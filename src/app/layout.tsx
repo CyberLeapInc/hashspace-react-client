@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter as FontSans} from "next/font/google";
 import { cn } from '@/lib/utils'
 import "./globals.css";
+import Link from "next/link";
+import {NavigationMenuLink, navigationMenuTriggerStyle} from "@/components/ui/navigation-menu";
+import * as React from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -25,7 +28,24 @@ export default function RootLayout({
               "min-h-screen bg-background font-sans antialiased",
               fontSans.variable
           )}
-      >{children}</body>
+      >
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-14 max-w-screen-2xl items-center" style={{'gap': '24px'}}>
+              <div className="transition-all">
+                  <Link href="/" legacyBehavior passHref>
+                      Index
+                  </Link>
+              </div>
+              <div className="transition-all">
+                  <Link href="/login" legacyBehavior passHref>
+                      login
+                  </Link>
+              </div>
+          </div>
+      </header>
+
+
+      {children}</body>
     </html>
   );
 }
