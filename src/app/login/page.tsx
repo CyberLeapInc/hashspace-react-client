@@ -1,84 +1,87 @@
-"use client"
-
-import * as React from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+'use client'
+import React, {useEffect} from 'react';
+import { Button, Checkbox, Form, type FormProps, Input } from 'antd';
+import { Turnstile } from '@marsidev/react-turnstile'
 import {startLogin} from "@/service/api";
 
-const formSchema = z.object({
-    email: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
-    captcha: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-    }),
-})
+const SITE_KEY = '0x4AAAAAAAVuhgDN4FXyZAFb';
 
-function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-    startLogin(values.email, values.captcha).then((res) => {
-        console.log(res)
-    }).catch(e => {
-        console.log(e)
-    })
-}
+type FieldType = {
+    username?: string;
+    password?: string;
+    remember?: string;
+};
 
-export default function Login() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-            captcha: ""
-        },
-    })
+const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    console.log('Success:', values);
+};
+
+const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+};
+
+import './index.css';
+
+const CryptoPage = () => {
+    const [status, setStatus] = React.useState('')
+    const [email, setEmail] = React.useState('')
+    const [cloudFlareToken, setCloudFlareToken] = React.useState('');
+
+    const submitEmail = () => {
+        startLogin(email, cloudFlareToken).then(res => {
+            console.log(res)
+        })
+    }
+
+    const onVerify = () => {
+
+    }
+    const onErr = () => {}
+
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <div>
-                            <FormItem>
-                                <FormLabel>邮箱</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="请输入邮箱" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        </div>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="captcha"
-                    render={({ field }) => (
-                        <div>
-                            <FormItem>
-                                <FormLabel>captcha</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="请输入captcha" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        </div>
-                    )}
-                />
-                <Button type="submit">Submit</Button>
-            </form>
-        </Form>
-    )
-}
+        <div style={{
+            width: '100%',
+            height: 'calc(100vh - 329px)',
+            position: "relative"
+        }}>
+            <div className="container-my">
+                <div className={'login-card'}>
+                    {status}
+                    <div className="logospace">
+                        <img
+                            className="label_2"
+                            src={"https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng80d9894646f196c38188762374123b34a4ce34d32af69d03bf10c2f01ef37de0"}
+                        />
+                        Hash Space
+                    </div>
+                    <div className={'login-hello'}>欢迎加入 Hash Space</div>
+                    <div className={'login-small-text'}>邮箱</div>
+                    <Input
+                        type={'email'}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder={'请输入您的邮箱'}
+                    ></Input>
+                    <Turnstile
+                        onError={() => setStatus('error')}
+                        onExpire={() => {
+                            setStatus('expired')
+                        }}
+                        onSuccess={(token) => {
+                            setStatus('solved')
+                            setCloudFlareToken(token)
+                        }}
+                        siteKey={SITE_KEY}
+                    />
+                    <Button  type="primary" block size={'large'} shape={'round'} onClick={() => {
+                        submitEmail()
+                    }}>下一步</Button>
+                </div>
+            </div>
+
+
+        </div>
+    );
+};
+
+export default CryptoPage;

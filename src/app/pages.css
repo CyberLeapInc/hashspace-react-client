@@ -1,0 +1,168 @@
+.container-my{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.banner{
+    background-image: url("../../public/banner.png");
+    height: 636px;
+    background-size: cover;
+}
+.title{
+    font-family: Poppins, Poppins;
+    font-weight: bold;
+    font-size: 70px;
+    color: #333333;
+    line-height: 72px;
+    text-align: left;
+    font-style: normal;
+    padding-top: 150px;
+}
+.title2{
+    font-family: MicrosoftYaHei, MicrosoftYaHei;
+    font-weight: bold;
+    font-size: 42px;
+    color: #333333;
+    line-height: 72px;
+    text-align: left;
+    font-style: normal;
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+.text{
+    font-family: Poppins, Poppins;
+    font-weight: 400;
+    font-size: 20px;
+    color: #999999;
+    line-height: 30px;
+    text-align: left;
+    font-style: normal;
+    padding-top: 40px;
+}
+.button-zone{
+    padding-top: 40px;
+}
+.middle{
+    height: 483px;
+    background: #EDF1FE;
+}
+.cardlist{
+    display: flex;
+    width: 100%;
+    height: 250px;
+    gap: 27px;
+}
+.card{
+    border-radius: 40px;
+    height: 250px;
+    background-color: white;
+    flex: 1;
+    padding: 40px 44px;
+    box-sizing: border-box;
+}
+.card-image{
+    height: 40px;
+    width: 40px;
+    margin-bottom: 12px;
+}
+.image-avatar{
+    height: 40px;
+    width: 40px;
+}
+.card-title{
+    font-family: MicrosoftYaHei, MicrosoftYaHei;
+    font-weight: bold;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    font-style: normal;
+    margin-bottom: 12px;
+}
+.card-text{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 16px;
+    color: #666666;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+.question-title{
+    font-family: MicrosoftYaHei, MicrosoftYaHei;
+    font-weight: bold;
+    font-size: 42px;
+    color: #333333;
+    line-height: 72px;
+    text-align: left;
+    font-style: normal;
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+.bbb{
+    background: #D8D8D8;
+    border-radius: 23px;
+    opacity: 0.2;
+}
+.collapse-title{
+    width: 100%;
+    text-align: left;
+    border-radius: 23px;
+    height: 40px;
+    line-height: 40px;
+    box-sizing: content-box;
+    padding: 0 26px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-family: MicrosoftYaHeiSemibold;
+    font-size: 20px;
+    color: #333333;
+    font-style: normal;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+.grayquestion{
+    border-radius: 23px;
+
+}
+.grayquestionopen{
+    border-radius: 23px;
+    background-color: #f8f8f8
+}
+.collapse-text{
+    padding: 0 26px;
+    padding-bottom: 26px;
+}
+.bbaaa:hover{
+    background: #F9F9F9;
+}
+.collapse-span{
+    border-radius: 4px;
+    border: 1px solid #DEDEDE;
+    height: 22px;
+    width: 20px;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 12px;
+    align-items: center;
+    float: left;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.uparrowimg{
+    height: 38px;
+    width: 38px;
+    margin-right: 50px;
+    display: inline-block;
+    background-size: cover;
+    background-image: url("../../public/arrow-up-round-big.png");
+}
+.downarrowimg{
+    height: 38px;
+    width: 38px;
+    rotate: 180deg;
+    margin-right: 50px;
+    display: inline-block;
+    background-size: cover;
+    background-image: url("../../public/arrow-up-round-big.png");
+}

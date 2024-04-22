@@ -1,0 +1,29 @@
+.login-card{
+    width: 420px;
+    height: 370px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    margin: 0 auto;
+    margin-top: 96px;
+    padding: 40px 32px;
+}
+.login-hello{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: left;
+    font-style: normal;
+    margin-top: 16px;
+}
+.login-small-text{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+    margin-top: 12px;
+}

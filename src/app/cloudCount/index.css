@@ -1,0 +1,104 @@
+.container-my{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.container-tabs{
+    width: 100%;
+    height: calc(100vh - 230px)
+}
+.tabs-list{
+    width: 384px;
+    margin: 40px 0;
+}
+.card-single{
+    width: 286px;
+    height: 528px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.11);
+    border-radius: 16px;
+    position: relative;
+}
+.card-single-top{
+    width: 286px;
+    height: 156px;
+    background: #3C53FF;
+    border-radius: 16px 16px 0px 0px;
+    color: white;
+    padding: 24px 20px;
+}
+.card-single-top-a{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 600;
+    font-size: 20px;
+    color: #FFFFFF;
+    line-height: 30px;
+    font-style: normal;
+}
+.card-single-top-b{
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 32px;
+    color: #FFFFFF;
+    line-height: 30px;
+    font-style: normal;
+    margin: 12px 0;
+}
+.card-single-top-c{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+.card-single-bottom{
+    padding: 8px 20px;
+}
+.card-single-bottom-row{
+    display: flex;
+    justify-content: space-between;
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 16px;
+}
+.card-single-bottom-label{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+.card-single-bottom-value{
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+    line-height: 24px;
+    text-align: right;
+    font-style: normal;
+}
+.round-primary-button{
+    border-radius: 26px;
+    height: 52px;
+    background-color: white;
+    color: #3C53FF;
+    border: 1px solid #3C53FF;
+}
+.round-primary-button:hover{
+    background-color: #3C53FF;
+    color: white;
+}
+.button-286{
+    width: 186px;
+    position:absolute;
+    left: 50px;
+    bottom: 20px;
+}
+.card-tabs-content{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 !important;
+}

@@ -74,3 +74,15 @@
       @apply bg-background text-foreground;
     }
   }
+
+.data-\[state\=active\]\:bg-background[data-state=active] {
+  background: #3C53FF !important;
+  color: white !important;
+}
+.container-my{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.bg-gray{
+  background-color: #F6F7F8;
+}
