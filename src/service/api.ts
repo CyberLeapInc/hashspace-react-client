@@ -5,6 +5,7 @@ const ApiPrefixProd = 'https://api.hashspace.com/';
 
 const axiosInstance = axios.create({
     baseURL: ApiPrefix,
+    withCredentials: true,
 })
 
 export const startLogin = function (email: string, captcha: string) {
