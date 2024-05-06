@@ -49,15 +49,27 @@ export default function RootLayout({
               <Link href="/cloudCount" legacyBehavior passHref>
                   云算力
               </Link>
-              <Link href="/login" legacyBehavior passHref>
-                  常见问题
-              </Link>
-              <Link href="/login" legacyBehavior passHref>
+              {/*<Link href="/login" legacyBehavior passHref>*/}
+              {/*    常见问题*/}
+              {/*</Link>*/}
+              <Link href="/calculator" legacyBehavior passHref>
                   计算器
               </Link>
-              <Link href="/login" legacyBehavior passHref>
-                  关于
-              </Link>
+              {/*<Link href="/login" legacyBehavior passHref>*/}
+              {/*    关于*/}
+              {/*</Link>*/}
+            <Link href="/orderInfo" legacyBehavior passHref>
+                测试连接/订单详情
+            </Link>
+            <Link href="/buyDetail" legacyBehavior passHref>
+                测试连接/购买详情
+            </Link>
+            <Link href="/securityCenter" legacyBehavior passHref>
+                测试连接/安全中心
+            </Link>
+            <Link href="/myOrder" legacyBehavior passHref>
+                测试连接/我的订单
+            </Link>
 
           </div>
       </header>
