@@ -1,7 +1,7 @@
-import React, { createContext, useReducer, useEffect, useContext } from 'react';
-import { getUserInfo } from "@/service/api";
+'use client'
+import React, {createContext, useReducer, useEffect, useContext, ReactNode} from 'react';
 import {UserInfo} from "@/service/interface";
-interface State {
+export interface State {
     userInfo: UserInfo;
 }
 
@@ -46,7 +46,7 @@ const reducer = (state: State, action: Action): State => {
     }
 };
 
-export const MyContextProvider= ({ children }) => {
+export const MyContextProvider= ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return (

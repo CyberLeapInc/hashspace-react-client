@@ -16,7 +16,11 @@ axiosInstance.interceptors.response.use((res) => {
     return res.data
 })
 
-export const startLogin = function (email: string, captcha: string) {
+export const startLogin = function (email: string, captcha: string): Promise<{
+    session_id: string;
+    totp_enabled: boolean;
+
+}>  {
     return axiosInstance.post('/auth/login/start', {
         email,
         captcha

@@ -4,11 +4,13 @@ import type {CheckboxProps} from 'antd';
 import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
 import {ActionType, MyContext} from "@/service/context";
 import { useRouter } from 'next/navigation';
+import Logo from '../../../public/logo.png'
 
 
 import {Turnstile} from '@marsidev/react-turnstile'
 import {getLoginCode, getUserInfo, login, startLogin} from "@/service/api";
 import './index.css';
+import Image from "next/image";
 
 const SITE_KEY = '0x4AAAAAAAVuhgDN4FXyZAFb';
 
@@ -42,7 +44,7 @@ const CryptoPage: React.FC = () => {
     const router = useRouter();
 
     const submitEmail = () => {
-        startLogin(email, '000000').then(res => {
+        startLogin(email, '000000').then((res) => {
             console.log(res)
             setSessionId(res.session_id || '')
             setTotpEnabled(res.totp_enabled || false)
@@ -74,12 +76,8 @@ const CryptoPage: React.FC = () => {
         }}>
             <div className="container-my">
                 <div className={'login-card'}>
-                    {status}
                     <div className="logospace">
-                        <img
-                            className="label_2"
-                            src={"https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng80d9894646f196c38188762374123b34a4ce34d32af69d03bf10c2f01ef37de0"}
-                        />
+                        <Image className="label_2" src={Logo} alt={'logo'} />
                         Hash Space
                     </div>
                     {
@@ -104,7 +102,7 @@ const CryptoPage: React.FC = () => {
                                     }}
                                     siteKey={SITE_KEY}
                                 />
-                                <Button type="primary" block size={'large'} shape={'round'} onClick={() => {
+                                <Button disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'} shape={'round'} onClick={() => {
                                     submitEmail()
                                 }}>下一步</Button>
                             </div>
@@ -118,6 +116,7 @@ const CryptoPage: React.FC = () => {
                                     <div >
                                         <div className={'login-title-text'}>邮箱</div>
                                         <Input
+                                            maxLength={6}
                                             type={'text'}
                                             value={code}
                                             size={'large'}
@@ -132,6 +131,7 @@ const CryptoPage: React.FC = () => {
                                         <div>
                                             <div className={'login-title-text'}>Google Authenticator验证码</div>
                                             <Input
+                                                maxLength={6}
                                                 type={'text'}
                                                 value={totpCode}
                                                 size={'large'}

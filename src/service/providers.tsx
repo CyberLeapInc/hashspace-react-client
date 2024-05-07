@@ -1,7 +1,7 @@
 'use client';
 
 import React, {ReactNode, useContext, useEffect} from "react";
-import {ActionType, initialState, MyContext, MyContextProvider} from "@/service/context";
+import {ActionType, MyContext, MyContextProvider} from "@/service/context";
 import Link from "next/link";
 import {Avatar, Button, Popover, Space} from "antd";
 import {UserOutlined} from '@ant-design/icons';
@@ -10,8 +10,13 @@ import TwitterPic from "../../public/twitter@2x.png";
 import TgPic from "../../public/tg@2x.png";
 import EmailPic from "../../public/email@2x.png";
 import {getUserInfo, logout} from "@/service/api";
+import { State } from "@/service/context";
+import Logo from '../../public/logo.png'
 
-const HoverContent = ({outState, onLogOut}) => {
+const HoverContent = ({outState, onLogOut}: {
+    outState: State,
+    onLogOut: Function
+}) => {
     // const {state, dispatch} = useContext(MyContext)
     const routerLinkList = [
         {
@@ -61,7 +66,7 @@ const HoverContent = ({outState, onLogOut}) => {
                             </Button>
                         ))
                     }
-                    <Button block type="text" size={"large"} onClick={onLogOut}>退出账号</Button>
+                    <Button block type="text" size={"large"} onClick={() => onLogOut()}>退出账号</Button>
 
                 </Space>
             </Space>
@@ -102,10 +107,7 @@ const Header: React.FC = () => {
             >
                 <div className="container-my flex h-14 max-w-screen-2xl items-center" style={{'gap': '24px'}}>
                     <div className="logospace">
-                        <img
-                            className="label_2"
-                            src={"https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng80d9894646f196c38188762374123b34a4ce34d32af69d03bf10c2f01ef37de0"}
-                        />
+                        <Image className="label_2" src={Logo} alt={'logo'} />
                         Hash Space
                     </div>
                     <Link href="/" legacyBehavior passHref>
@@ -160,10 +162,7 @@ const Footer = () => {
         <div className="footer-cus">
             <div className="footer-container">
                 <div className="logospace">
-                    <img
-                        className="label_2"
-                        src={"https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng80d9894646f196c38188762374123b34a4ce34d32af69d03bf10c2f01ef37de0"}
-                    />
+                    <Image className="label_2" src={Logo} alt={'logo'} />
                     Hash Space
                 </div>
                 <div>服务协议</div>
