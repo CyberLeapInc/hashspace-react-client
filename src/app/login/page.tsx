@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import type {CheckboxProps} from 'antd';
 import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
 import {ActionType, MyContext} from "@/service/context";
@@ -29,6 +29,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const CryptoPage: React.FC = () => {
+    'use client'
     const [status, setStatus] = React.useState('')
     const [email, setEmail] = React.useState('')
     const [code, setCode] = React.useState('')
@@ -40,7 +41,11 @@ const CryptoPage: React.FC = () => {
     const [totpCode, setTotpCode] = useState('')
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {state, dispatch} = useContext(MyContext);
-    const searchParams = new URLSearchParams(location.search);
+    let goTo = '/'
+    if (typeof window !== "undefined") {
+        const searchParams = new URLSearchParams(window.location.search);
+        goTo = searchParams.get('to') || '/'
+    }
     const router = useRouter();
 
     const submitEmail = () => {
@@ -62,7 +67,7 @@ const CryptoPage: React.FC = () => {
         login(sessionId, code, totpCode).then(res => {
             getUserInfo().then(res => {
                 dispatch({ type: ActionType.setUserInfo, payload: res });
-                router.push(searchParams.get('to') || '/')
+                router.push(goTo)
             })
         })
     }

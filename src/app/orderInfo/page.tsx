@@ -8,9 +8,13 @@ import calPayBackMoney from '../../../public/cal-paybackmoney.png'
 import calProfit from '../../../public/cal-profit.png'
 import ReactDOM from 'react-dom';
 import { Table } from 'antd';
+import dynamic from 'next/dynamic';
 import type { TableProps } from 'antd';
 
-import { Area } from '@ant-design/plots';
+// import { Area } from '@ant-design/plots';
+const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
+    ssr: false
+})
 import Image from "next/image";
 import {
     Button,
@@ -81,9 +85,8 @@ const calculator = () => {
     const onFormLayoutChange = (v: string) => {
         console.log(v)
     }
-    return <div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px'}}>
+    return (<div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px'}}>
         <div className={'cal-card-big'}>
-
             <div className={'flex-wrap'}>
                 <div className={'intro'}>
                     <div className={'login-hello'}>算力数据</div>
@@ -157,6 +160,7 @@ const calculator = () => {
             />
         </div>
     </div>
+    )
 }
 
 export default calculator;
