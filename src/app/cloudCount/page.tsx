@@ -114,7 +114,7 @@ export default function CloudCount() {
                         {
                             MockData.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item}></Card>
+                                return <Card data={item} key={item.type}></Card>
                             })
                         }
                     </TabsContent>
@@ -122,7 +122,7 @@ export default function CloudCount() {
                         {
                             MockData.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item}></Card>
+                                return <Card data={item} key={item.title}></Card>
                             })
                         }
                     </TabsContent>

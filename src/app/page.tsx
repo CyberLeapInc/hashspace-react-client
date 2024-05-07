@@ -87,19 +87,16 @@ export default function Home() {
     <main className="dd">
       <div className=''>
           <div className="banner">
-              <div className='container-my'>
+              <div style={{
+                  width: '1200px',
+                  margin: '0 auto'
+              }}>
                   <div className="title">
                       Expanding your<br/>
                       crypto space.
                   </div>
-                  <div className="text">It's a bit of a long It's a bit of a long It's a bit of a long It's a bit of a
-                      <br/>long It's a bit of a long It's a bit of a long It's a bit of a long
-                  </div>
-                  <div className="button-zone">
-                      <Button style={{height: '50px',marginRight: '20px',backgroundColor: "black"}} type="primary" shape="round" size="large">1123123</Button>
-                      <Button style={{height: '50px'}} type="default" shape="round"  size="large">123121</Button>
-                  </div>
               </div>
+
           </div>
           <div className="middle">
               <div className="container-my">
@@ -111,31 +108,31 @@ export default function Home() {
                           </div>
                           <div className="card-title">专业团队</div>
                           <div
-                              className="card-text">真实可信的矿场资源，专业团队筛选，遍布全球
+                              className="card-text">我们对矿场进行严格筛选，确保每一处都符合高标准，并始终为您提供值得信赖的优质矿机，矿场及电力资源。
                           </div>
                       </div>
                       <div className="card">
                           <div className="card-image">
                               <Image src={CountImage} alt="pro"></Image>
                           </div>
-                          <div className="card-title">专业团队</div>
+                          <div className="card-title">算力自主</div>
                           <div
-                              className="card-text">自己选择矿池、自己支付电费、矿池直接支付收益、自己选择收款类型
+                              className="card-text">用户自己选择矿池，自己支付电费，矿池直接支付收益，自己选择收款类型，您的各项服务都由您做主。
                           </div>
                       </div>
                       <div className="card">
                           <div className="card-image">
                               <Image src={SafeImage} alt="pro"></Image>
                           </div>
-                          <div className="card-title">专业团队</div>
+                          <div className="card-title">安全合规</div>
                           <div
-                              className="card-text">矿场位于美国，合规的电力系统
+                              className="card-text">自营的挖矿数据中心位于美国、东南亚等多地，您的挖矿过程将拥有更好的灵活性、透明度以及竞争力。
                           </div>
                       </div>
                   </div>
               </div>
           </div>
-          <div style={{marginBottom: '40px', backgroundColor: "white"}}>
+          <div style={{paddingBottom: '40px', backgroundColor: "white"}}>
               <div className="container-my">
                   <div className="question-title">常见问题</div>
                   {
@@ -146,13 +143,13 @@ export default function Home() {
                               } else {
                                   setQuestionOpen(item.index)
                               }
-                          }} className={questionOpen === item.index ? 'grayquestionopen' : 'grayquestion'}>
+                          }} style={{transition: 'all 0.3s'}} className={questionOpen === item.index ? 'grayquestionopen' : 'grayquestion'}>
                               <CollapsibleTrigger className="collapse-title">
                                   <span>
                                       <div className="collapse-span">{item.index}</div>
                                       {item.title}
                                   </span>
-                                  <span className={item.index === questionOpen ? "uparrowimg" : "uparrowimg"}/>
+                                  <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"}/>
                               </CollapsibleTrigger>
                               <CollapsibleContent className="collapse-text">
                                   {item.text}

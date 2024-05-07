@@ -188,12 +188,15 @@ const calculator = () => {
     const onFormLayoutChange = (v: string) => {
         console.log(v)
     }
+
     return <div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px'}}>
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>
             <Table
+                // @ts-ignore
                 columns={columns}
                 dataSource={list}
+                rowKey={'start_at'}
                 expandable={{
                     expandedRowRender: (record) => renderExpandData(record),
                     rowExpandable: (record) => true,

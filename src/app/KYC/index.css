@@ -1,0 +1,21 @@
+.id_card{
+    width: 420px;
+    /*height: 334px;*/
+    background: #FFFFFF;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 32px;
+}
+.kyc-image{
+    height: 80px;
+    width: 80px;
+    margin: 0 auto;
+}
+.kyc-text{
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
+    line-height: 30px;
+    padding: 40px 0;
+    text-align: center;
+}

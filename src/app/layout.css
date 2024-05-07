@@ -32,13 +32,13 @@
     font-style: normal;
 }
 .logospace{
-    font-family: ArialRoundedMTBold;
     font-size: 18px;
     color: #393535;
     line-height: 35px;
     text-align: left;
     font-style: normal;
     display: flex;
+    font-weight: bold;
     img{
         margin-right: 10px;
     }

@@ -1,12 +1,14 @@
 'use client'
-import React, {useEffect, useState} from 'react';
-import { Button, Form, type FormProps, Input } from 'antd';
-import { Checkbox } from 'antd';
-import type { CheckboxProps } from 'antd';
+import React, {useContext, useState} from 'react';
+import type {CheckboxProps} from 'antd';
+import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
+import {ActionType, MyContext} from "@/service/context";
+import { useRouter } from 'next/navigation';
 
 
-import { Turnstile } from '@marsidev/react-turnstile'
-import {getLoginCode, startLogin} from "@/service/api";
+import {Turnstile} from '@marsidev/react-turnstile'
+import {getLoginCode, getUserInfo, login, startLogin} from "@/service/api";
+import './index.css';
 
 const SITE_KEY = '0x4AAAAAAAVuhgDN4FXyZAFb';
 
@@ -24,24 +26,27 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
     console.log('Failed:', errorInfo);
 };
 
-import './index.css';
-
-const CryptoPage = () => {
+const CryptoPage: React.FC = () => {
     const [status, setStatus] = React.useState('')
     const [email, setEmail] = React.useState('')
     const [code, setCode] = React.useState('')
     const [agree, setAgree] = React.useState(false)
     const [cloudFlareToken, setCloudFlareToken] = React.useState('');
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [sessionId, setSessionId] = useState('')
     const [totpEnabled, setTotpEnabled] = useState(false)
+    const [totpCode, setTotpCode] = useState('')
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const {state, dispatch} = useContext(MyContext);
+    const searchParams = new URLSearchParams(location.search);
+    const router = useRouter();
 
     const submitEmail = () => {
         startLogin(email, '000000').then(res => {
             console.log(res)
-            setSessionId(res.data.session_id || '')
-            setTotpEnabled(res.data.totp_enabled || false)
-            getLoginCode(sessionId).then(res => {
+            setSessionId(res.session_id || '')
+            setTotpEnabled(res.totp_enabled || false)
+            getLoginCode(res.session_id).then(res => {
                 setStep(1)
             })
         })
@@ -52,7 +57,12 @@ const CryptoPage = () => {
 
 
     const onVerify = () => {
-
+        login(sessionId, code, totpCode).then(res => {
+            getUserInfo().then(res => {
+                dispatch({ type: ActionType.setUserInfo, payload: res });
+                router.push(searchParams.get('to') || '/')
+            })
+        })
     }
     const onErr = () => {}
 
@@ -103,26 +113,51 @@ const CryptoPage = () => {
                     {
                         step === 1 && (
                             <div>
-                                <div className={'login-hello'}>邮箱验证</div>
-                                <div className={'login-small-text'}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效</div>
-                                <div className={'login-small-text'}>验证码</div>
-                                <Input
-                                    type={'text'}
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                    placeholder={'请输入验证码'}
-                                ></Input>
-                                <Checkbox onChange={onChange}>创建账户即表示我同意币安的</Checkbox>
-                                <Button type="primary" block size={'large'} shape={'round'}
-                                        disabled={!agree}
-                                        onClick={() => {onVerify()}}>下一步</Button>
+                                <div className={'login-hello'}>验证</div>
+                                <Space direction={"vertical"} size={"large"} style={{width: '100%'}}>
+                                    <div >
+                                        <div className={'login-title-text'}>邮箱</div>
+                                        <Input
+                                            type={'text'}
+                                            value={code}
+                                            size={'large'}
+                                            onChange={(e) => setCode(e.target.value)}
+                                            placeholder={'请输入验证码'}
+                                        ></Input>
+                                        <div
+                                            className={'login-small-text'}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
+                                        </div>
+                                    </div>
+                                    {totpEnabled && (
+                                        <div>
+                                            <div className={'login-title-text'}>Google Authenticator验证码</div>
+                                            <Input
+                                                type={'text'}
+                                                value={totpCode}
+                                                size={'large'}
+                                                onChange={(e) => setTotpCode(e.target.value)}
+                                                placeholder={'请输入验证码'}
+                                            ></Input>
+                                            <div
+                                                className={'login-small-text'}>请打开您的Google Authenticator，输入6位验证码
+                                            </div>
+                                        </div>
+                                    )}
+                                    <Space direction={"vertical"} size={'small'} style={{width: '100%'}}>
+                                        <Checkbox onChange={onChange}
+                                                  className={'login-validate'}>创建账户即表示我同意币安的《服务条款》和《隐私政策》</Checkbox>
+                                        <Button type="primary" block size={'large'} shape={'round'}
+                                                disabled={!agree}
+                                                onClick={() => {
+                                                    onVerify()
+                                                }}>下一步</Button>
+                                    </Space>
+                                </Space>
                             </div>
                         )
                     }
                 </div>
             </div>
-
-
         </div>
     );
 };
