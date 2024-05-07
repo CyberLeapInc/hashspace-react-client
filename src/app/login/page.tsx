@@ -49,7 +49,7 @@ const CryptoPage: React.FC = () => {
     const router = useRouter();
 
     const submitEmail = () => {
-        startLogin(email, '000000').then((res) => {
+        startLogin(email, cloudFlareToken).then((res) => {
             console.log(res)
             setSessionId(res.session_id || '')
             setTotpEnabled(res.totp_enabled || false)
@@ -91,23 +91,34 @@ const CryptoPage: React.FC = () => {
                                 <div className={'login-hello'}>欢迎加入 Hash Space</div>
                                 <div className={'login-small-text'}>邮箱</div>
                                 <Input
+                                    style={{
+                                        height:'50px',
+                                    }}
+                                    size={'large'}
                                     type={'email'}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder={'请输入您的邮箱'}
                                 ></Input>
-                                <Turnstile
-                                    onError={() => setStatus('error')}
-                                    onExpire={() => {
-                                        setStatus('expired')
+                                {
+                                    status !== 'solved' && <Turnstile
+                                        onError={() => setStatus('error')}
+                                        onExpire={() => {
+                                            setStatus('expired')
+                                        }}
+                                        onSuccess={(token) => {
+                                            setStatus('solved')
+                                            setCloudFlareToken(token)
+                                        }}
+                                        siteKey={SITE_KEY}
+                                    />
+                                }
+                                <Button
+                                    style={{
+                                        marginTop: '40px',
+                                        height:'50px'
                                     }}
-                                    onSuccess={(token) => {
-                                        setStatus('solved')
-                                        setCloudFlareToken(token)
-                                    }}
-                                    siteKey={SITE_KEY}
-                                />
-                                <Button disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'} shape={'round'} onClick={() => {
+                                    disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'} shape={'round'} onClick={() => {
                                     submitEmail()
                                 }}>下一步</Button>
                             </div>
@@ -121,6 +132,9 @@ const CryptoPage: React.FC = () => {
                                     <div >
                                         <div className={'login-title-text'}>邮箱</div>
                                         <Input
+                                            style={{
+                                                height:'50px'
+                                            }}
                                             maxLength={6}
                                             type={'text'}
                                             value={code}
@@ -136,6 +150,9 @@ const CryptoPage: React.FC = () => {
                                         <div>
                                             <div className={'login-title-text'}>Google Authenticator验证码</div>
                                             <Input
+                                                style={{
+                                                    height:'50px'
+                                                }}
                                                 maxLength={6}
                                                 type={'text'}
                                                 value={totpCode}
@@ -152,7 +169,10 @@ const CryptoPage: React.FC = () => {
                                         <Checkbox onChange={onChange}
                                                   className={'login-validate'}>创建账户即表示我同意币安的《服务条款》和《隐私政策》</Checkbox>
                                         <Button type="primary" block size={'large'} shape={'round'}
-                                                disabled={!agree}
+                                                disabled={!agree || !(code.length === 6)}
+                                                style={{
+                                                    height:'50px'
+                                                }}
                                                 onClick={() => {
                                                     onVerify()
                                                 }}>下一步</Button>

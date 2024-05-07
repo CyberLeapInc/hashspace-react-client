@@ -40,3 +40,10 @@
     text-align: left;
     font-style: normal;
 }
+
+#cf-turnstile{
+    iframe{
+        margin-top: 10px;
+        width: 355px !important;
+    }
+}
