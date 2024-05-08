@@ -4,15 +4,14 @@ import {Table, Button, Card, Flex, Space} from "antd";
 import {MyContext} from "@/service/context";
 import IconGoogle from '../../../public/icon-google.png'
 import IconPhone from '../../../public/icon-phone.png'
+import DividerCus from "@/components/ui/dividerCus";
 
 import './index.css'
 import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {getLoginHistory, LoginHistoryItem} from "@/service/api";
 
-const DividerCus = ({margin = 0, visible = true}) => {
-    return (<span className={'divider-cus'} style={{marginTop: margin, marginBottom: margin, backgroundColor: visible ? '#eee' : 'transparent'}}></span>)
-}
+
 
 const Tips = ({text = '', type=''}) => {
     return (

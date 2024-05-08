@@ -13,6 +13,12 @@ import {getUserInfo, logout} from "@/service/api";
 import { State } from "@/service/context";
 import Logo from '../../public/logo.png'
 import { useRouter } from 'next/navigation';
+import IconAvatar from '../../public/icon-avatar.png'
+import DividerCus from "@/components/ui/dividerCus";
+import IconSecurity from '../../public/icon-security.png'
+import IconMyorder from '../../public/icon-myorder.png'
+import IconAddress from '../../public/icon-address.png'
+import IconElectfee from '../../public/icon-electfee.png'
 
 
 const HoverContent = ({outState, onLogOut}: {
@@ -23,52 +29,72 @@ const HoverContent = ({outState, onLogOut}: {
     const routerLinkList = [
         {
             text: 'KYC认证',
-            href: '/KYC'
+            href: '/KYC',
+            icon: IconSecurity
         },
         {
             text: '安全中心',
-            href: '/securityCenter'
+            href: '/securityCenter',
+            icon: IconSecurity,
         },
         {
             text: '我的订单',
-            href: '/myOrder'
+            href: '/myOrder',
+            icon: IconMyorder,
         },
         {
             text: '收款地址',
-            href: '/KYC'
+            href: '/walletAddress',
+            icon: IconAddress
         },
         {
             text: '电费余额',
-            href: '/KYC'
+            href: '/',
+            icon: IconElectfee
         },
     ]
 
     return (
         <div style={{width: '210px', fontSize: '14px', color: '#333', fontWeight: 400}}>
-            <Space direction={"vertical"} size={"small"} style={{width: '100%'}}>
+            <Space direction={"vertical"} size={0} style={{width: '100%'}}>
                 <Space>
-                    <Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />
+                    <Image  style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'} />
                     <div>
                         <div style={{fontWeight: 400}}>{outState.userInfo.email}</div>
                         <div style={{fontSize: '12px', color: '#999'}}>{outState.userInfo.has_identity ? <span style={{color: 'green'}}>已认证</span> : <span>未认证</span>}</div>
                     </div>
                 </Space>
+
                 <Space style={{
                     width: '100%'
                 }} direction={"vertical"}  size={0}>
+                    <DividerCus></DividerCus>
                     {
                         routerLinkList.map(item => (
-                            <Button
-                                key={item.text}
-                                style={{
-                                color: '#333',
-                                fontSize: '14px',
-                            }} block type="text" size={"large"}>
-                                <Link href={item.href}>{item.text}</Link>
-                            </Button>
+                            <>
+                                <Button
+                                    key={item.text}
+                                    style={{
+                                        color: '#333',
+                                        fontSize: '14px',
+                                        display:'flex',
+                                        verticalAlign: 'middle',
+                                        justifyContent: 'center'
+                                    }} block type="text" size={"large"}>
+                                    <Image width={18} src={item.icon} alt={'avatar'} style={{
+                                        margin:'2px 8px 0 0'
+                                    }}/>
+
+                                    <Link href={item.href}>{item.text}</Link>
+                                </Button>
+                                <DividerCus></DividerCus>
+                            </>
                         ))
                     }
-                    <Button block type="text" size={"large"} onClick={() => onLogOut()}>退出账号</Button>
+                    <div>
+                        <Button block type="text" size={"large"} onClick={() => onLogOut()}>退出账号</Button>
+
+                    </div>
 
                 </Space>
             </Space>
@@ -142,7 +168,8 @@ const Header: React.FC = () => {
                     {
                         state.userInfo.email && (
                             <Popover content={() => <HoverContent outState={state} onLogOut={logOut}/>}>
-                                <Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />
+                                <Image  style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'} />
+                                {/*<Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />*/}
                             </Popover>
                         )
                     }
