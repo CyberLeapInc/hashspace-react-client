@@ -1,11 +1,10 @@
 .container-my{
     max-width: 1200px;
     margin: 0 auto;
-    overflow: scroll;
 }
 .container-tabs{
     width: 100%;
-    height: calc(100vh - 230px)
+    min-height: calc(100vh - 260px);
 }
 .tabs-list{
     width: 384px;

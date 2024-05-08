@@ -99,7 +99,7 @@ const Card = function ({data}) {
 export default function CloudCount() {
     return (
         <div style={{backgroundColor: '#F6F7F8'}}>
-            <div className="container-my">
+            <div className="container-my" style={{paddingBottom: '25px'}}>
             <Tabs defaultValue="btc" className="container-tabs">
                     <div style={{
                         margin: '0 auto',

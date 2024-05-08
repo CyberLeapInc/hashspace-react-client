@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.response.use((res) => {
-    console.log(res)
+    console.log('==========')
     if (res.data.status === '401') {
         console.log('1111')
     }
@@ -47,4 +47,67 @@ export const logout = () => {
 
 export const getUserInfo  = function () {
     return axiosInstance.get('/api/auth/user/info')
+}
+
+export const getKycToken = function () : Promise<{access_token: string}> {
+    return axiosInstance.post('/api/auth/identity')
+}
+
+export interface LoginHistoryResponse {
+    list: LoginHistoryItem[];
+    pagination: 分页;
+    [property: string]: any;
+}
+
+export interface LoginHistoryItem {
+    /**
+     * 登陆时间
+     */
+    created_at: number;
+    /**
+     * 登陆IP
+     */
+    ip: string;
+    /**
+     * 登陆位置
+     */
+    location: string;
+    /**
+     * 设备名
+     */
+    user_agent: string;
+    [property: string]: any;
+}
+
+/**
+ * 分页
+ */
+export interface 分页 {
+    /**
+     * 页数
+     */
+    page: number;
+    /**
+     * 每夜数量
+     */
+    page_size: number;
+    /**
+     * 总数量
+     */
+    total_count: number;
+    /**
+     * 总页数
+     */
+    total_page: number;
+    [property: string]: any;
+}
+
+
+export const getLoginHistory = function (): Promise<LoginHistoryResponse> {
+    return axiosInstance.get('/api/auth/login-history', {
+        params:{
+            page: 1,
+            page_size: 10,
+        }
+    })
 }

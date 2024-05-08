@@ -12,6 +12,8 @@ import EmailPic from "../../public/email@2x.png";
 import {getUserInfo, logout} from "@/service/api";
 import { State } from "@/service/context";
 import Logo from '../../public/logo.png'
+import { useRouter } from 'next/navigation';
+
 
 const HoverContent = ({outState, onLogOut}: {
     outState: State,
@@ -25,11 +27,11 @@ const HoverContent = ({outState, onLogOut}: {
         },
         {
             text: '安全中心',
-            href: '/KYC'
+            href: '/securityCenter'
         },
         {
             text: '我的订单',
-            href: '/KYC'
+            href: '/myOrder'
         },
         {
             text: '收款地址',
@@ -77,14 +79,16 @@ const HoverContent = ({outState, onLogOut}: {
 const Header: React.FC = () => {
     'use client'
     const {state, dispatch} = useContext(MyContext)
+    const router = useRouter();
     const logOut = () => {
-        logout().then(
+        logout().then(() => {
             // @ts-ignore
             dispatch({
                 type: ActionType.setUserInfo,
                 payload: {}
             })
-        )
+            router.replace('/')
+        })
     }
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -125,17 +129,8 @@ const Header: React.FC = () => {
                     {/*<Link href="/login" legacyBehavior passHref>*/}
                     {/*    关于*/}
                     {/*</Link>*/}
-                    <Link href="/orderInfo" legacyBehavior passHref>
-                        测试连接/订单详情
-                    </Link>
                     <Link href="/buyDetail" legacyBehavior passHref>
                         测试连接/购买详情
-                    </Link>
-                    <Link href="/securityCenter" legacyBehavior passHref>
-                        测试连接/安全中心
-                    </Link>
-                    <Link href="/myOrder" legacyBehavior passHref>
-                        测试连接/我的订单
                     </Link>
                     {
                         !state.userInfo.email && <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>

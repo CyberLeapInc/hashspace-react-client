@@ -1,7 +1,9 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import { Table } from 'antd';
+import {Button, Table} from 'antd';
 import type { TableProps } from 'antd';
+import Link from "next/link";
+
 
 import './index.css'
 
@@ -180,6 +182,17 @@ const renderExpandData= (data: any) => {
         <div>合计费用：{data.cost}</div>
         <div></div>
         <div>日期： {new Date(data.start_at || 0).toLocaleString()} - {new Date(data.end_at || 0).toLocaleString()}</div>
+        <div style={{
+            position: 'absolute',
+            top: '-8px',
+            right: '0'
+        }}>
+            <Button type={"link"}>
+                <Link href={'/orderInfo'}>
+                    订单详情 {'>'}
+                </Link>
+            </Button>
+        </div>
     </div>)
 }
 

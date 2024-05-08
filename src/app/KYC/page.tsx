@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {MyContext, MyContextProvider} from "@/service/context";
 import {Button, Card} from "antd";
 import './index.css'
@@ -7,13 +7,42 @@ import KycNewImage from '../../../public/kyc-new.png'
 import KycNotAllowImage from '../../../public/kyc-notallow.png'
 import KycWaitingImage from '../../../public/kyc-waiting.png'
 import Image from "next/image";
-
+import SumsubWebSdk from '@sumsub/websdk-react'
+import {getKycToken} from "@/service/api";
 const KYC = () => {
     const {state} = useContext(MyContext)
+    const [accessToken, setAccessToken] = useState('')
+    useEffect(() => {
+        getKycToken().then(res => {
+            setAccessToken(res.access_token)
+        })
+    }, []);
+    const accessTokenExpirationHandler = () => {
+        console.log('exp')
+        return Promise.resolve('1')
+    }
+    const config = {}
+    const options = {}
+    const messageHandler = (v: any) => {
+        console.log(v)
+    }
+    const errorHandler = (v: any) => {
+        console.log(v)
+    }
     return (
         <div style={{
             height: 'calc(100vh - 239px)'
         }}>
+            {
+                accessToken && <SumsubWebSdk
+                    accessToken={accessToken}
+                    expirationHandler={accessTokenExpirationHandler}
+                    config={config}
+                    options={options}
+                    onMessage={messageHandler}
+                    onError={errorHandler}
+                />
+            }
             <div className={'container-my'} style={{paddingTop: '100px'}}>
                 <div className={'id_card'}>
                     <Image className={'kyc-image'} src={KycNewImage} alt={'kyc new'}></Image>
