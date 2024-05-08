@@ -19,6 +19,7 @@ import IconSecurity from '../../public/icon-security.png'
 import IconMyorder from '../../public/icon-myorder.png'
 import IconAddress from '../../public/icon-address.png'
 import IconElectfee from '../../public/icon-electfee.png'
+import IconKyc from '../../public/icon-kyc.png'
 
 
 const HoverContent = ({outState, onLogOut}: {
@@ -30,7 +31,7 @@ const HoverContent = ({outState, onLogOut}: {
         {
             text: 'KYC认证',
             href: '/KYC',
-            icon: IconSecurity
+            icon: IconKyc
         },
         {
             text: '安全中心',
@@ -81,7 +82,7 @@ const HoverContent = ({outState, onLogOut}: {
                                         verticalAlign: 'middle',
                                         justifyContent: 'center'
                                     }} block type="text" size={"large"}>
-                                    <Image width={18} src={item.icon} alt={'avatar'} style={{
+                                    <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
                                         margin:'2px 8px 0 0'
                                     }}/>
 
