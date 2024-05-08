@@ -3,9 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {Button, Table} from 'antd';
 import type { TableProps } from 'antd';
 import Link from "next/link";
-
+import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
 
 import './index.css'
+import Image from "next/image";
 
 
 export interface OrderItem {
@@ -213,12 +214,13 @@ const calculator = () => {
                 expandable={{
                     expandedRowRender: (record) => renderExpandData(record),
                     rowExpandable: (record) => true,
-                    expandIcon: ({ expanded, onExpand, record }) =>
-                        expanded ? (
-                            <div onClick={e => onExpand(record, e)} >up</div>
-                        ) : (
-                            <div onClick={e => onExpand(record, e)}>down</div>
-                        )
+                    expandIcon: ({expanded, onExpand, record}) =>
+                        <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => onExpand(record, e)}>
+                            <Image style={{
+                                rotate: expanded ? '180deg': '0deg',
+                                transition: 'all 0.3s'
+                            }} src={ArrowUpOutlineBlack} alt={'arrow'} width={8}/>
+                        </div>
                 }}
             />
         </div>

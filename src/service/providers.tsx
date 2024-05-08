@@ -81,13 +81,13 @@ const Header: React.FC = () => {
     const {state, dispatch} = useContext(MyContext)
     const router = useRouter();
     const logOut = () => {
+        router.replace('/')
         logout().then(() => {
             // @ts-ignore
             dispatch({
                 type: ActionType.setUserInfo,
                 payload: {}
             })
-            router.replace('/')
         })
     }
     useEffect(() => {

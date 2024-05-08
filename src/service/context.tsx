@@ -26,7 +26,7 @@ export const initialState: State = {
         uid: "",
         identity: {
             fail_reason: "",
-            status: 0
+            status: -1
         },
         address: []
     },
