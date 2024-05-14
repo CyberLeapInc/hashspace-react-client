@@ -24,7 +24,9 @@ const KYC = () => {
         console.log('exp')
         return Promise.resolve('1')
     }
-    const config = {}
+    const config = {
+        lang: 'zh'
+    }
     const options = {}
     const messageHandler = (v: any) => {
         console.log(v)

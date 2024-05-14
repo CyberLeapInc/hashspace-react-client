@@ -5,14 +5,13 @@ import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
 import {ActionType, MyContext} from "@/service/context";
 import { useRouter } from 'next/navigation';
 import Logo from '../../../public/logo.png'
+import {cloudFlareSiteKey} from "@/lib/constant";
 
 
 import {Turnstile} from '@marsidev/react-turnstile'
 import {getLoginCode, getUserInfo, login, startLogin} from "@/service/api";
 import './index.css';
 import Image from "next/image";
-
-const SITE_KEY = '0x4AAAAAAAVuhgDN4FXyZAFb';
 
 type FieldType = {
     username?: string;
@@ -110,7 +109,7 @@ const CryptoPage: React.FC = () => {
                                             setStatus('solved')
                                             setCloudFlareToken(token)
                                         }}
-                                        siteKey={SITE_KEY}
+                                        siteKey={cloudFlareSiteKey}
                                     />
                                 }
                                 <Button

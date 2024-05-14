@@ -1,7 +1,7 @@
 'use client'
 import React, {useContext, useEffect, useState} from "react";
-import {Table, Button, Card, Flex, Space} from "antd";
-import {MyContext} from "@/service/context";
+import {Table, Button, Card, Flex, Space, Modal} from "antd";
+import {ActionType, MyContext} from "@/service/context";
 import IconGoogle from '../../../public/icon-google.png'
 import IconPhone from '../../../public/icon-phone.png'
 import DividerCus from "@/components/ui/dividerCus";
@@ -9,7 +9,10 @@ import DividerCus from "@/components/ui/dividerCus";
 import './index.css'
 import Image from "next/image";
 import {cn} from "@/lib/utils";
-import {getLoginHistory, LoginHistoryItem} from "@/service/api";
+import {useOnMountUnsafe} from "@/lib/clientUtils";
+import {getLoginHistory, getUserInfo, LoginHistoryItem, startTotp} from "@/service/api";
+import {TwoFactorAuth, UnbindTowFactorAuth} from "@/components/TwoFactorAuth";
+import {PhoneBind} from "@/components/PhoneBind";
 
 
 
@@ -46,14 +49,70 @@ const columns = [
     },
 ];
 
-const SecurityCenter = () => {
-    const {state} = useContext(MyContext);
+
+
+const SecurityCenter: React.FC = () => {
+    const {state, dispatch} = useContext(MyContext);
+    const [isModalOpen, setIsOpenModal] =  useState(false);
+    const [isShowUnbindTotpModal, setIsShowUnbindTotpModal] =  useState(false);
+    const [isShowBindPhone, setIsShowBindPhone] =  useState(false);
+    const [isShowUnbindPhone, setIsShowUnbindPhone] =  useState(false);
     let [list, setList] = useState<LoginHistoryItem[]>([])
-    useEffect(() => {
+    let [counter, setCounter] = useState(0)
+    const closeModal = () => {
+        setCounter(counter + 1)
+        setIsOpenModal(false)
+    }
+    const handleOnSuccess = () => {
+        closeModal()
+        getUserInfo().then(res => {
+            dispatch({
+                type: ActionType.setUserInfo,
+                payload: res
+            })
+        })
+    }
+    const handleOnBindPhoneSuccess = () => {
+        setCounter(counter+1)
+        setIsShowBindPhone(false)
+        getUserInfo().then(res => {
+            dispatch({
+                type: ActionType.setUserInfo,
+                payload: res
+            })
+        })
+    }
+    const handleOnUnbindTotpSuccess =() => {
+        setCounter(counter+1)
+        setIsShowUnbindTotpModal(false)
+        getUserInfo().then(res => {
+            dispatch({
+                type: ActionType.setUserInfo,
+                payload: res
+            })
+        })
+    }
+    const handleBindGoogle = () => {
+        if (state.userInfo.has_totp === false) {
+            setIsOpenModal(true);
+        } else {
+            setIsShowUnbindTotpModal(true);
+        }
+    }
+    const handleBindPhone = () => {
+        if (!state.userInfo.has_phone) {
+            setIsShowBindPhone(true)
+        } else {
+            setIsShowUnbindPhone(true);
+        }
+    }
+    useOnMountUnsafe(() => {
+
         getLoginHistory().then(res => {
             setList(res.list)
         })
-    },[])
+        return () => {}
+    })
     return <div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px',paddingBottom: '25px'}}>
         {state.userInfo.email && <div className={'container-my'}>
             <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
@@ -96,7 +155,7 @@ const SecurityCenter = () => {
                                 <DividerCus margin={6} visible={false}></DividerCus>
                                 <div>保护你的账户安全</div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '7px'}}>
+                            <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={handleBindGoogle}>
                                 {
                                     state.userInfo.has_totp ? <Button shape={"round"} type={"text"} style={{
                                         height: '44px',
@@ -124,13 +183,16 @@ const SecurityCenter = () => {
                                 <DividerCus margin={6} visible={false}></DividerCus>
                                 <div>保护你的账户安全</div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '7px'}}>
+                            <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={() => {
+                                setCounter(++counter)
+                                setIsShowBindPhone(true)
+                            }}>
                                 {
                                     state.userInfo.phone_number ? <Button shape={"round"} type={"text"} style={{
                                         height: '44px',
                                         width: '136px',
                                         fontSize: '14px'
-                                    }}>解绑</Button> : <Button shape={"round"} type={"primary"} style={{
+                                    }}>换绑</Button> : <Button shape={"round"} type={"primary"} style={{
                                         height: '44px',
                                         width: '136px',
                                         fontSize: '14px'
@@ -155,6 +217,18 @@ const SecurityCenter = () => {
 
             </Space>
         </div>}
+        <Modal title={'Google验证'} open={isModalOpen} style={{maxHeight: '600px'}} width={820} onCancel={() => closeModal()} footer={''}>
+            {isModalOpen && <TwoFactorAuth key={counter} onSuccess={() => handleOnSuccess()}></TwoFactorAuth>}
+        </Modal>
+        <Modal title={'解绑Google验证'} open={isShowUnbindTotpModal} width={420} footer={''} onCancel={() => {
+            setIsShowUnbindTotpModal(false)
+            setCounter(counter+1)
+        }}>
+            <UnbindTowFactorAuth  key={counter} onSuccess={() =>handleOnUnbindTotpSuccess()}></UnbindTowFactorAuth>
+        </Modal>
+        <Modal title={'绑定手机号'} open={isShowBindPhone} width={420} footer={''} onCancel={() => setIsShowBindPhone(false)}>
+            <PhoneBind onSuccess={() => handleOnBindPhoneSuccess()} key={counter}></PhoneBind>
+        </Modal>
     </div>
 }
 

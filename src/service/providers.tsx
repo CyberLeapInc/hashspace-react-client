@@ -72,7 +72,7 @@ const HoverContent = ({outState, onLogOut}: {
                     <DividerCus></DividerCus>
                     {
                         routerLinkList.map(item => (
-                            <>
+                            <div key={item.text}>
                                 <Button
                                     key={item.text}
                                     style={{
@@ -89,7 +89,7 @@ const HoverContent = ({outState, onLogOut}: {
                                     <Link href={item.href}>{item.text}</Link>
                                 </Button>
                                 <DividerCus></DividerCus>
-                            </>
+                            </div>
                         ))
                     }
                     <div>
@@ -160,14 +160,14 @@ const Header: React.FC = () => {
                         测试连接/购买详情
                     </Link>
                     {
-                        !state.userInfo.email && <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>
+                        !(state?.userInfo?.email) && <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>
                             <Link href="/login" legacyBehavior passHref>
                                 开始挖矿
                             </Link>
                         </Button>
                     }
                     {
-                        state.userInfo.email && (
+                        (state?.userInfo?.email) && (
                             <Popover content={() => <HoverContent outState={state} onLogOut={logOut}/>}>
                                 <Image  style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'} />
                                 {/*<Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />*/}

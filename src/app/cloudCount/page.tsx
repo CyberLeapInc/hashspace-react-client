@@ -1,91 +1,48 @@
 'use client'
-import React from "react";
+import React, {useState} from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import './index.css'
 import {Button} from "@/components/ui/button";
+import {useOnMountUnsafe} from "@/lib/clientUtils";
+import {getProductList, GoodListItem} from "@/service/api";
 
-const MockData = [ {
-    title: 'test title',
-    summary: 'summary',
-    desc: 'desc',
-    type: 'SHA256(BTC)',
-    date: '2000/00/00-2000/00/00',
-    power: '29.5',
-    powerFeePerDay: '0.0088',
-    gainPerDay: '123',
-    minBuy: 'n',
-    profit: '2333'
-},{
-    title: 'test title',
-    summary: 'summary',
-    desc: 'desc',
-    type: 'SHA256(BTC)',
-    date: '2000/00/00-2000/00/00',
-    power: '29.5',
-    powerFeePerDay: '0.0088',
-    gainPerDay: '123',
-    minBuy: 'n',
-    profit: '2333'
-},{
-    title: 'test title',
-    summary: 'summary',
-    desc: 'desc',
-    type: 'SHA256(BTC)',
-    date: '2000/00/00-2000/00/00',
-    power: '29.5',
-    powerFeePerDay: '0.0088',
-    gainPerDay: '123',
-    minBuy: 'n',
-    profit: '2333'
-},{
-    title: 'test title',
-    summary: 'summary',
-    desc: 'desc',
-    type: 'SHA256(BTC)',
-    date: '2000/00/00-2000/00/00',
-    power: '29.5',
-    powerFeePerDay: '0.0088',
-    gainPerDay: '123',
-    minBuy: 'n',
-    profit: '2333'
-},]
 // @ts-ignore
-const Card = function ({data}) {
+const Card = function ({data}: {data: GoodListItem}) {
     return (
         <div className="card-single">
             <div className="card-single-top">
-                <div className={'card-single-top-a'}>{data.title}</div>
-                <div className={'card-single-top-b'}>$ {data.summary}/T</div>
-                <div className={'card-single-top-c'}>{data.desc}</div>
+                <div className={'card-single-top-a'}>{data.name}</div>
+                <div className={'card-single-top-b'}>$ {(data.price||'').slice(0, 4)}/{data.unit}</div>
+                <div className={'card-single-top-c'}>{data.description}</div>
             </div>
             <div className="card-single-bottom">
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">{data.summary}</div>
-                    <div className="card-single-bottom-value">{data.type}</div>
+                    <div className="card-single-bottom-label">算法</div>
+                    <div className="card-single-bottom-value">{data.algorithm}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">挖矿日期</div>
-                    <div className="card-single-bottom-value">{data.date}</div>
+                    <div className="card-single-bottom-value">{new Date(data.start_at * 1000 || 0).toLocaleDateString()} - {new Date(data.end_at * 1000 || 0).toLocaleDateString()}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">功耗</div>
-                    <div className="card-single-bottom-value">{data.powerFeePerDay}</div>
+                    <div className="card-single-bottom-value">{data.power_consumption}J/T</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日电费</div>
-                    <div className="card-single-bottom-value">{data.powerFeePerDay}</div>
+                    <div className="card-single-bottom-value">${data.daily_electricity}/T/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日收益</div>
-                    <div className="card-single-bottom-value">{data.gainPerDay}</div>
+                    <div className="card-single-bottom-value">${data.daily_income}/T/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">最小购买数量</div>
-                    <div className="card-single-bottom-value">{data.minBuy}</div>
+                    <div className="card-single-bottom-value">{data.max_qty}T</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">预期收益</div>
-                    <div className="card-single-bottom-value">{data.profit}</div>
+                    <div className="card-single-bottom-value">${data.income}</div>
                 </div>
 
             </div>
@@ -97,10 +54,26 @@ const Card = function ({data}) {
 }
 
 export default function CloudCount() {
+    const [list, setList] = useState<Array<any>>([])
+    const [listTwo, setListTow] = useState<Array<any>>([])
+
+    useOnMountUnsafe(() => {
+        getProductList().then(res=> {
+            res.goods.map(item => {
+                if (item.currency?.includes('BTC')) {
+                    setList(item.list || []);
+                } else {
+                    setListTow(item.list || [])
+                }
+            })
+        })
+    })
     return (
         <div style={{backgroundColor: '#F6F7F8'}}>
             <div className="container-my" style={{paddingBottom: '25px'}}>
-            <Tabs defaultValue="btc" className="container-tabs">
+            <Tabs defaultValue="btc" className="container-tabs" onChange={(e) => {
+                console.log(e.target)
+            }}>
                     <div style={{
                         margin: '0 auto',
                         width: '384px',
@@ -112,17 +85,17 @@ export default function CloudCount() {
                     </div>
                     <TabsContent value="btc" className={'card-tabs-content'}>
                         {
-                            MockData.map((item) => {
+                            list.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item} key={item.type}></Card>
+                                return <Card data={item} key={item.good_id}></Card>
                             })
                         }
                     </TabsContent>
                     <TabsContent value="ltc" className={'card-tabs-content'}>
                         {
-                            MockData.map((item) => {
+                            listTwo.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item} key={item.title}></Card>
+                                return <Card data={item} key={item.good_id}></Card>
                             })
                         }
                     </TabsContent>

@@ -27,7 +27,7 @@
     padding: 24px 20px;
 }
 .card-single-top-a{
-    font-family: PingFangSC, PingFang SC;
+
     font-weight: 600;
     font-size: 20px;
     color: #FFFFFF;
@@ -35,7 +35,7 @@
     font-style: normal;
 }
 .card-single-top-b{
-    font-family: Poppins, Poppins;
+
     font-weight: 600;
     font-size: 32px;
     color: #FFFFFF;
@@ -44,7 +44,7 @@
     margin: 12px 0;
 }
 .card-single-top-c{
-    font-family: PingFangSC, PingFang SC;
+
     font-weight: 400;
     font-size: 14px;
     color: #FFFFFF;
@@ -63,7 +63,6 @@
     margin-bottom: 16px;
 }
 .card-single-bottom-label{
-    font-family: PingFangSC, PingFang SC;
     font-weight: 400;
     font-size: 14px;
     color: #666666;
@@ -72,7 +71,7 @@
     font-style: normal;
 }
 .card-single-bottom-value{
-    font-family: PingFangSC, PingFang SC;
+
     font-weight: 400;
     font-size: 14px;
     color: #000000;

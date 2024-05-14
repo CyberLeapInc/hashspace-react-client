@@ -1,0 +1,14 @@
+.code-sender-wrapper{
+    display: flex;
+    height: 52px;
+    border-radius: 12px;
+    border: 1px solid #A1A3AB;
+    transition: all 0.3s;
+}
+.code-sender-wrapper-focus{
+    border: 1px solid #1677ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+}
+.code-sender-wrapper-error{
+    border: 1px solid red;
+}

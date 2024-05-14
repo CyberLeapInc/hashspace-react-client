@@ -1,0 +1,37 @@
+.step-row{
+    display: flex;
+    line-height: 24px;
+}
+.step-index{
+    width: 30px;
+    height: 30px;
+    color:#3C53FF;
+    background-color: rgba(60, 83, 255, 0.1);
+    border-radius: 15px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 10px;
+}
+.step-intro{
+    line-height: 24px;
+    padding-top: 3px;
+    flex: 1;
+    word-wrap:break-word;
+}
+.step-danger{
+    font-weight: 400;
+    font-size: 14px;
+    color: #EA2A2A;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+.step-info{
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+    margin-bottom: 24px;
+}
