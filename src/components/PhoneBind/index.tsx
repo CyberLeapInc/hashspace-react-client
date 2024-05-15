@@ -176,7 +176,7 @@ export const PhoneBind = ({
                 height: '50px',
                 marginTop: '40px'
             }}
-            disabled={!(code.length === 6&& currentCode.length === 6 && !currentCodeErrorStatus && !codeErrorStatus && !loading)}
+            disabled={!(code.length === 6 && !codeErrorStatus && !loading) || (state.userInfo.has_phone && currentCode.length !== 6 && currentCodeErrorStatus)}
             onClick={onConfirm}
             loading={loading}
         >确认绑定</Button>
