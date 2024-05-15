@@ -37,14 +37,25 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
     })
 }
 
+// 路由白名单
+// 目前是【首页 云算力 常见问题 计算器 关于】
+const whiteList = [
+    '',
+    '/',
+    '/cloudCount',
+    '/calculator',
+    '/login'
+]
+
 axiosInstance.interceptors.response.use((res) => {
-    console.log('bbbb')
-    console.log(res)
     return res.data
 }, (e) => {
     const {response} = e;
     switch (response.status) {
         case status.NOT_LOGIN:
+            if (!whiteList.includes(location.pathname)) {
+                location.replace('/')
+            }
             break;
         case status.BUSINESS_ERROR:
             return handleBusinessError(response.data)

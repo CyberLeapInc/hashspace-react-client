@@ -214,6 +214,7 @@ const Footer = () => {
     </>
 }
 
+
 export const Providers = ({ children }: { children: ReactNode }) => {
     return (
         <MyContextProvider>
