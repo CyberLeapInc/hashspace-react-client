@@ -34,15 +34,15 @@ const Card = function ({data}: {data: GoodListItem}) {
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日收益</div>
-                    <div className="card-single-bottom-value">${data.daily_income}/T/D</div>
+                    <div className="card-single-bottom-value">${(data.daily_income?.toString() || '').slice(0,12)}/T/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">最小购买数量</div>
-                    <div className="card-single-bottom-value">{data.max_qty}T</div>
+                    <div className="card-single-bottom-value">{(data.max_qty?.toString() || '').split('.')[0]}T</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">预期收益</div>
-                    <div className="card-single-bottom-value">${data.income}</div>
+                    <div className="card-single-bottom-value">${(data.income?.toString() || '').slice(0, 12)}</div>
                 </div>
 
             </div>
