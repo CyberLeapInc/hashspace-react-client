@@ -8,13 +8,14 @@ import { cn } from "@/lib/utils";
 interface Props {
     onSend: () => Promise<any>;
     onChange: (e: any) => void;
+    onError: (e: any) => void;
     value: string;
     disabled: boolean;
     errorStatus?: boolean
     label?: string;
 }
 
-export const CodeSender = ({ onSend, value, onChange, disabled, errorStatus = false, label = '验证码' }: Props) => {
+export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '验证码' }: Props) => {
     const TIMER_CONST = 60;
     const [focus, setFocus] = useState(false);
     const [timer, setTimer] = useState(0);
@@ -52,6 +53,7 @@ export const CodeSender = ({ onSend, value, onChange, disabled, errorStatus = fa
             message.success('验证码已发送');
         } catch (e) {
             message.error('发送验证码失败');
+            onError(e)
         } finally {
             setSending(false);
         }

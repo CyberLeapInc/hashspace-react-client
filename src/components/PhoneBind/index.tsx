@@ -14,6 +14,7 @@ export const PhoneBind = ({
 }: {
     onSuccess: () => void
 }) => {
+    const [captchaRefreshKey, setCaptchaRefreshKey] = React.useState(0)
     const {state} = useContext(MyContext)
     const [status, setStatus] = React.useState('')
     const [code, setCode] = useState('')
@@ -91,6 +92,10 @@ export const PhoneBind = ({
                         <Input disabled size={"large"}  bordered={false} style={{width: '80%'}} value={state.userInfo.phone_number} />
                     </div>
                     <CodeSender
+                        onError={() => {
+                            setStatus('no')
+                            setCaptchaRefreshKey(prevState => prevState+1)
+                        }}
                         errorStatus={currentCodeErrorStatus}
                         value={currentCode}
                         onChange={(e) => {
@@ -129,6 +134,10 @@ export const PhoneBind = ({
             }}/>
         </div>
         <CodeSender
+            onError={() => {
+                setStatus('no')
+                setCaptchaRefreshKey(prevState => prevState+1)
+            }}
             errorStatus={codeErrorStatus}
             label={
                 state.userInfo.has_phone? '新手机号验证码' : '验证码'
@@ -158,6 +167,7 @@ export const PhoneBind = ({
                     setCloudFlareToken(token)
                 }}
                 siteKey={cloudFlareSiteKey}
+                key={captchaRefreshKey}
             />
         }
         <Button

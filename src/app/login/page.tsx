@@ -28,9 +28,9 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 };
 
 const CryptoPage: React.FC = () => {
-    'use client'
     const [messageApi, contextHolder] = message.useMessage();
     const [status, setStatus] = React.useState('')
+    const [captchaRefreshKey, setCaptchaRefreshKey] = React.useState(0)
     const [email, setEmail] = React.useState('')
     const [code, setCode] = React.useState('')
     const [codeErrorStatus, setCodeErrorStatus] = useState(false);
@@ -73,6 +73,8 @@ const CryptoPage: React.FC = () => {
                 }
             })
         }).catch(e => {
+            setStatus('no')
+            setCaptchaRefreshKey(prevState => prevState+1)
             if (e.details.type === 'UserLocked') {
                 messageApi.open({
                     type: 'error',
@@ -105,6 +107,7 @@ const CryptoPage: React.FC = () => {
                 router.push(goTo)
             })
         }).catch(e => {
+
             if (e.details.type === 'SessionExpired') {
                 messageApi.open({
                     type: 'error',
@@ -160,6 +163,7 @@ const CryptoPage: React.FC = () => {
                                 ></Input>
                                 {
                                     status !== 'solved' && <Turnstile
+                                    key={captchaRefreshKey}
                                         onError={() => setStatus('error')}
                                         onExpire={() => {
                                             setStatus('expired')
