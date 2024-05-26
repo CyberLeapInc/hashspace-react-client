@@ -4,9 +4,13 @@ import {Button, Table} from 'antd';
 import type { TableProps } from 'antd';
 import Link from "next/link";
 import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
+import {getOrderList, OrderListItem, PageInfo} from "@/service/api";
 
 import './index.css'
 import Image from "next/image";
+import big from "big.js";
+import moment from "moment";
+import Clipboard from "@/components/Clipboard";
 
 
 export interface OrderItem {
@@ -135,10 +139,14 @@ const columns: TableProps<OrderItem>['columns'] = [
     {
         title: '订单时间',
         dataIndex: 'created_at',
+        render: (data) => {
+            return <div>{moment(data*1000).format('LLLL')}</div>
+        },
+        width: 200
     },
     {
         title: '订单ID',
-        dataIndex: 'name',
+        dataIndex: 'order_id',
     },
     {
         title: '套餐',
@@ -154,6 +162,9 @@ const columns: TableProps<OrderItem>['columns'] = [
     {
         title: '金额',
         dataIndex: 'hashrate_cost',
+        render: (text, record, index) => {
+            return <div>${big(record.hashrate_cost || '').toFixed(4)}</div>
+        }
     },
     {
         title: '状态',
@@ -162,7 +173,8 @@ const columns: TableProps<OrderItem>['columns'] = [
             // 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
             const res = ['待支付', '支付成功挖矿中', '支付超时', '挖矿结束']
             return (<span>{res[(record.state || 1 )- 1]}</span>)
-        }
+        },
+        width: 100
     },
     Table.EXPAND_COLUMN,
 ];
@@ -171,34 +183,96 @@ const data: DataType[] = [
 
 ];
 
+const PaymentStatus = ({status, link, source, goodId}: {status: number, link: string, source: string, goodId: string}) => {
+    switch (status) {
+        case 1:
+            return (<span style={{width: '100%'}}>
+                <Button type={"primary"} shape={"round"} href={link}>立即支付</Button>
+            </span>)
+        case 2:
+            return (
+                <div>
+                    <div>已支付</div>
+                    <div>
+                        TXID: <Clipboard str={source} />
+                    </div>
+                </div>
+            )
+        case 3:
+            return (
+                <Button>
+                    <Link href={`/productDetail?good_id=${goodId}`}>重新购买</Link>
+                </Button>
+            )
+        default:
+            return <span>{source}</span>
+    }
+}
+
 const renderExpandData= (data: any) => {
     return (<div className={'row-detail'}>
         <div>币种: {data.good?.currency}</div>
-        <div>合约费用：{data.hashrate_cost}</div>
-        <div>支付状态: {data.state}</div>
-        <div>算力：{data.hashrate}</div>
-        <div>电费: {data.electricity_cost}</div>
-        <div>TXID: {data.address}</div>
-        <div>计算公式：{data.currency}</div>
-        <div>合计费用：{data.cost}</div>
+        <div>合约费用：<span className={'smallCost'}>${big(data.hashrate_cost).toFixed(4)}</span></div>
+        <div>支付状态: {<PaymentStatus goodId={data.good.good_id} status={data.state} link={data.payment_link}
+                                       source={data.payment_link_source}/>}</div>
+        <div>算力：{data.hashrate}{data.good.unit}</div>
+        <div>电费: <span className={'smallCost'}>${big(data.electricity_cost).toFixed(4)}</span></div>
         <div></div>
-        <div>日期： {new Date(data.start_at || 0).toLocaleString()} - {new Date(data.end_at || 0).toLocaleString()}</div>
-        <div style={{
-            position: 'absolute',
-            top: '-8px',
-            right: '0'
-        }}>
-            <Button type={"link"}>
-                <Link href={'/orderInfo'}>
-                    订单详情 {'>'}
-                </Link>
-            </Button>
-        </div>
+        <div>算法：{data.good.algorithm}</div>
+        <div>合计费用：<span style={{
+            fontWeight: 'bold',
+            fontSize: '20px',
+            color: '#333333',
+        }}>${big(data.cost).toFixed(4)}</span></div>
+        <div></div>
+        <div
+            style={{width: '600px'}}>挖矿日期： {new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</div>
+        {
+            data.state === 2 && <div style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '0'
+            }}>
+                <Button type={"link"}>
+                    <Link href={'/orderInfo'}>
+                        订单详情 {'>'}
+                    </Link>
+                </Button>
+            </div>
+        }
     </div>)
 }
 
 
-const calculator = () => {
+const MyOrder = () => {
+    const [orderList, setOrderList] = useState<OrderListItem[]>([]);
+    const [pageInfo, setPageInfo] = useState<PageInfo>({page: 1, page_size: 20, total_page: 1, total_count: 0})
+    const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+
+    const handleExpand = (record: any) => {
+        const keys = [...expandedRowKeys];
+        // @ts-ignore
+        const index = keys.indexOf(record.order_id);
+
+        if (index >= 0) {
+            // 如果行已经展开，折叠它
+            keys.splice(index, 1);
+        } else {
+            // 如果行已经折叠，展开它
+            // @ts-ignore
+            keys.push(record.order_id);
+        }
+
+        setExpandedRowKeys(keys);
+    };
+
+    useEffect(() => {
+        getOrderList(1, 20).then(res => {
+            setOrderList(res.list);
+            setPageInfo(res.pagination)
+        })
+
+    }, [setOrderList, getOrderList])
     const onFormLayoutChange = (v: string) => {
         console.log(v)
     }
@@ -209,13 +283,14 @@ const calculator = () => {
             <Table
                 // @ts-ignore
                 columns={columns}
-                dataSource={list}
-                rowKey={'start_at'}
+                dataSource={orderList}
+                rowKey={'order_id'}
                 expandable={{
+                    expandedRowKeys: expandedRowKeys,
                     expandedRowRender: (record) => renderExpandData(record),
                     rowExpandable: (record) => true,
                     expandIcon: ({expanded, onExpand, record}) =>
-                        <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => onExpand(record, e)}>
+                        <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => handleExpand(record)}>
                             <Image style={{
                                 rotate: expanded ? '180deg': '0deg',
                                 transition: 'all 0.3s'
@@ -227,4 +302,4 @@ const calculator = () => {
     </div>
 }
 
-export default calculator;
+export default MyOrder;

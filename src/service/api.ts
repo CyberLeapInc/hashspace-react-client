@@ -618,3 +618,119 @@ export interface PaymentResultResponse {
 export const getPaymentResult = (id: string): Promise<PaymentResultResponse> => {
     return axiosInstance.get(`/api/auth/user/payment/${id}`)
 }
+
+export interface OrderListResponse {
+    list: OrderListItem[];
+    pagination: PageInfo;
+    [property: string]: any;
+}
+
+export interface OrderListItem {
+    /**
+     * 总费用，例如：$120.9
+     */
+    cost?: string;
+    /**
+     * 日期
+     */
+    created_at?: number;
+    /**
+     * 电费，例如：$30
+     */
+    electricity_cost?: string;
+    /**
+     * 挖矿结束
+     */
+    end_at?: number;
+    /**
+     * 云算力合约产品详情
+     */
+    good?: OrderGood;
+    /**
+     * 算力，如：100 T，单位为{good.unit}
+     */
+    hashrate?: string;
+    /**
+     * 合约费用，例如:  $90
+     */
+    hashrate_cost?: string;
+    /**
+     * 订单ID，如：E202323121312
+     */
+    order_id: string;
+    /**
+     * 支付到期时间
+     */
+    payment_expired_at?: number;
+    /**
+     *
+     * 支付完成的地址链接，例如：https://www.blockchain.com/explorer/addresses/btc/bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+     */
+    payment_link: string;
+    /**
+     * 支付的地址，如：bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+     */
+    payment_link_source: string;
+    /**
+     * 挖矿开始
+     */
+    start_at?: number;
+    /**
+     * 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
+     */
+    state?: number;
+}
+
+/**
+ * 云算力合约产品详情
+ */
+export interface OrderGood {
+    algorithm: string;
+    currency: string[];
+    daily_electricity: string;
+    daily_income: string;
+    description: string;
+    end_at: number;
+    good_id: string;
+    income: string;
+    max_qty: string;
+    min_qty: string;
+    name: string;
+    power_consumption: string;
+    price: string;
+    remain_qty: string;
+    start_at: number;
+    step_qty: string;
+    unit: string;
+}
+
+/**
+ * 分页
+ */
+export interface PageInfo {
+    /**
+     * 页数
+     */
+    page: number;
+    /**
+     * 每夜数量
+     */
+    page_size: number;
+    /**
+     * 总数量
+     */
+    total_count: number;
+    /**
+     * 总页数
+     */
+    total_page: number;
+}
+
+export const getOrderList = (page = 1, pageSize = 20): Promise<OrderListResponse> => {
+    return axiosInstance.get('/api/auth/user/order', {
+        params: {
+            page,
+            page_size: pageSize
+        }
+    })
+}
