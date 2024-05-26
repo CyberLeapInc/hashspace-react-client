@@ -10,6 +10,10 @@ import {BuyProduct, BuyProductProp} from "@/components/BuyProduct";
 import NumberSelector from "@/components/NumberSelector";
 import big from "big.js";
 import {CheckboxChangeEvent} from "antd/es/checkbox";
+import BTC from '../../../public/btc.svg'
+import DOGE from '../../../public/doge.svg'
+import LTC from '../../../public/ltc.svg'
+import Image from "next/image";
 
 const option = {
     xAxis: {
@@ -45,6 +49,8 @@ const ProductDetail = () => {
     const [goodDetail, setGoodDetail] = useState<GoodDetail>()
     const [goodId, setGoodId] = useState('')
     const [targetPrice, setTargetPrice] = useState(0)
+    const [targetDogePrice, setDogeTargetPrice] = useState(0)
+    const [targetLtcPrice, setLtcTargetPrice] = useState(0)
     const [isShowBuyProduct, setIsShowBuyProduct] = useState(false)
     const [buyCount, setBuyCount] = useState(0)
     const [buyDays,setBuyDays] = useState(DEFAULT_BUY_DAYS)
@@ -55,8 +61,28 @@ const ProductDetail = () => {
     const [checkboxValue, setCheckboxValue] = useState(false)
     const [buyProductKey, setBuyProductKey] = useState(0)
 
-    const onTargetPriceChange = (v: number) => {
-        setTargetPrice(v)
+    const getImage = (currency: string) => {
+        if (currency === 'BTC') return BTC;
+        if (currency === 'DOGE') return DOGE;
+        if (currency === 'LTC') return LTC;
+    }
+
+    const getPrice = (currency: string) => {
+        if (currency === 'DOGE') return targetDogePrice
+        if (currency === 'LTC') return targetLtcPrice
+    }
+
+    const onTargetPriceChange = (v: number, type = 'BTC') => {
+        if (type === 'BTC') {
+            setTargetPrice(v)
+        }
+        if (type === 'DOGE') {
+            setDogeTargetPrice(v)
+        }
+        if (type === 'LTC') {
+            setLtcTargetPrice(v)
+        }
+
     }
     const handleBuyCountChange= (v: number) => {
         setBuyCount(v);
@@ -143,15 +169,15 @@ const ProductDetail = () => {
                 <div className={css.productDetailWrapper}>
                     <div className={css.left}>
                         <div className={css.block}>
-                            <div className={css.productTitle}>s19jpro</div>
+                            <div className={css.productTitle}>S19J Pro</div>
                             <div className={css.productInfo}>
-                                <span>106t</span>
+                                <span>106T</span>
                                 <Divider orientationMargin={40} style={{height: '25px',marginLeft: '40px', marginRight: '40px'}} type={'vertical'}/>
-                                <span>19.5j/t</span>
+                                <span>19.5J/T</span>
                                 <Divider orientationMargin={40} style={{height: '25px',marginLeft: '40px', marginRight: '40px'}} type={'vertical'}/>
-                                <span>2068w</span>
+                                <span>2068W</span>
                             </div>
-                            <div style={{height: '220px'}}>{goodId}</div>
+                            <div style={{height: '220px',lineHeight: '220px', textAlign: 'center'}}>产品{goodId}对应的图片展示在这里</div>
                         </div>
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px'}}>
                             <div className={cn(css.chart, css.block)}>
@@ -163,19 +189,52 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                             <div className={cn(css.block)}>
-                                <div className={css.tip}>左右滑动调整价格</div>
-                                <div className={css.coinImg}>btc image</div>
-                                <Slider min={0} max={200000} value={targetPrice} onChange={onTargetPriceChange} defaultValue={30} disabled={false} />
-                                <div className={css.coinText}>预期BTC价格 <span style={{color: '#3c53ff', fontWeight: 'bold'}}>${targetPrice}</span></div>
+                                {goodDetail?.currency.length === 1 && (
+                                    <div>
+                                        <div className={css.tip}>左右滑动调整价格</div>
+                                        <div className={css.coinImg}><Image src={BTC} alt={'btc'}/></div>
+                                        <Slider min={0} max={200000} value={targetPrice} onChange={onTargetPriceChange}
+                                                defaultValue={30} disabled={false}/>
+                                        <div className={css.coinText}>预期BTC价格 <span
+                                            style={{color: '#3c53ff', fontWeight: 'bold'}}>${targetPrice}</span></div>
+                                    </div>
+                                )}
+                                {
+                                    goodDetail?.currency.length === 2 && (
+                                        <div>
+                                            <div className={css.tip}>左右滑动调整价格</div>
+                                            {goodDetail.currency.map(currency => {
+                                                return (
+                                                    <div key={currency}>
+                                                    <div className={css.inlineSlider} >
+                                                        <Image className={css.inlineCoinImg} src={getImage(currency)} alt={'btc'}/>
+                                                        <Slider style={{flex: 1}} min={0} max={200000}
+                                                                onChange={(v) => onTargetPriceChange(v, currency)}
+                                                                defaultValue={30} disabled={false}/>
+                                                    </div>
+                                                    <div>
+                                                        <div className={cn(css.coinText, css.coinTextLittle)} style={{textAlign: "left"}}>预期{currency}价格 <span
+                                                            style={{
+                                                                color: '#3c53ff',
+                                                                fontWeight: 'bold'
+                                                            }}>${getPrice(currency)}</span></div>
+                                                    </div>
+                                                </div>)
+                                            })}
+                                        </div>
+                                    )
+                                }
+
                             </div>
                         </div>
                     </div>
                     <div style={{flex: 1}}>
                         <div className={css.productName}>{goodDetail?.name}</div>
-                        <div className={css.date} suppressHydrationWarning>{getLocalDate(goodDetail?.start_at)} - {getLocalDate(goodDetail?.end_at)}</div>
+                        <div className={css.date}
+                             suppressHydrationWarning>{getLocalDate(goodDetail?.start_at)} - {getLocalDate(goodDetail?.end_at)}</div>
                         <div className={css.card}>
                             <div className={css.row}>
-                                <div className={css.label}>选择数量</div>
+                            <div className={css.label}>选择数量</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         unit={goodDetail?.unit || ''}

@@ -3,7 +3,7 @@
 import React, {ReactNode, useContext, useEffect} from "react";
 import {ActionType, MyContext, MyContextProvider} from "@/service/context";
 import Link from "next/link";
-import {Avatar, Button, Popover, Space} from "antd";
+import {Avatar, Button, Popover, Space,ConfigProvider} from "antd";
 import {UserOutlined} from '@ant-design/icons';
 import Image from "next/image";
 import TwitterPic from "../../public/twitter@2x.png";
@@ -218,9 +218,25 @@ const Footer = () => {
 export const Providers = ({ children }: { children: ReactNode }) => {
     return (
         <MyContextProvider>
-            <Header/>
-            {children}
-            <Footer />
+            <ConfigProvider
+                theme={{
+                    components: {
+                        Slider: {
+                            /* 这里是你的组件 token */
+                            handleColor: 'black',
+                            trackBg: 'black',
+                            trackHoverBg: 'black',
+                            dotActiveBorderColor: 'black',
+                            handleActiveColor: 'black',
+                        },
+                    },
+                }}
+            >
+                <Header/>
+                {children}
+                <Footer />
+            </ConfigProvider>
+
         </MyContextProvider>
     )
 }

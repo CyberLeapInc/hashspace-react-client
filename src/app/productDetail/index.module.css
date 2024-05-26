@@ -81,12 +81,25 @@
     width: 60px;
     margin: 15px auto;
 }
+.inlineSlider{
+    display: flex;
+}
+.inlineCoinImg{
+    height: 28px;
+    width: 28px;
+    margin-top: 4px;
+    margin-right: 10px;
+}
 .coinText{
     font-weight: 400;
     font-size: 14px;
     color: #333333;
     line-height: 20px;
     text-align: center;
+}
+.coinTextLittle{
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 .card{
     background: #FFFFFF;
