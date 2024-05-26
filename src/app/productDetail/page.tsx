@@ -76,6 +76,25 @@ const ProductDetail = () => {
             setIsShowBuyProduct(state)
         })
     }
+    const medianAndMax = (min: number, max: number, step: number) => {
+        let values = [];
+        for(let i = min; i <= max; i += step) {
+            values.push(i);
+        }
+
+        let median;
+        if (values.length % 2 === 0) { // 数组长度为偶数
+            median = (values[values.length / 2 - 1]);
+        } else { // 数组长度为奇数
+            median = values[(values.length - 1) / 2];
+        }
+
+        return {
+            max: values[values.length - 1],
+            median: median
+        };
+    }
+
     useEffect(() => {
         let tempGoodId = '';
         if (typeof window !== "undefined") {
@@ -86,7 +105,10 @@ const ProductDetail = () => {
         getProductDetail(tempGoodId).then(res => {
             setGoodDetail(res.item)
             setBuyCount(Number(res.item.min_qty))
-            setBtnValueList([Number(res.item.min_qty)||0, Math.floor((Number(res.item.max_qty) - Number(res.item.min_qty))/2), Number(res.item.max_qty || 100)])
+            const {
+                median,max
+            } = medianAndMax(Number(res.item.min_qty), Number(res.item.max_qty), Number(res.item.step_qty))
+            setBtnValueList([Number(res.item.min_qty)||0, median, max])
         })
         // getPublicMarket().then(res => {
         //     console.log(res)
