@@ -1,0 +1,22 @@
+.numberSelectorWrapper{
+    width: 356px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    line-height: 44px;
+    border: 1px solid rgba(233,233,233,0.76);
+    padding: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+.handler{
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+    color: rgba(60, 83, 255, 1);
+    background: rgba(60,83,255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+}

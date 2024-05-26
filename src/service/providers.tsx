@@ -144,7 +144,7 @@ const Header: React.FC = () => {
                     <Link href="/" legacyBehavior passHref>
                         首页
                     </Link>
-                    <Link href="/cloudCount" legacyBehavior passHref>
+                    <Link href="/productList" legacyBehavior passHref>
                         云算力
                     </Link>
                     {/*<Link href="/login" legacyBehavior passHref>*/}

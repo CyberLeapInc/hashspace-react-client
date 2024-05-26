@@ -1,0 +1,19 @@
+.wrapper{
+    height: 32px;
+    background: #F7F7F7;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 5px 0;
+}
+.wrapper:hover{
+    background: #F0F0F0;
+}
+.copyOutLine{
+    color: #3C53FF;
+}

@@ -5,6 +5,8 @@ import './index.css'
 import {Button} from "@/components/ui/button";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getProductList, GoodListItem} from "@/service/api";
+import big from 'big.js';
+import Link from "next/link";
 
 // @ts-ignore
 const Card = function ({data}: {data: GoodListItem}) {
@@ -26,34 +28,34 @@ const Card = function ({data}: {data: GoodListItem}) {
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">功耗</div>
-                    <div className="card-single-bottom-value">{data.power_consumption}J/T</div>
+                    <div className="card-single-bottom-value">{new big(data.power_consumption || 0).toFixed(2)}J/{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日电费</div>
-                    <div className="card-single-bottom-value">${data.daily_electricity}/T/D</div>
+                    <div className="card-single-bottom-value">${new big(data.daily_electricity || 0).toFixed(8)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日收益</div>
-                    <div className="card-single-bottom-value">${(data.daily_income?.toString() || '').slice(0,12)}/T/D</div>
+                    <div className="card-single-bottom-value">${new big(data.daily_income || 0).toFixed(8)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">最小购买数量</div>
-                    <div className="card-single-bottom-value">{(data.max_qty?.toString() || '').split('.')[0]}T</div>
+                    <div className="card-single-bottom-value">{new big(data['max_qty'] || 0).toFixed(2)}{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">预期收益</div>
-                    <div className="card-single-bottom-value">${(data.income?.toString() || '').slice(0, 12)}</div>
+                    <div className="card-single-bottom-value">${new big((data.income|| 0)).toFixed(3)}</div>
                 </div>
 
             </div>
             <Button className={
                 'round-primary-button button-286'
-            }>立即下单</Button>
+            }><Link href={`productDetail?good_id=${data.good_id}`}>立即下单</Link></Button>
         </div>
     )
 }
 
-export default function CloudCount() {
+export default function ProductList() {
     const [list, setList] = useState<Array<any>>([])
     const [listTwo, setListTow] = useState<Array<any>>([])
 

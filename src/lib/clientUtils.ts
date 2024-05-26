@@ -12,3 +12,8 @@ export function useOnMountUnsafe(effect: EffectCallback) {
         }
     }, [])
 }
+
+export const getLocalDate = (timeStamp :number | undefined = 0) => {
+    let d = timeStamp || 0;
+    return new Date(d * 1000).toLocaleDateString()
+}

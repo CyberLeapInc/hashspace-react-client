@@ -27,7 +27,7 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
             message: data.message,
             details: {
                 ...data.details[0],
-                type: data.details[0]['@type'].split('.')[4]
+                type: data.details[0]? data.details[0]['@type'] ? data.details[0]['@type'].split('.')[4] : '' : '',
             }
         })
     }
@@ -42,7 +42,7 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
 const whiteList = [
     '',
     '/',
-    '/cloudCount',
+    '/productList',
     '/calculator',
     '/login'
 ]
@@ -387,3 +387,234 @@ export const getProductList = (): Promise<GoodListResponse> => {
     return axiosInstance.get('/api/public/cloudhash')
 }
 
+export interface GoodDetailResponse {
+    item: GoodDetail;
+    [property: string]: any;
+}
+
+export interface GoodDetail {
+    /**
+     * 算法
+     */
+    algorithm: string;
+    /**
+     * 可挖矿币种
+     */
+    currency: string[];
+    /**
+     * 日电费
+     */
+    daily_electricity: string;
+    /**
+     * 日收益
+     */
+    daily_income: string;
+    /**
+     * 描述
+     */
+    description: string;
+    /**
+     * 结束时间
+     */
+    end_at: number;
+    /**
+     * 云算力ID
+     */
+    good_id: string;
+    /**
+     * 预期收益
+     */
+    income: string;
+    /**
+     * 最大购买量
+     */
+    max_qty: string;
+    /**
+     * 最小购买量
+     */
+    min_qty: string;
+    /**
+     * 商品名
+     */
+    name: string;
+    /**
+     * 功耗
+     */
+    power_consumption: string;
+    /**
+     * 算力单价
+     */
+    price: string;
+    /**
+     * 总剩余可买
+     */
+    remain_qty: string;
+    /**
+     * 开始时间
+     */
+    start_at: number;
+    /**
+     * 购买量步长
+     */
+    step_qty: string;
+    /**
+     * 算力单位 T。G
+     */
+    unit: string;
+    [property: string]: any;
+}
+
+export const getProductDetail = (goodId: string): Promise<GoodDetailResponse> => {
+    return axiosInstance.get(`/api/public/cloudhash/${goodId}`)
+}
+export interface PubInoRes {
+    /**
+     * 收款地址
+     */
+    payment_currency: PaymentCurrency[];
+    [property: string]: any;
+}
+
+export interface PaymentCurrency {
+    /**
+     * 币种，如BTC，LTC，USDT
+     */
+    currency: string;
+    /**
+     * 支持的网络，如：ERC20, TRC20
+     */
+    network: string[];
+    [property: string]: any;
+}
+export const getPubInfo = (): Promise<PubInoRes> => {
+    return axiosInstance.get(`/api/public/info`)
+}
+
+export interface PublicMarketResponse {
+    list: List[];
+    [property: string]: any;
+}
+
+export interface List {
+    /**
+     * 计算器初始化价格
+     */
+    calculator_init_price: string;
+    /**
+     * 计算器最大价格
+     */
+    calculator_max_price: string;
+    /**
+     * 计算器最小价格
+     */
+    calculator_min_price: string;
+    /**
+     * 计算器比价步长
+     */
+    calculator_price_step: string;
+    /**
+     * 币种
+     */
+    currency: string;
+    /**
+     * 难度
+     */
+    difficulty: string;
+    /**
+     * 最新价格
+     */
+    last_usdt_price: string;
+    /**
+     * 全网算力，需要转换为 K,M, G, T, P
+     */
+    network_hashrate: string;
+    [property: string]: any;
+}
+
+
+export const getPublicMarket = ():Promise<PublicMarketResponse> => {
+    return axiosInstance.get('/api/public/market', {})
+}
+
+
+export interface BuyProductReq {
+    /**
+     * 币种，如：USDT
+     */
+    currency: string;
+    /**
+     * 电费，如：$120； 电费=electricity_day * good.electricity_cost * hashrate_qty
+     */
+    electricity_cost: string;
+    /**
+     * 充值电费天数，如：10天;  限制 最小good.min_electricity_day;  步长为 good.step_electricity_day
+     */
+    electricity_day: number;
+    /**
+     * 下单购买的算力商品ID，如：BTC001
+     */
+    good_id: string;
+    /**
+     * 算力费用，如：$30； 算力费用=hashrate_qty*good.cost
+     */
+    hashrate_cost: string;
+    /**
+     * 购买算力数量，如：100 T; 限制 最小为 good.min_qty;  步长为 good.step_qty; 最大为 good.total_remain_qty
+     */
+    hashrate_qty: string;
+    /**
+     * 网络，如：ERC20
+     */
+    network: string;
+    /**
+     * 总费用，如：$150； 总费用=算力费用+电费
+     */
+    total_cost: string;
+    /**
+     * 交易ID,
+     * uuidv4。用于防止重复下单，如果遇到网络波动，下单失败，则可重新传入该trace_id。避免重复下单，如：8fcae8d5-1460-4543-b923-24c7aab7b358
+     */
+    trace_id: string;
+    [property: string]: any;
+}
+
+export interface BuyProductRes {
+    /**
+     * 收款地址
+     */
+    address: string;
+    /**
+     * 金额
+     */
+    amount: string;
+    /**
+     * 订单失效时间戳，秒级别
+     */
+    expired_at: number;
+    /**
+     * 订单号
+     */
+    order_id: string;
+    [property: string]: any;
+}
+
+export const buyProduct = (data:BuyProductReq): Promise<BuyProductRes> => {
+    return axiosInstance.post('/api/auth/cloudhash/buy', data)
+}
+
+export enum paymentResult {
+    paying=1,
+    done,
+    timeout
+}
+
+export interface PaymentResultResponse {
+    /**
+     * 支付状态，1-待支付；2-已支付；3-支付超时
+     */
+    state: paymentResult;
+    [property: string]: any;
+}
+export const getPaymentResult = (id: string): Promise<PaymentResultResponse> => {
+    return axiosInstance.get(`/api/auth/user/payment/${id}`)
+}
