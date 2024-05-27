@@ -533,7 +533,7 @@ export interface List {
 
 
 export const getPublicMarket = ():Promise<PublicMarketResponse> => {
-    return axiosInstance.get('/api/public/market', {})
+    return axiosInstance.post('/api/public/market', {})
 }
 
 

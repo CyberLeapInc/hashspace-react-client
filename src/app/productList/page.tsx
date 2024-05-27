@@ -7,6 +7,8 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getProductList, GoodListItem} from "@/service/api";
 import big from 'big.js';
 import Link from "next/link";
+import SoldOut from '../../../public/soldOut.png'
+import Image from "next/image";
 
 // @ts-ignore
 const Card = function ({data}: {data: GoodListItem}) {
@@ -48,7 +50,19 @@ const Card = function ({data}: {data: GoodListItem}) {
                 </div>
 
             </div>
-            <Button className={
+            {
+                Number(data.max_qty || 0) <= Number(data.min_qty || 0) && <Image src={SoldOut} alt={'soldOut'} style={{
+                    height: '80px',
+                    width: '80px',
+                    position: 'absolute',
+                    right: '40px',
+                    bottom: '80px'
+                }}/>
+            }
+
+            <Button
+                disabled={Number(data.max_qty || 0) <= Number(data.min_qty || 0)}
+                className={
                 'round-primary-button button-286'
             }><Link href={`productDetail?good_id=${data.good_id}`}>立即下单</Link></Button>
         </div>

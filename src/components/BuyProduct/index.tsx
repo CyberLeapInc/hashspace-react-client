@@ -245,7 +245,7 @@ export const BuyProduct = (data: BuyProductProp) => {
             step === Step.finish && (<div>
                 <div className={css.title}>支付详情</div>
                 <div className={css.tip}>待转账金额</div>
-                <div className={css.money}>$ {amount}</div>
+                <div className={css.money}>{currentCurrency.currency} {amount}</div>
                 <Counter timeLeft={duration} onCountFinish={setTimeStatus}/>
                 <div className={css.row}>
                     <div>订单ID</div>
