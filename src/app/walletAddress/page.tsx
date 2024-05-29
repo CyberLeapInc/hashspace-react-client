@@ -62,11 +62,16 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
     }
 
     const finish = () => {
-        let query =  {
-            code,session_id:sessionId,totp
+        let query: {
+            code: string;
+            session_id: string,
+            totp?: string,
+        }=  {
+            code,
+            session_id:sessionId,
         }
-        if (!state.userInfo.has_totp) {
-            delete query.totp;
+        if (state.userInfo.has_totp) {
+            query.totp = totp
         }
         bindAddressFinish(query).then(res => {
             console.log(res)
