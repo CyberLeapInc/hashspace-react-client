@@ -758,3 +758,7 @@ export const bindAddressFinish = (data: {
 }) => {
     return axiosInstance.post('/api/auth/address', data)
 }
+
+export const deleteOrder = (id: string) => {
+    return axiosInstance.delete(`/api/auth/user/order/${id}`)
+}

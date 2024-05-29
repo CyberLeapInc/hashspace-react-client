@@ -1,10 +1,11 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import {Button, Table} from 'antd';
+import {Button, Table, Modal} from 'antd';
 import type { TableProps } from 'antd';
 import Link from "next/link";
 import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
-import {getOrderList, OrderListItem, PageInfo} from "@/service/api";
+import {getOrderList, OrderListItem, PageInfo,deleteOrder} from "@/service/api";
+import {DeleteOutlined} from "@ant-design/icons";
 
 import './index.css'
 import Image from "next/image";
@@ -209,37 +210,62 @@ const PaymentStatus = ({status, link, source, goodId}: {status: number, link: st
     }
 }
 
-const renderExpandData= (data: any) => {
-    return (<div className={'row-detail'}>
-        <div>币种: {data.good?.currency}</div>
-        <div>合约费用：<span className={'smallCost'}>${big(data.hashrate_cost).toFixed(4)}</span></div>
-        <div>支付状态: {<PaymentStatus goodId={data.good.good_id} status={data.state} link={data.payment_link}
-                                       source={data.payment_link_source}/>}</div>
-        <div>算力：{data.hashrate}{data.good.unit}</div>
-        <div>电费: <span className={'smallCost'}>${big(data.electricity_cost).toFixed(4)}</span></div>
-        <div></div>
-        <div>算法：{data.good.algorithm}</div>
-        <div>合计费用：<span style={{
-            fontWeight: 'bold',
-            fontSize: '20px',
-            color: '#333333',
-        }}>${big(data.cost).toFixed(4)}</span></div>
-        <div></div>
-        <div
-            style={{width: '600px'}}>挖矿日期： {new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</div>
-        {
-            data.state === 2 && <div style={{
-                position: 'absolute',
-                top: '-8px',
-                right: '0'
-            }}>
-                <Button type={"link"}>
-                    <Link href={'/orderInfo'}>
-                        订单详情 {'>'}
-                    </Link>
-                </Button>
+
+
+const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: () => void) => {
+    const deleteRow = (row: OrderListItem) => {
+        deleteOrder(row.order_id).then(() => {
+            onDelete()
+        })
+    }
+    const confirm = () => {
+        modal.confirm({
+            title: '删除订单',
+            content: '您是否真的要删除订单，删除订单后将无法找回该订单？',
+            okText: '我再想想',
+            cancelText: '是',
+            onCancel: () => deleteRow(data),
+            onOk: () => console.log('ok')
+        });
+    };
+
+    return (<div>
+        <div className={'row-detail'}>
+            <div>币种: {data.good?.currency}</div>
+            <div>合约费用：<span className={'smallCost'}>${big(data.hashrate_cost).toFixed(4)}</span></div>
+            <div>支付状态: {<PaymentStatus goodId={data.good.good_id} status={data.state} link={data.payment_link}
+                                           source={data.payment_link_source}/>}</div>
+            <div>算力：{data.hashrate}{data.good.unit}</div>
+            <div>电费: <span className={'smallCost'}>${big(data.electricity_cost).toFixed(4)}</span></div>
+            <div></div>
+            <div>算法：{data.good.algorithm}</div>
+            <div>合计费用：<span style={{
+                fontWeight: 'bold',
+                fontSize: '20px',
+                color: '#333333',
+            }}>${big(data.cost).toFixed(4)}</span></div>
+            <div></div>
+            <div
+                style={{width: '600px'}}>挖矿日期： {new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}
             </div>
-        }
+            <div className={'delOrderBtn'}>
+                <Button type={"text"} icon={<DeleteOutlined/>} onClick={confirm}>删除订单</Button>
+            </div>
+            {
+                data.state === 2 && <div style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    right: '0'
+                }}>
+                    <Button type={"link"}>
+                        <Link href={'/orderInfo'}>
+                            订单详情 {'>'}
+                        </Link>
+                    </Button>
+                </div>
+            }
+        </div>
+        {contextHolder}
     </div>)
 }
 
@@ -248,6 +274,8 @@ const MyOrder = () => {
     const [orderList, setOrderList] = useState<OrderListItem[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>({page: 1, page_size: 20, total_page: 1, total_count: 0})
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+    const [modal, contextHolder] = Modal.useModal();
+
 
     const handleExpand = (record: any) => {
         const keys = [...expandedRowKeys];
@@ -273,11 +301,14 @@ const MyOrder = () => {
         })
 
     }, [setOrderList, getOrderList])
-    const onFormLayoutChange = (v: string) => {
-        console.log(v)
+    const onDelete = () => {
+        getOrderList(1, 20).then(res => {
+            setOrderList(res.list);
+            setPageInfo(res.pagination)
+        })
     }
 
-    return <div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px'}}>
+    return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>
             <Table
@@ -287,7 +318,7 @@ const MyOrder = () => {
                 rowKey={'order_id'}
                 expandable={{
                     expandedRowKeys: expandedRowKeys,
-                    expandedRowRender: (record) => renderExpandData(record),
+                    expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete),
                     rowExpandable: (record) => true,
                     expandIcon: ({expanded, onExpand, record}) =>
                         <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => handleExpand(record)}>
