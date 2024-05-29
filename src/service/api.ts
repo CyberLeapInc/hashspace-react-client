@@ -734,3 +734,27 @@ export const getOrderList = (page = 1, pageSize = 20): Promise<OrderListResponse
         }
     })
 }
+
+export const bindAddressStart = (currency : string, remark: string, address: string): Promise<{
+    session_id: string
+}> => {
+    return axiosInstance.post('/api/auth/address/start', {
+        currency,
+        remark,
+        address
+    })
+}
+
+export const bindAddressFinish = (data: {
+    /**
+     * 6位验证码
+     */
+    code: string;
+    session_id: string;
+    /**
+     * 2fa验证码
+     */
+    totp?: string;
+}) => {
+    return axiosInstance.post('/api/auth/address', data)
+}

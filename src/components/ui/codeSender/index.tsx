@@ -1,6 +1,8 @@
 'use client'
 import React, { useState, useEffect } from "react";
 import { Button, Input, message } from "antd";
+import {useOnMountUnsafe} from "@/lib/clientUtils";
+
 
 import './index.css';
 import { cn } from "@/lib/utils";
@@ -13,9 +15,10 @@ interface Props {
     disabled: boolean;
     errorStatus?: boolean
     label?: string;
+    immidity?: boolean;
 }
 
-export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '验证码' }: Props) => {
+export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '验证码', immidity }: Props) => {
     const TIMER_CONST = 60;
     const [focus, setFocus] = useState(false);
     const [timer, setTimer] = useState(0);
@@ -32,6 +35,13 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
             return () => clearInterval(interval);
         }
     }, [timer]); // Depend on `timer` state
+
+    useOnMountUnsafe(() => {
+        if (immidity) {
+            handleSendCode()
+        }
+    })
+
 
     const onFocus = () => {
         setFocus(true);
