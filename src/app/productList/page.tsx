@@ -60,11 +60,15 @@ const Card = function ({data}: {data: GoodListItem}) {
                 }}/>
             }
 
-            <Button
-                disabled={Number(data.max_qty || 0) <= Number(data.min_qty || 0)}
-                className={
-                'round-primary-button button-286'
-            }><Link href={`productDetail?good_id=${data.good_id}`}>立即下单</Link></Button>
+            <Link href={`productDetail?good_id=${data.good_id}`}>
+                <Button
+                    disabled={Number(data.max_qty || 0) <= Number(data.min_qty || 0)}
+                    className={
+                        'round-primary-button button-286'
+                    }>立即下单</Button>
+            </Link>
+
+
         </div>
     )
 }

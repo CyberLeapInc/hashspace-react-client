@@ -156,9 +156,6 @@ const Header: React.FC = () => {
                     {/*<Link href="/login" legacyBehavior passHref>*/}
                     {/*    关于*/}
                     {/*</Link>*/}
-                    <Link href="/buyDetail" legacyBehavior passHref>
-                        测试连接/购买详情
-                    </Link>
                     {
                         !(state?.userInfo?.email) && <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>
                             <Link href="/login" legacyBehavior passHref>

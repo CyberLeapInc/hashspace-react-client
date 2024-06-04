@@ -391,6 +391,7 @@ export interface GoodDetailResponse {
     item: GoodDetail;
     [property: string]: any;
 }
+type currency = 'BTC' | 'DOGE' | 'LTC'
 
 export interface GoodDetail {
     /**
@@ -400,7 +401,7 @@ export interface GoodDetail {
     /**
      * 可挖矿币种
      */
-    currency: string[];
+    currency: currency[];
     /**
      * 日电费
      */
@@ -885,4 +886,260 @@ export interface chargeElectricityResponse {
 }
 export const chargeElectricity = (data: chargeElectricityRequest): Promise<chargeElectricityResponse> => {
     return axiosInstance.post('/api/auth/electricity/charge', data)
+}
+
+export interface GetChainListResponse {
+    list: Chain[];
+    [property: string]: any;
+}
+
+export interface Chain {
+    /**
+     * 计算器初始化价格
+     */
+    calculator_init_price: string;
+    /**
+     * 计算器最大价格
+     */
+    calculator_max_price: string;
+    /**
+     * 计算器最小价格
+     */
+    calculator_min_price: string;
+    /**
+     * 计算器比价步长
+     */
+    calculator_price_step: string;
+    /**
+     * 币种
+     */
+    currency: currency;
+    /**
+     * 难度
+     */
+    difficulty: string;
+    /**
+     * 最新价格
+     */
+    last_usdt_price: string;
+    /**
+     * 全网算力，需要转换为 K,M, G, T, P
+     */
+    network_hashrate: string;
+}
+
+export const getChainList = (): Promise<GetChainListResponse> => {
+    return axiosInstance.get('/api/public/chain')
+}
+
+export interface FullRevenueRequest {
+    /**
+     * 难度，例如：8394713171361
+     */
+    difficulty: string;
+    /**
+     * 云算力ID，例如：BTC001
+     */
+    good_id: string;
+    /**
+     * 购买算力数量，例如:  15 T。算力单位为产品对应的算力单位
+     */
+    hashrate_qty: string;
+    /**
+     * 当前币价，例如：$ 75000.91
+     */
+    price: string;
+}
+
+export interface FullRevenueResponse {
+    /**
+     * 总收入币种，例如：BTC
+     */
+    currency: string;
+    /**
+     * 日收入币，例如：0.000045 BTC
+     */
+    daily_coin_income: string;
+    /**
+     * 日收入USD，例如：$1.32
+     */
+    daily_income: string;
+    /**
+     * 净收入USD，例如：$81.3
+     */
+    net_income: string;
+    /**
+     * 回本天数，例如：30天; 如果小于等于0，则为无法回本
+     */
+    payback_day: number;
+    /**
+     * 回本币价，例如：$73000.01
+     */
+    payback_price: string;
+    /**
+     * 投资回报率，例如：3.0596， 为回报率305.96%
+     */
+    roi: string;
+    /**
+     * 总收入币，例如：0.00025 BTC
+     */
+    total_coin_income: string;
+    /**
+     * 总支出USD，例如：$303.3
+     */
+    total_cost: string;
+    /**
+     * 总收入USD; 下单页的预期收益，例如：$222.23
+     */
+    total_income: string;
+}
+
+export const fullRevenue = (data:FullRevenueRequest): Promise<FullRevenueResponse> => {
+    return axiosInstance.post('/api/public/cloudhash/full-revenue', data)
+}
+
+export interface OrderDetailResponse {
+    /**
+     * 币种，如 BTC
+     */
+    currency: string;
+    /**
+     * 算力曲线
+     */
+    history: HashrateHistoryItem[];
+    item: GoodDetail;
+    /**
+     * 矿池观察者链接，为url
+     */
+    pool_observer_link: string;
+    /**
+     * 实时交付算力，如100.11 TH； 下边所有包含算力的单位为 item.good.unit 如 T
+     */
+    realtime_hashrate: string;
+    /**
+     * 今日已挖预估收益；单位为币，如 0.000013222 BTC
+     */
+    today_estimate_income: string;
+    /**
+     * 昨日总收益；单位为币，如 0.0123123 BTC
+     */
+    total_income: string;
+    /**
+     * 昨日电费；单位为 USD，如 $11.77
+     */
+    yesterday_electricity_cost: string;
+    /**
+     * 昨日交付算力，如100.11 TH
+     */
+    yesterday_hashrate: string;
+    /**
+     * 昨日收益；单位为币，如 0.000123123 BTC
+     */
+    yesterday_income: string;
+}
+
+export interface HashrateHistoryItem {
+    /**
+     * 时间，为秒级别时间戳
+     */
+    created_at: number;
+    /**
+     * 算力，如 11.2 T, 单位为item.good.unit
+     */
+    hashrate: string;
+}
+
+export interface GoodDetail {
+    cost: string;
+    created_at: number;
+    electricity_cost: string;
+    end_at: number;
+    good: {
+        algorithm: string;
+        currency: currency[];
+        daily_electricity: string;
+        daily_income: string;
+        description: string;
+        end_at: number;
+        good_id: string;
+        income: string;
+        max_qty: string;
+        min_qty: string;
+        name: string;
+        power_consumption: string;
+        price: string;
+        remain_qty: string;
+        start_at: number;
+        step_qty: string;
+        /**
+         * 算力单位
+         */
+        unit: string;
+    };
+    hashrate: string;
+    hashrate_cost: string;
+    payment_expired_at: number;
+    start_at: number;
+    state: number;
+}
+
+export const getOrderInfo = (id: string): Promise<OrderDetailResponse> => {
+    return axiosInstance.get(`/api/auth/user/order/${id}`)
+}
+
+export interface PaymentListResponse {
+    list: PaymentItem[];
+    pagination: PageInfo;
+}
+
+export interface PaymentItem {
+    /**
+     * 达标率，例如：0.9。为90%的达标率
+     */
+    compliance_rate?: string;
+    /**
+     * 日期
+     */
+    created_at?: number;
+    /**
+     * 收益，例如：0.012312313 BTC
+     */
+    income?: string;
+    /**
+     * 收益币种，例如： BTC
+     */
+    income_currency?: string;
+    /**
+     * 支付txid的URL
+     */
+    payment_link: string;
+    /**
+     * 支付txid
+     */
+    payment_link_source: string;
+    /**
+     * 实际算力，例如：90 T
+     */
+    real_hashrate?: string;
+    /**
+     * 支付状态，1-已支付；2-待支付
+     */
+    status: number;
+    /**
+     * 理论算力，例如：100 T
+     */
+    theory_hashrate?: string;
+    /**
+     * 算力单位，例如T
+     */
+    unit: string;
+}
+
+export const getPaymentList = (id:string): Promise<PaymentListResponse> => {
+    return axiosInstance.get(`/api/auth/user/order/${id}/payment`, {
+        params: {
+            page: 1,
+            page_size: 30
+        }
+    })
 }

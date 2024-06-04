@@ -98,44 +98,6 @@ interface DataType {
     address: string;
 }
 
-const list = [
-        {
-            "created_at": 12312313,
-            "hashrate": "11000000000",
-            "cost": "3000.12",
-            "state": 1,
-            "address": "OxFDSFSFSDFSDFSDF",
-            "currency": "BTC",
-            "start_at": 1232131231323,
-            "end_at": 1231231321123,
-            "payment_expired_at": 12321312313213,
-            "electricity_cost": "100.12",
-            "hashrate_cost": "2000",
-            "good": {
-                "name": "30天新手",
-                "description": "快速开始",
-                "algorithm": "SHA256",
-                "currency": [
-                    "BTC",
-                    "DOGE"
-                ],
-                "start_at": 12313123213,
-                "end_at": 12313123213,
-                "unit": "T",
-                "power_consumption": "21.3",
-                "daily_electricity": "0.012",
-                "daily_income": "0.00123",
-                "price": "0.12",
-                "min_qty": "10",
-                "step_qty": "10",
-                "max_qty": "1000",
-                "income": "0.0123123",
-                "remain_qty": "5000",
-                "good_id": "NEWBEE"
-            }
-        }
-    ];
-
 const columns: TableProps<OrderItem>['columns'] = [
     {
         title: '订单时间',
@@ -258,7 +220,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                     right: '0'
                 }}>
                     <Button type={"link"}>
-                        <Link href={'/orderInfo'}>
+                        <Link href={`/orderInfo?orderId=${data.order_id}`}>
                             订单详情 {'>'}
                         </Link>
                     </Button>
@@ -271,6 +233,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
 
 
 const MyOrder = () => {
+    'use client'
     const [orderList, setOrderList] = useState<OrderListItem[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo>({page: 1, page_size: 20, total_page: 1, total_count: 0})
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);

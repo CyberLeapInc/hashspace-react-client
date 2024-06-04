@@ -2,49 +2,86 @@
 import css from './index.module.css'
 import {Button, Checkbox, Divider, Input, Modal, Slider} from "antd";
 import {cn} from "@/lib/utils";
-import * as echarts from 'echarts';
-import React, {useEffect, useRef, useState} from "react";
-import {getProductDetail, GoodDetail, buyProduct} from "@/service/api";
+import React, {useCallback, useEffect, useRef, useState,useContext} from "react";
+import {getProductDetail, GoodDetail, buyProduct, fullRevenue, FullRevenueRequest} from "@/service/api";
 import {getLocalDate} from '@/lib/clientUtils'
 import {BuyProduct, BuyProductProp} from "@/components/BuyProduct";
 import NumberSelector from "@/components/NumberSelector";
 import big from "big.js";
 import {CheckboxChangeEvent} from "antd/es/checkbox";
-import BTC from '../../../public/btc.svg'
-import DOGE from '../../../public/doge.svg'
-import LTC from '../../../public/ltc.svg'
-import Image from "next/image";
+import {PriceSlider} from "@/components/PriceSlider";
+import { ColumnConfig } from '@ant-design/plots';
+import {useDebounceFn} from "ahooks";
+import {MyContext} from "@/service/context";
 
-const option = {
-    xAxis: {
-        type: 'category',
-        data: ['投资回报率', '预期收益']
-    },
-    yAxis: {
-        type: 'value',
-        show: false
-    },
-    series: [
-        {
-            data: [120, 210],
-            type: 'bar',
-            label: {
-                show: true,
-                position: 'top',
-                valueAnimation: true
+import dynamic from 'next/dynamic'
+
+const Column = dynamic(() => import('@ant-design/plots').then(({ Column }) => Column), {
+    ssr: false
+})
+
+const data = [
+    { type: 'net_income', value: 116 },
+    { type: 'total_income', value: 1000 },
+];
+
+const DemoColumn = ({data}: {data: any[]}) => {
+    const [dataList, setDataList] = useState(data || [])
+    useEffect(() => {
+        setDataList(data)
+    }, [data]);
+    const config: ColumnConfig = {
+        xField: 'type',
+        yField: 'value',
+        marginBottom: 12,
+        paddingBottom: 20,
+        axis: {
+            y: {
+                label: false,
+                tick: false,
             },
-            itemStyle: {
-                normal: {
-                    barBorderRadius: [6, 6, 0, 0]
-                }
+            x: {
+                labelFontSize: 14,
+                labelFill: 'rgba(51, 51, 51, 1)',
+                tick: false,
+                labelFormatter: (v: string) => {
+                    if (v === 'net_income') {
+                        return '投资回报率'
+                    }
+                    if (v === 'total_income') {
+                        return '预期收益'
+                    }
+                },
+                labelSpacing: 9,
             }
-        }
-    ]
+        },
+        style: {
+            fill: (data: any) => {
+                if (data.type === 'net_income') {
+                    return '#3C53FF';
+                }
+                return '#393535';
+            },
+            radiusTopLeft: 10,
+            radiusTopRight: 10,
+            maxWidth: 28,
+        },
+        label: {
+            text: ({type, value} : {type: string, value: string}) => {
+                return `$${big(value).toFixed(2)}`
+            },
+            textBaseline: 'bottom',
+
+        },
+        legend: false,
+    };
+    return <Column {...config} data={dataList}/>;
 };
 
 const DEFAULT_BUY_DAYS = 10;
 
 const ProductDetail = () => {
+    'use client'
     const ref = useRef();
     const [goodDetail, setGoodDetail] = useState<GoodDetail>()
     const [goodId, setGoodId] = useState('')
@@ -60,30 +97,30 @@ const ProductDetail = () => {
     const [totalCost, setTotalCost] = useState('0')
     const [checkboxValue, setCheckboxValue] = useState(false)
     const [buyProductKey, setBuyProductKey] = useState(0)
+    const [dataList, setDataList] = useState(data || [])
+    const [revenueData, setRevenueData] = useState({roi: '0', total_income: '0'})
+    const {state, dispatch} = useContext(MyContext)
 
-    const getImage = (currency: string) => {
-        if (currency === 'BTC') return BTC;
-        if (currency === 'DOGE') return DOGE;
-        if (currency === 'LTC') return LTC;
-    }
-
-    const getPrice = (currency: string) => {
-        if (currency === 'DOGE') return targetDogePrice
-        if (currency === 'LTC') return targetLtcPrice
-    }
-
-    const onTargetPriceChange = (v: number, type = 'BTC') => {
-        if (type === 'BTC') {
+    const onTargetPriceChange = (v: number, currency = 'BTC') => {
+        if (currency === 'BTC') {
             setTargetPrice(v)
         }
-        if (type === 'DOGE') {
+        if (currency === 'DOGE') {
             setDogeTargetPrice(v)
         }
-        if (type === 'LTC') {
+        if (currency === 'LTC') {
             setLtcTargetPrice(v)
         }
-
     }
+    const getPrice = useCallback((currency: string) => {
+        if (currency === 'BTC') return targetPrice
+        if (currency === 'DOGE') return targetDogePrice
+        if (currency === 'LTC') return targetLtcPrice
+    }, [targetPrice, targetDogePrice, targetLtcPrice])
+
+    const getDifficulty = useCallback((currency: string) => {
+        return state.chainList.find(chain => chain.currency === currency)?.difficulty
+    }, [state.chainList])
     const handleBuyCountChange= (v: number) => {
         setBuyCount(v);
     }
@@ -102,6 +139,29 @@ const ProductDetail = () => {
             setIsShowBuyProduct(state)
         })
     }
+    const deb = useDebounceFn(() => {
+        const fullRevenueRequest: FullRevenueRequest = {
+            price: String(getPrice('BTC')),
+            good_id: goodId,
+            hashrate_qty: String(buyCount),
+            difficulty: getDifficulty('BTC') || '0',
+        }
+        fullRevenue(fullRevenueRequest).then(res => {
+            setDataList([
+                { type: 'net_income', value: Number(res.net_income) },
+                { type: 'total_income', value: Number(res.total_income) },
+            ])
+            setRevenueData({
+                roi: big(res.roi).times(100).toFixed(2).toString() + '%',
+                total_income: '$' + big(res.total_income).toFixed(4).toString()
+            })
+        })
+    }, {wait: 1000, leading: false, trailing: true})
+
+    useEffect(()=> {
+        deb.run()
+    }, [targetPrice, goodId, buyCount, getPrice])
+
     const medianAndMax = (min: number, max: number, step: number) => {
         let values = [];
         for(let i = min; i <= max; i += step) {
@@ -136,9 +196,6 @@ const ProductDetail = () => {
             } = medianAndMax(Number(res.item.min_qty), Number(res.item.max_qty), Number(res.item.step_qty))
             setBtnValueList([Number(res.item.min_qty)||0, median, max])
         })
-        // getPublicMarket().then(res => {
-        //     console.log(res)
-        // })
     }, [goodId]);
 
     useEffect(() => {
@@ -154,13 +211,6 @@ const ProductDetail = () => {
         setTotalCost(big(electricityCost).add(big(hashrateCost)).toString())
     }, [electricityCost, hashrateCost]);
 
-    useEffect(() => {
-        const myChart = echarts.init(ref.current)
-        myChart.setOption(option)
-        return () => {
-            myChart.dispose();
-        }
-    }, [ref])
 
     const getBuyProductInfo = ({currency, network, trace_id}:{currency: string, network: string, trace_id: string}) => {
         return buyProduct({
@@ -197,49 +247,16 @@ const ProductDetail = () => {
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px'}}>
                             <div className={cn(css.chart, css.block)}>
                                 {/*@ts-ignore*/}
-                                <div style={{height: '170px', width: '100%'}} ref={ref}></div>
+                                <div style={{height: '170px', width: '100%'}}>
+                                    <DemoColumn data={dataList}></DemoColumn>
+                                </div>
                                 <div className={css.range}>
-                                    <div className={css.text}>2</div>
-                                    <div className={css.text}>2</div>
+                                    <div className={css.text}>{revenueData.roi}</div>
+                                    <div className={css.text}>{revenueData.total_income}</div>
                                 </div>
                             </div>
                             <div className={cn(css.block)}>
-                                {goodDetail?.currency.length === 1 && (
-                                    <div>
-                                        <div className={css.tip}>左右滑动调整价格</div>
-                                        <div className={css.coinImg}><Image src={BTC} alt={'btc'}/></div>
-                                        <Slider min={0} max={200000} value={targetPrice} onChange={onTargetPriceChange}
-                                                defaultValue={30} disabled={false}/>
-                                        <div className={css.coinText}>预期BTC价格 <span
-                                            style={{color: '#3c53ff', fontWeight: 'bold'}}>${targetPrice}</span></div>
-                                    </div>
-                                )}
-                                {
-                                    goodDetail?.currency.length === 2 && (
-                                        <div>
-                                            <div className={css.tip}>左右滑动调整价格</div>
-                                            {goodDetail.currency.map(currency => {
-                                                return (
-                                                    <div key={currency}>
-                                                    <div className={css.inlineSlider} >
-                                                        <Image className={css.inlineCoinImg} src={getImage(currency)} alt={'btc'}/>
-                                                        <Slider style={{flex: 1}} min={0} max={200000}
-                                                                onChange={(v) => onTargetPriceChange(v, currency)}
-                                                                defaultValue={30} disabled={false}/>
-                                                    </div>
-                                                    <div>
-                                                        <div className={cn(css.coinText, css.coinTextLittle)} style={{textAlign: "left"}}>预期{currency}价格 <span
-                                                            style={{
-                                                                color: '#3c53ff',
-                                                                fontWeight: 'bold'
-                                                            }}>${getPrice(currency)}</span></div>
-                                                    </div>
-                                                </div>)
-                                            })}
-                                        </div>
-                                    )
-                                }
-
+                                <PriceSlider currencyList={goodDetail?.currency || []} onTargetPriceChange={onTargetPriceChange} />
                             </div>
                         </div>
                     </div>

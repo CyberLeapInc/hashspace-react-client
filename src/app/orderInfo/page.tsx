@@ -1,166 +1,183 @@
 'use client'
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect, useContext, useRef, useCallback, useMemo} from 'react';
+import Image, {StaticImageData} from "next/image";
 import calAllgain from '../../../public/cal-allgain.png'
 import calAllPay from '../../../public/cal-allpay.png'
 import calDailyGain from '../../../public/cal-dailygain.png'
 import calPayBackDay from '../../../public/cal-paybackday.png'
 import calPayBackMoney from '../../../public/cal-paybackmoney.png'
 import calProfit from '../../../public/cal-profit.png'
-import ReactDOM from 'react-dom';
+import {getOrderInfo, OrderDetailResponse, HashrateHistoryItem, getPaymentList, PaymentItem} from "@/service/api";
 import { Table } from 'antd';
 import dynamic from 'next/dynamic';
 import type { TableProps } from 'antd';
+import { Button } from 'antd';
+import './index.css'
+import css from './index.module.css'
+import {MyContext} from "@/service/context";
+import big from "big.js";
 
-// import { Area } from '@ant-design/plots';
 const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
     ssr: false
 })
-import Image from "next/image";
-import {
-    Button,
-    Cascader,
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Radio,
-    Select,
-    Switch,
-    TreeSelect,
-} from 'antd';
 
-import './index.css'
-interface DataType {
-    key: string;
-    name: string;
-    money: string;
-    address: string;
+const columns: TableProps<PaymentItem>['columns'] = [
+    { title: '日期', dataIndex: 'created_at' },
+    { title: '理论算力', dataIndex: 'theory_hashrate' },
+    { title: '实际算力', dataIndex: 'real_hashrate' },
+    { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`
+    },
+    { title: '收益', dataIndex: 'income' },
+    { title: '状态', dataIndex: 'status', render: (v) => v === 1 ? '已支付' : '待支付' },
+];
+
+interface CardData {
+    image: StaticImageData;
+    alt: string;
+    title: string;
+    showKey: keyof OrderDetailResponse;
 }
 
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: '日期',
-        dataIndex: 'name',
-    },
-    {
-        title: '理论算力',
-        dataIndex: 'name',
-    },
-    {
-        title: '实际算力',
-        dataIndex: 'name',
-    },
-    {
-        title: '算力达标率',
-        dataIndex: 'name',
-    },
-    {
-        title: '昨日收益',
-        dataIndex: 'name',
-    },
-    {
-        title: '状态',
-        dataIndex: 'name',
-    },
+const cardData : CardData[] = [
+    { image: calAllgain, alt: '总收入', title: '实时交付算力', showKey: 'realtime_hashrate'},
+    { image: calAllPay, alt: '总支出', title: '昨日交付算力', showKey: 'yesterday_hashrate'},
+    { image: calProfit, alt: '净利润', title: '昨日电费', showKey: 'yesterday_electricity_cost'},
+    { image: calDailyGain, alt: '每日收入', title: '昨日收益', showKey: 'yesterday_income'},
+    { image: calPayBackDay, alt: '回本天数', title: '总收益', showKey: 'total_income' },
+    { image: calPayBackMoney, alt: '回本币价', title: '今日已挖预估', showKey: 'today_estimate_income' },
 ];
 
-const data: DataType[] = [
-
-];
-const DemoArea = () => {
-    const config = {
-        data: {
-            type: 'fetch',
-            value: 'https://assets.antv.antgroup.com/g2/aapl.json',
-        },
-        xField: (d: any) => new Date(d.date),
-        yField: 'close',
-    };
-
-    return <Area height={280} width={410} {...config} />;
+interface CardProps {
+    image: StaticImageData;
+    alt: string;
+    title: string;
+    showKey: keyof OrderDetailResponse,
+    rawData: OrderDetailResponse | null;
+}
+const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
+    const {state, dispatch} = useContext(MyContext)
+    if (!rawData) return <></>
+    const getShowKey = (key: keyof OrderDetailResponse): string => {
+        return rawData[key] as string || '0'
+    }
+    const getMoney = (currency: string, count: number|string) => {
+        const priceNow = state.chainList.find((item) => item.currency === currency)?.last_usdt_price
+        console.log(priceNow)
+        const res = big(count).times(big(priceNow || 0)).toFixed(4).toString();
+        return res;
+    }
+    const getInfo = (key: keyof OrderDetailResponse): string => {
+        if (/income/.test(key)) {
+            return `$${getMoney(rawData.currency, rawData[key] as string || '0')}`
+        }
+        return ''
+    }
+    const getUnit = (key: keyof OrderDetailResponse): string => {
+        if (/hashrate/.test(key)) {
+            return 'TH'
+        }
+        if (/income/.test(key)) {
+            return rawData.currency
+        }
+        if (/electricity_cost/.test(key)) {
+            return ''
+        }
+        return ''
+    }
+    return (
+        (
+            <div className={css.calCard}>
+                <div className={css.calCardTitle}>
+                    <Image className={css.image} src={image} alt={alt}></Image>
+                    {title}
+                </div>
+                <div className={css.calCardCount}>{!getUnit(showKey) && "$"}{getShowKey(showKey)}
+                    <span className={css.unit}>{getUnit(showKey)}</span>
+                </div>
+                <div className={css.calCardInfo}>{getInfo(showKey)}</div>
+            </div>
+        )
+    )
 };
 
+const DemoArea = ({dataList}: {
+    dataList: HashrateHistoryItem[]
+}) => {
+    const [realData, setRealData] = useState<HashrateHistoryItem[]>(dataList);
+    useEffect(() => {
+        const temp = dataList.sort((a, b) => a.created_at - b.created_at);
+        setRealData(temp)
+    }, [dataList]);
+    const config = {
+        xField: (d: any) => {
+            return new Date(d.created_at * 1000).toDateString();
+        },
+        yField: 'hashrate',
+        style: {
+            fill: 'linear-gradient(90deg, rgba(215, 173, 255, 0.3) 100%, rgba(104, 167, 255, 0.80) 0%)',
+        },
+        marginBottom: 0,
+        marginTop: 50,
+        paddingBottom: 25,
+        height: 350,
+    };
+    return <Area width={410} {...config} data={realData}/>;
+};
 
-const calculator = () => {
-    const onFormLayoutChange = (v: string) => {
-        console.log(v)
-    }
-    return (<div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px'}}>
-        <div className={'cal-card-big'}>
-            <div className={'flex-wrap'}>
-                <div className={'intro'}>
-                    <div className={'login-hello'}>算力数据</div>
-                    <div className={'cal-card-list'}>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calAllgain} alt={'总收入'}></Image>
-                                实时交付算力
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
-                        </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calAllPay} alt={'总支出'}></Image>
-                                昨日交付算力
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
-                        </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calProfit} alt={'净利润'}></Image>
-                                昨日电费
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
-                        </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calDailyGain} alt={'每日收入'}></Image>
-                                昨日收益
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
-                        </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calPayBackDay} alt={'回本天数'}></Image>
-                                总收益
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
-                        </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title'}>
-                                <Image src={calPayBackMoney} alt={'回本币价'}></Image>
-                                今日已挖预估
-                            </div>
-                            <div className={'cal-card-count'}>0.00001btc</div>
-                            <div className={'cal-card-info'}>123</div>
+const OrderInfo = () => {
+    const [orderId, setOrderId] = useState('');
+    const [link, setLink] = useState('');
+    const [paymentList, setPaymentList] = useState<PaymentItem[]>([]);
+    const [orderInfo, setOrderInfo] = useState<OrderDetailResponse | null>(null);
+    useEffect(() => {
+        let tempOrderId = '';
+        if (typeof window !== "undefined") {
+            const searchParams = new URLSearchParams(window.location.search);
+            tempOrderId = searchParams.get('orderId') || ''
+            setOrderId(tempOrderId)
+        }
+        getOrderInfo(tempOrderId).then((res) => {
+            console.log(res)
+            setLink(res.pool_observer_link)
+            setOrderInfo(res)
+        })
+        getPaymentList(tempOrderId).then((res) => {
+            console.log(res)
+            setPaymentList(res.list)
+        })
+    }, [orderId])
+
+    return (
+        <div style={{ minHeight: 'calc(100vh - 232px)', paddingTop: '25px' }}>
+            <div className={css.calCardBig}>
+                <div className={css.flexWrap}>
+                    <div className={css.intro}>
+                        <div className={css.loginHello}>算力数据</div>
+                        <div className={css.calCardList}>
+                            {cardData.map((card, index) => (
+                                <Card rawData={orderInfo} key={index} {...card} />
+                            ))}
                         </div>
                     </div>
-                </div>
-                <div className={'divider'}></div>
-                <div className={'form'}>
-                    <div className={'login-hello'} style={{display: 'flex', justifyContent: 'space-between'}}>算力数据
-                        <Button shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                    <div className={css.divider}></div>
+                    <div className={css.form}>
+                        <div className={css.loginHello} style={{ display: 'flex', justifyContent: 'space-between' }}>算力数据
+                            <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                        </div>
+                        <DemoArea dataList={orderInfo?.history || []}/>
                     </div>
-                    <DemoArea/>
                 </div>
             </div>
-
+            <div className={css.calCardBig}>
+                <div className={css.loginHello}>收益明细</div>
+                <Table
+                    columns={columns}
+                    dataSource={paymentList}
+                    bordered
+                />
+            </div>
         </div>
-        <div className={'cal-card-big'}>
-            <div className={'login-hello'}>收益明细</div>
-            <Table
-                columns={columns}
-                dataSource={data}
-                bordered
-            />
-        </div>
-    </div>
-    )
+    );
 }
 
-export default calculator;
+export default OrderInfo;

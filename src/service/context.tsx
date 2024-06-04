@@ -1,12 +1,16 @@
 'use client'
 import React, {createContext, useReducer, useEffect, useContext, ReactNode} from 'react';
 import {UserInfo} from "@/service/interface";
+import {Chain, getChainList, getUserInfo} from "@/service/api";
+import {useMount} from "ahooks";
 export interface State {
     userInfo: UserInfo;
+    chainList: Chain[];
 }
 
 export enum ActionType {
-    setUserInfo = 'SET_USER_INFO'
+    setUserInfo = 'SET_USER_INFO',
+    setChainList = 'SET_CHAIN_LIST'
 }
 
 interface Action {
@@ -30,7 +34,9 @@ export const initialState: State = {
         },
         address: []
     },
+    chainList: []
 };
+
 
 export const MyContext = createContext<{ state: State; dispatch: React.Dispatch<Action> }>({
     state: initialState,
@@ -39,8 +45,10 @@ export const MyContext = createContext<{ state: State; dispatch: React.Dispatch<
 
 const reducer = (state: State, action: Action): State => {
     switch (action.type) {
-        case 'SET_USER_INFO':
+        case ActionType.setUserInfo:
             return { ...state, userInfo: action.payload };
+        case ActionType.setChainList:
+            return { ...state, chainList: action.payload };
         default:
             return state;
     }
@@ -48,6 +56,17 @@ const reducer = (state: State, action: Action): State => {
 
 export const MyContextProvider= ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    useMount(() => {
+        getUserInfo().then((res) => {
+            const userInfo = res;
+            dispatch({ type: ActionType.setUserInfo, payload: userInfo });
+        })
+        getChainList().then((res) => {
+            const chainList = res.list;
+            dispatch({ type: ActionType.setChainList, payload: chainList });
+        })
+    });
 
     return (
         <MyContext.Provider value={{ state, dispatch }}>

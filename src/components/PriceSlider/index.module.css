@@ -1,0 +1,149 @@
+.productDetailBg{
+    background-color: white;
+    min-height: calc(100vh - 235px);
+    min-width: 1200px;
+}
+.productDetailWrapper{
+    display: flex;
+    gap: 40px;
+    padding-top: 20px;
+    padding-bottom: 100px;
+}
+.productName{
+    font-weight: 600;
+    font-size: 28px;
+    color: #333333;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+.date{
+    font-weight: 400;
+    font-size: 16px;
+    color: #666666;
+    line-height: 22px;
+    text-align: left;
+    font-style: normal;
+    margin-bottom: 24px;
+}
+
+.contentWrapper{
+    width: 1200px;
+    margin: 0 auto;
+}
+.block{
+    background: #F9F9FB;
+    border-radius: 20px;
+    width: 100%;
+    flex: 1;
+    padding: 20px;
+    min-height: 252px;
+}
+.range{
+    display: flex;
+    margin: 0 20px;
+
+}
+.text{
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #3C53FF;
+    line-height: 17px;
+}
+.left{
+    width: 520px;
+}
+.productTitle{
+    text-align: center;
+    line-height: 45px;
+    font-weight: 500;
+    font-size: 18px;
+    color: #333333;
+}
+.productInfo{
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    line-height: 25px;
+    justify-content: center;
+}
+.tip{
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    line-height: 44px;
+    text-align: center;
+}
+.coinImg{
+    height: 60px;
+    width: 60px;
+    margin: 15px auto;
+}
+.inlineSlider{
+    display: flex;
+}
+.inlineCoinImg{
+    height: 28px;
+    width: 28px;
+    margin-top: 4px;
+    margin-right: 10px;
+}
+.coinText{
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    line-height: 20px;
+    text-align: center;
+}
+.coinTextLittle{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.card{
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid rgba(233,233,233,0.76);
+    padding: 32px;
+    padding-bottom: 12px;
+    width: 100%;
+}
+.row{
+    display: flex;
+    margin-bottom: 20px;
+}
+.label{
+    width: 125px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333333;
+    line-height: 26px;
+    text-align: left;
+}
+.info{
+    font-weight: bold;
+    font-size: 20px;
+    color: #333333;
+    line-height: 26px;
+
+    text-align: left;
+}
+.button{
+    width: 112px !important;
+    margin-right: 10px;
+    height: 32px !important;
+}
+.summary{
+    font-weight: bold;
+    font-size: 28px;
+    color: #FF7E3C;
+}
+.checkbox a{
+    color: rgba(60, 83, 255, 1);
+}
+.selected{
+    background: rgba(60,83,255,0.05) !important;
+    border-radius: 8px;
+    border: 1px solid #3C53FF;
+}
