@@ -1,5 +1,6 @@
 .numberSelectorWrapper{
-    width: 356px;
+    width: 100%;
+    min-width: 356px;
     background: #FFFFFF;
     border-radius: 12px;
     line-height: 44px;

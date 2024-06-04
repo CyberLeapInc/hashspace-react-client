@@ -50,7 +50,7 @@ const HoverContent = ({outState, onLogOut}: {
         },
         {
             text: '电费余额',
-            href: '/',
+            href: '/electricityFee',
             icon: IconElectfee
         },
     ]

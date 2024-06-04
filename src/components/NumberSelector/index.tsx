@@ -6,8 +6,8 @@ export interface NumberSelector {
     value: number
     unit: string
     step: number
-    min: number
-    max: number
+    min?: number
+    max?: number
     onChange: (res: number) => void
 }
 

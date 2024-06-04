@@ -1,0 +1,96 @@
+.title{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.bigButton{
+    height: 52px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+.smallButton{
+flex: 1;
+    max-width: 50%;
+    height: 32px;
+    background: #F7F7F7;
+    border: none;
+}
+.selectedCurrency{
+    background: rgba(60,83,255,0.05);
+    border: 1px solid #3C53FF;
+}
+.info{
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    line-height: 24px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.tip{
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 24px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+.money{
+    font-weight: bold;
+    font-size: 40px;
+    color: #333333;
+    line-height: 40px;
+    text-align: left;
+    text-align: center;
+    margin-bottom: 12px;
+}
+.payButton{
+    height: 52px;
+    background: #3C53FF;
+    border-radius: 26px;
+    margin-top: 40px;
+}
+.counter{
+    height: 28px;
+    line-height: 28px;
+    background: #F7F7F7;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 12px;
+    color: #999999;
+}
+.row{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    line-height: 54px;
+}
+.warning{
+    font-weight: 400;
+    font-size: 12px;
+    color: #EA2A2A;
+    line-height: 24px;
+    padding: 10px;
+    background-color: rgba(250, 93, 93, 0.06);
+    border-radius: 8px;
+}
+.qrcodeWrapper{
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(233,233,233,0.76);
+    width: 120px;
+    margin: 30px auto;
+}
+.network{
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    line-height: 24px;
+    text-align: center;
+}

@@ -4,7 +4,7 @@ import {Button, Table, Modal} from 'antd';
 import type { TableProps } from 'antd';
 import Link from "next/link";
 import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
-import {getOrderList, OrderListItem, PageInfo,deleteOrder} from "@/service/api";
+import {getOrderList, OrderListItem, PageInfo, deleteOrder, OrderGood} from "@/service/api";
 import {DeleteOutlined} from "@ant-design/icons";
 
 import './index.css'
@@ -184,11 +184,11 @@ const data: DataType[] = [
 
 ];
 
-const PaymentStatus = ({status, link, source, goodId}: {status: number, link: string, source: string, goodId: string}) => {
+const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {status: number, link: string, source: string, goodId: string,record: any, reBuy: (data: any) => void}) => {
     switch (status) {
         case 1:
             return (<span style={{width: '100%'}}>
-                <Button type={"primary"} shape={"round"} href={link}>立即支付</Button>
+                <Button type={"primary"} shape={"round"} onClick={() => reBuy(record)}>立即支付</Button>
             </span>)
         case 2:
             return (
@@ -212,7 +212,7 @@ const PaymentStatus = ({status, link, source, goodId}: {status: number, link: st
 
 
 
-const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: () => void) => {
+const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: () => void, reBuy: (data: any) => void) => {
     const deleteRow = (row: OrderListItem) => {
         deleteOrder(row.order_id).then(() => {
             onDelete()
@@ -233,7 +233,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
         <div className={'row-detail'}>
             <div>币种: {data.good?.currency}</div>
             <div>合约费用：<span className={'smallCost'}>${big(data.hashrate_cost).toFixed(4)}</span></div>
-            <div>支付状态: {<PaymentStatus goodId={data.good.good_id} status={data.state} link={data.payment_link}
+            <div>支付状态: {<PaymentStatus record={data} reBuy={reBuy} goodId={data.good.good_id} status={data.state} link={data.payment_link}
                                            source={data.payment_link_source}/>}</div>
             <div>算力：{data.hashrate}{data.good.unit}</div>
             <div>电费: <span className={'smallCost'}>${big(data.electricity_cost).toFixed(4)}</span></div>
@@ -275,6 +275,39 @@ const MyOrder = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>({page: 1, page_size: 20, total_page: 1, total_count: 0})
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [modal, contextHolder] = Modal.useModal();
+    const [currentObj, setCurrentObj] = useState<OrderListItem>({
+        cost: "",
+        created_at: 0,
+        electricity_cost: "",
+        end_at: 0,
+        good: {
+            algorithm: "",
+            currency: [],
+            daily_electricity: "",
+            daily_income: "",
+            description: "",
+            end_at: 0,
+            good_id: "",
+            income: "",
+            max_qty: "",
+            min_qty: "",
+            name: "",
+            power_consumption: "",
+            price: "",
+            remain_qty: "",
+            start_at: 0,
+            step_qty: "",
+            unit: ""
+        },
+        hashrate: "",
+        hashrate_cost: "",
+        order_id: "",
+        payment_expired_at: 0,
+        payment_link: "",
+        payment_link_source: "",
+        start_at: 0,
+        state: 0
+    })
 
 
     const handleExpand = (record: any) => {
@@ -307,8 +340,14 @@ const MyOrder = () => {
             setPageInfo(res.pagination)
         })
     }
+    const reBuy = (data:OrderListItem) => {
+        setCurrentObj(data);
+    }
 
     return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
+        <Modal open={false}>
+            <div >123</div>
+        </Modal>
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>
             <Table
@@ -318,7 +357,7 @@ const MyOrder = () => {
                 rowKey={'order_id'}
                 expandable={{
                     expandedRowKeys: expandedRowKeys,
-                    expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete),
+                    expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete, reBuy),
                     rowExpandable: (record) => true,
                     expandIcon: ({expanded, onExpand, record}) =>
                         <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => handleExpand(record)}>

@@ -762,3 +762,127 @@ export const bindAddressFinish = (data: {
 export const deleteOrder = (id: string) => {
     return axiosInstance.delete(`/api/auth/user/order/${id}`)
 }
+export interface ElectricityResponse {
+    /**
+     * 电费余额，例如: $4.8
+     */
+    balance: string;
+    /**
+     * 预计可挖矿天数，例如：10天
+     */
+    estimate_remain_day: number;
+    /**
+     * 电费历史明细
+     */
+    list: ElectricityList[];
+    /**
+     * 最低充值电费金额，例如：$50
+     */
+    min_electricity_charge_amount: string;
+    pagination: PageInfo;
+    /**
+     * 充值电费步长，例如：$10
+     */
+    step_electricity_charge_amount: string;
+    /**
+     * 昨日电费，例如: $1.23
+     */
+    yesterday_cost: string;
+    [property: string]: any;
+}
+
+export interface ElectricityList {
+    /**
+     * 金额，例如: $1.23
+     */
+    amount?: string;
+    /**
+     * 时间
+     */
+    created_at?: number;
+    /**
+     * 算力订单号，例如：E2023234243
+     */
+    order_id?: string;
+    /**
+     * 支付超时时间
+     */
+    payment_expired_at: number;
+    /**
+     *
+     * 支付完成的地址跳转链接，例如：https://www.blockchain.com/explorer/addresses/btc/bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+     */
+    payment_link: string;
+    /**
+     * 支付完成的地址，如：bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+     */
+    payment_link_source: string;
+    /**
+     * 1-待支付；2-已支付；3-支付失败
+     */
+    state: number;
+    /**
+     * 类型：1-充值；2-扣除电费
+     */
+    type?: number;
+    payment_request: {
+        amount:string
+        currency: string
+        network: string
+        trace_id:string
+    }
+
+}
+
+export const getElectricityInfo = ({page, pageSize}: {
+    page: number,
+    pageSize: number,
+}): Promise<ElectricityResponse> => {
+    return axiosInstance.get('/api/auth/electricity', {
+        params: {
+            page,
+            page_size: pageSize
+        }
+    })
+}
+
+export interface chargeElectricityRequest {
+    /**
+     * 充值金额，如: $ 30; 限制两位；最小为：min_electricity_charge_amount
+     */
+    amount: string;
+    /**
+     * 充值币种，如：USDT
+     */
+    currency: string;
+    /**
+     * 网络，如：ERC20
+     */
+    network: string;
+    /**
+     * 交易ID, uuidv4。用于防止重复下单，如果遇到网络波动，下单失败，则可重新传入该trace_id。避免重复下单 必需
+     * 如：8fcae8d5-1460-4543-b923-24c7aab7b358
+     */
+    trace_id: string;
+}
+export interface chargeElectricityResponse {
+    /**
+     * 地址
+     */
+    address: string;
+    /**
+     * 付款金额
+     */
+    amount: string;
+    /**
+     * 到期时间
+     */
+    expired_at: number;
+    /**
+     * 订单ID
+     */
+    order_id: string;
+}
+export const chargeElectricity = (data: chargeElectricityRequest): Promise<chargeElectricityResponse> => {
+    return axiosInstance.post('/api/auth/electricity/charge', data)
+}

@@ -4,7 +4,7 @@ import {Button, Checkbox, Divider, Input, Modal, Slider} from "antd";
 import {cn} from "@/lib/utils";
 import * as echarts from 'echarts';
 import React, {useEffect, useRef, useState} from "react";
-import {getProductDetail, GoodDetail, getPublicMarket} from "@/service/api";
+import {getProductDetail, GoodDetail, buyProduct} from "@/service/api";
 import {getLocalDate} from '@/lib/clientUtils'
 import {BuyProduct, BuyProductProp} from "@/components/BuyProduct";
 import NumberSelector from "@/components/NumberSelector";
@@ -162,6 +162,21 @@ const ProductDetail = () => {
         }
     }, [ref])
 
+    const getBuyProductInfo = ({currency, network, trace_id}:{currency: string, network: string, trace_id: string}) => {
+        return buyProduct({
+            currency,
+            electricity_cost: big(electricityCost).toString(),
+            electricity_day: buyDays,
+            good_id:goodDetail?.good_id || '',
+            hashrate_cost: hashrateCost,
+            hashrate_qty: buyCount.toString(),
+            network,
+            total_cost: totalCost,
+            trace_id
+        });
+    }
+
+
 
     return (
         <div className={css.productDetailBg}>
@@ -297,7 +312,7 @@ const ProductDetail = () => {
                 </div>
             </div>
             <Modal open={isShowBuyProduct} width={420} footer={''} onCancel={() => toggleModal(false)}>
-                <BuyProduct finishPay={() => toggleModal(false)} key={buyProductKey} electricity_cost={electricityCost} electricity_day={buyDays} good_id={goodDetail?.good_id || ''} hashrate_cost={hashrateCost} hashrate_qty={buyCount} total_cost={totalCost} ></BuyProduct>
+                <BuyProduct finishPay={() => toggleModal(false)} key={buyProductKey} total_cost={totalCost} onBuy={getBuyProductInfo}></BuyProduct>
             </Modal>
         </div>
     )
