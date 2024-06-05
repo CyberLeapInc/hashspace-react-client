@@ -73,21 +73,23 @@ const HoverContent = ({outState, onLogOut}: {
                     {
                         routerLinkList.map(item => (
                             <div key={item.text}>
-                                <Button
-                                    key={item.text}
-                                    style={{
-                                        color: '#333',
-                                        fontSize: '14px',
-                                        display:'flex',
-                                        verticalAlign: 'middle',
-                                        justifyContent: 'center'
-                                    }} block type="text" size={"large"}>
-                                    <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
-                                        margin:'2px 8px 0 0'
-                                    }}/>
+                                <Link href={item.href}>
+                                    <Button
+                                        key={item.text}
+                                        style={{
+                                            color: '#333',
+                                            fontSize: '14px',
+                                            display:'flex',
+                                            verticalAlign: 'middle',
+                                            justifyContent: 'center'
+                                        }} block type="text" size={"large"}>
+                                        <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
+                                            margin:'2px 8px 0 0'
+                                        }}/>
+                                        {item.text}
+                                    </Button>
+                                </Link>
 
-                                    <Link href={item.href}>{item.text}</Link>
-                                </Button>
                                 <DividerCus></DividerCus>
                             </div>
                         ))
@@ -217,6 +219,17 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <MyContextProvider>
             <ConfigProvider
                 theme={{
+                    token: {
+                        colorPrimary: '#3C53FF',
+                        colorPrimaryActive: '#3042CC',
+                        colorPrimaryHover: '#8A98FF',
+                        colorError: '#EA2A2A',
+                        colorBgContainerDisabled: '#EBEEFF',
+                        colorTextDisabled: '#ffffff',
+                        borderRadiusLG: 12,
+                        borderRadius: 12,
+                        borderRadiusSM: 4,
+                    },
                     components: {
                         Slider: {
                             /* 这里是你的组件 token */
@@ -225,6 +238,14 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                             trackHoverBg: 'black',
                             dotActiveBorderColor: 'black',
                             handleActiveColor: 'black',
+                        },
+                        Button: {
+                            contentFontSizeLG: 14,
+                            contentFontSizeSM: 14,
+                            contentFontSize: 14,
+                            defaultActiveBorderColor: '#3C53FF',
+                            defaultActiveColor: '#3C53FF',
+                            borderColorDisabled: '#EBEEFF'
                         },
                     },
                 }}
