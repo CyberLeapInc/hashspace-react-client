@@ -156,7 +156,10 @@ export const BuyProduct = (data: BuyProductProp) => {
             step === Step.finish && (
                 <FinishPayment
                     duration={duration}
-                    currentCurrency={currentCurrency}
+                    currentCurrency={{
+                        currency: currentCurrency.currency,
+                        network: [currentNetWork]
+                    }}
                     amount={amount}
                     orderId={orderId}
                     qrcodeUrl={qrcodeUrl}

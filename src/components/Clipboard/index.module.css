@@ -11,6 +11,7 @@
     transition: all 0.2s;
     margin: 5px 0;
     display: flex;
+    justify-content: center;
 }
 .text{
     display: inline-block;

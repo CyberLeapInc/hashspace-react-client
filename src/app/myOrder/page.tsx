@@ -16,6 +16,7 @@ import BTC from '../../../public/btc.svg'
 import DOGE from '../../../public/doge.svg'
 import LTC from '../../../public/ltc.svg'
 import {cn} from "@/lib/utils";
+import {FinishPayment} from "@/components/FinishPayment";
 
 const getCurrencyIcon = (currency: string) => {
     switch (currency) {
@@ -176,6 +177,14 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
     };
 
     return (<div>
+        {/*<Modal open={true} footer={null}>*/}
+        {/*    <div>a</div>*/}
+        {/*    <div>a</div>*/}
+        {/*    <div>*/}
+        {/*        <Button>1</Button>*/}
+        {/*        <Button>2</Button>*/}
+        {/*    </div>*/}
+        {/*</Modal>*/}
         <div className={css.rowDetail}>
             <div className={css.item}>
                 <span className={css.label}>币种:</span>
@@ -271,40 +280,7 @@ const MyOrder = () => {
     const [pageInfo, setPageInfo] = useState<PageInfo>({page: 1, page_size: 20, total_page: 1, total_count: 0})
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [modal, contextHolder] = Modal.useModal();
-    const [currentObj, setCurrentObj] = useState<OrderListItem>({
-        cost: "",
-        created_at: 0,
-        electricity_cost: "",
-        end_at: 0,
-        good: {
-            algorithm: "",
-            currency: [],
-            daily_electricity: "",
-            daily_income: "",
-            description: "",
-            end_at: 0,
-            good_id: "",
-            income: "",
-            max_qty: "",
-            min_qty: "",
-            name: "",
-            power_consumption: "",
-            price: "",
-            remain_qty: "",
-            start_at: 0,
-            step_qty: "",
-            unit: ""
-        },
-        hashrate: "",
-        hashrate_cost: "",
-        order_id: "",
-        payment_expired_at: 0,
-        payment_link: "",
-        payment_link_source: "",
-        start_at: 0,
-        state: 0
-    })
-
+    const [currentObj, setCurrentObj] = useState<OrderListItem | null>(null)
 
     const handleExpand = (record: any) => {
         const keys = [...expandedRowKeys];
@@ -342,8 +318,24 @@ const MyOrder = () => {
     }
 
     return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
-        <Modal open={false}>
-            <div>123</div>
+        <Modal open={currentObj!==null} width={420} footer={''} onCancel={() => setCurrentObj(null)}>
+            <FinishPayment
+                fixPos={8}
+                amount={currentObj?.payment_request.total_cost || '0'}
+                duration={(currentObj?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
+                currentCurrency={{
+                    currency: currentObj?.payment_request.currency || '',
+                    network:[ currentObj?.payment_request.network || '']
+                }}
+                orderId={currentObj?.order_id || ''}
+                qrcodeUrl={currentObj?.payment_link_source || ''}
+                isCountDownFinish={false}
+                setTimeStatus={() => {
+                }}
+                finishPay={() => {
+                    setCurrentObj(null)
+                }}
+            />
         </Modal>
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>

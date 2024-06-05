@@ -620,12 +620,6 @@ export const getPaymentResult = (id: string): Promise<PaymentResultResponse> => 
     return axiosInstance.get(`/api/auth/user/payment/${id}`)
 }
 
-export interface OrderListResponse {
-    list: OrderListItem[];
-    pagination: PageInfo;
-    [property: string]: any;
-}
-
 export interface OrderListItem {
     /**
      * 总费用，例如：$120.9
@@ -646,7 +640,7 @@ export interface OrderListItem {
     /**
      * 云算力合约产品详情
      */
-    good?: OrderGood;
+    good?: OrderListGood;
     /**
      * 算力，如：100 T，单位为{good.unit}
      */
@@ -673,6 +667,10 @@ export interface OrderListItem {
      */
     payment_link_source: string;
     /**
+     * 支付的请求参数，用于重新支付，参考购买算力接口
+     */
+    payment_request: PaymentRequest;
+    /**
      * 挖矿开始
      */
     start_at?: number;
@@ -680,6 +678,77 @@ export interface OrderListItem {
      * 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
      */
     state?: number;
+}
+
+/**
+ * 云算力合约产品详情
+ */
+export interface OrderListGood {
+    algorithm: string;
+    currency: string[];
+    daily_electricity: string;
+    daily_income: string;
+    description: string;
+    end_at: number;
+    good_id: string;
+    income: string;
+    max_qty: string;
+    min_qty: string;
+    name: string;
+    power_consumption: string;
+    price: string;
+    remain_qty: string;
+    start_at: number;
+    step_qty: string;
+    unit: string;
+}
+
+/**
+ * 支付的请求参数，用于重新支付，参考购买算力接口
+ */
+export interface PaymentRequest {
+    /**
+     * 币种
+     */
+    currency: string;
+    /**
+     * 电费
+     */
+    electricity_cost: string;
+    /**
+     * 充值电费天数
+     */
+    electricity_day: number;
+    /**
+     * 下单购买的算力商品ID
+     */
+    good_id: string;
+    /**
+     * 算力费用
+     */
+    hashrate_cost: string;
+    /**
+     * 购买算力数量
+     */
+    hashrate_qty: string;
+    /**
+     * 网络
+     */
+    network: string;
+    /**
+     * 总费用
+     */
+    total_cost: string;
+    /**
+     * 交易ID
+     */
+    trace_id: string;
+}
+
+export interface OrderListResponse {
+    list: OrderListItem[];
+    pagination: PageInfo;
+    [property: string]: any;
 }
 
 /**

@@ -235,8 +235,17 @@ const ElectricityFee = () => {
                 <BuyProduct key={buyProductKey} onBuy={onBuy} total_cost={cost} finishPay={closeBuyProductModal} />
             </Modal>
             <Modal width={420} title={'电费充值'} open={!!record} onCancel={() => setRecord(null)} footer={''}>
-                {    /* @ts-ignore */ }
-                <FinishPayment fixPos={4} duration={(record?.payment_expired_at  || 0) - (new Date().getTime() / 1000)} currentCurrency={{currency: record?.payment_request.currency}} amount={record?.amount} orderId={record?.order_id} qrcodeUrl={record?.payment_link_source} isCountDownFinish={false} finishPay={() => setRecord(null)} setTimeStatus={() => {}}/>
+                <FinishPayment
+                    fixPos={4}
+                    duration={(record?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
+                    currentCurrency={{currency: record?.payment_request.currency || '', network: [record?.payment_request.network || '']}}
+                    amount={record?.amount || '0'}
+                    orderId={record?.order_id || ''}
+                    qrcodeUrl={record?.payment_link_source || ''}
+                    isCountDownFinish={false}
+                    finishPay={() => setRecord(null)}
+                    setTimeStatus={() => {}}
+                />
             </Modal>
             <div className={css.top}>
                 <div className={css.box} style={{flex: 2}}>
