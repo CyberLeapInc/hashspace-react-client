@@ -17,6 +17,7 @@ import DOGE from '../../../public/doge.svg'
 import LTC from '../../../public/ltc.svg'
 import {cn} from "@/lib/utils";
 import {FinishPayment} from "@/components/FinishPayment";
+import {EasyConfirmContent} from "@/components/EasyConfirmContent";
 
 const getCurrencyIcon = (currency: string) => {
     switch (currency) {
@@ -145,9 +146,9 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
         case 3:
             return (
                 <div>
-                    <Button type={"primary"} shape={"round"}>
-                        <Link href={`/productDetail?good_id=${goodId}`}>重新购买</Link>
-                    </Button>
+                    <Link href={`/productDetail?good_id=${goodId}`}>
+                        <Button type={"primary"} shape={"round"}>重新购买</Button>
+                    </Link>
                     <div className={css.textAlignCenter}>
                         <span className={css.timeout}>支付超时</span>
                     </div>
@@ -159,32 +160,8 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
 }
 
 
-const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: () => void, reBuy: (data: any) => void) => {
-    const deleteRow = (row: OrderListItem) => {
-        deleteOrder(row.order_id).then(() => {
-            onDelete()
-        })
-    }
-    const confirm = () => {
-        modal.confirm({
-            title: '删除订单',
-            content: '您是否真的要删除订单，删除订单后将无法找回该订单？',
-            okText: '我再想想',
-            cancelText: '是',
-            onCancel: () => deleteRow(data),
-            onOk: () => console.log('ok')
-        });
-    };
-
+const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (data: any) => void, reBuy: (data: any) => void) => {
     return (<div>
-        {/*<Modal open={true} footer={null}>*/}
-        {/*    <div>a</div>*/}
-        {/*    <div>a</div>*/}
-        {/*    <div>*/}
-        {/*        <Button>1</Button>*/}
-        {/*        <Button>2</Button>*/}
-        {/*    </div>*/}
-        {/*</Modal>*/}
         <div className={css.rowDetail}>
             <div className={css.item}>
                 <span className={css.label}>币种:</span>
@@ -199,7 +176,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                 </span>
             </div>
             <div className={css.item}>
-                <span className={css.label}>合约费用：</span>
+                <span className={css.label}>合约费用:</span>
                 <span className={cn(css.smallCost, css.value)}>${big(data.hashrate_cost).toFixed(4)}</span>
             </div>
             <div className={css.item}>
@@ -218,11 +195,11 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                 </span>
             </div>
             <div className={css.item}>
-                <span className={css.label}>算力：</span>
+                <span className={css.label}>算力:</span>
                 <span className={css.value}>{data.hashrate}{data.good.unit}</span>
             </div>
             <div className={css.item}>
-                <span className={css.label}>电费：</span>
+                <span className={css.label}>电费:</span>
                 <span className={cn(css.value, css.smallCost)}>
                     ${big(data.electricity_cost).toFixed(4)}
                 </span>
@@ -232,28 +209,33 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                     data.state === 2 && (
                         <>
                             <span className={css.label}>TXID:</span>
-                            <span className={css.value}><Clipboard maxTextWidth={'67px'} linkUrl={data.payment_link}
-                                                                   str={data.payment_link_source}/></span>
+                            <span className={css.value}>
+                                <Clipboard
+                                    maxTextWidth={'67px'}
+                                    linkUrl={data.payment_link}
+                                    str={data.payment_link_source}
+                                />
+                            </span>
                         </>
                     )
                 }
             </div>
             <div className={css.item}>
-                <span className={css.label}>算法：</span>
+                <span className={css.label}>算法:</span>
                 <span className={css.value}>{data.good.algorithm}</span>
             </div>
             <div className={css.item}>
-                <span className={css.label}>合计费用：</span>
+                <span className={css.label}>合计费用:</span>
                 <span className={cn(css.totalFeeText, css.value)}>${big(data.cost).toFixed(4)}</span>
             </div>
             <div></div>
             <div className={css.item} style={{width: '600px'}}>
-                <span className={css.label}>挖矿日期：</span>
+                <span className={css.label}>挖矿日期:</span>
                 <span
                     className={css.value}>{new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</span>
             </div>
             <div className={css.delOrderBtn}>
-                <Button type={"text"} icon={<DeleteOutlined/>} onClick={confirm}>删除订单</Button>
+                <Button type={"text"} icon={<DeleteOutlined/>} onClick={() => onDelete(data)}>删除订单</Button>
             </div>
             {
                 data.state === 2 && <div style={{
@@ -281,6 +263,7 @@ const MyOrder = () => {
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [modal, contextHolder] = Modal.useModal();
     const [currentObj, setCurrentObj] = useState<OrderListItem | null>(null)
+    const [deleteObj, setDeleteObj] = useState<OrderListItem | null>(null)
 
     const handleExpand = (record: any) => {
         const keys = [...expandedRowKeys];
@@ -306,15 +289,24 @@ const MyOrder = () => {
         })
 
     }, [setOrderList, getOrderList])
-    const onDelete = () => {
-        getOrderList(1, 20).then(res => {
-            setOrderList(res.list);
-            setPageInfo(res.pagination)
-        })
+    const onDelete = (data: any) => {
+        if (!data) return
+        setDeleteObj(data)
     }
     const reBuy = (data: OrderListItem) => {
         setCurrentObj(data);
         console.log(data)
+    }
+
+    const deleteRow = () => {
+        if (!deleteObj) return;
+        deleteOrder(deleteObj.order_id).then(() => {
+            setDeleteObj(null)
+            getOrderList(1, 20).then(res => {
+                setOrderList(res.list);
+                setPageInfo(res.pagination)
+            })
+        })
     }
 
     return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
@@ -335,6 +327,17 @@ const MyOrder = () => {
                 finishPay={() => {
                     setCurrentObj(null)
                 }}
+            />
+        </Modal>
+        <Modal open={deleteObj!==null} footer={null} width={420}>
+            <EasyConfirmContent
+                key={deleteObj?.order_id}
+                title={'删除订单'}
+                content={'您是否真的要删除订单，删除订单后将无法找回该订单？'}
+                confirmText={'我再想想'}
+                cancelText={'是'}
+                onCancel={deleteRow}
+                onConfirm={() => setDeleteObj(null)}
             />
         </Modal>
         <div className={'cal-card-big'}>

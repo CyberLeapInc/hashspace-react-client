@@ -1,0 +1,30 @@
+.wrapper{
+    width: 350px;
+    margin: 0 auto;
+}
+.title{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: center;
+    margin-top: 10px;
+}
+.content{
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    line-height: 30px;
+    text-align: center;
+    margin: 40px 0px 60px;
+}
+.buttons{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+.button{
+    flex: 1;
+    height: 52px;
+}
