@@ -1,0 +1,70 @@
+.rowDetail{
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 45px 45px 45px 45px;
+    position: relative;
+    line-height: 45px;
+    vertical-align: middle;
+    width: 100%;
+}
+.smallCost{
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    color: #333333 !important;
+}
+.delOrderBtn{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100px;
+    height: 50px;
+    font-size: 24px;
+    line-height: 50px;
+}
+.rowBold{
+    font-weight: 500;
+    font-size: 14px;
+}
+.flexbox{
+    display: flex;
+}
+.item{
+    display: flex;
+    line-height: 45px;
+}
+.label{
+    width: 80px;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+}
+.value{
+    display: flex;
+    flex: 1;
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+}
+.totalFeeText{
+    font-weight: bold;
+    font-size: 20px;
+    color: #333333;
+}
+.timeout{
+    font-weight: 600;
+    color: #EA2A2A;
+}
+.textAlignCenter{
+    text-align: center;
+}
+.countdownWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 23px;
+    gap: 4px;
+    color: #EA2A2A;
+}

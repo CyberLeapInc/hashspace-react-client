@@ -1,109 +1,67 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import {Button, Table, Modal} from 'antd';
-import type { TableProps } from 'antd';
+import {Button, Table, Modal, Statistic} from 'antd';
+import type {TableProps} from 'antd';
 import Link from "next/link";
 import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
 import {getOrderList, OrderListItem, PageInfo, deleteOrder, OrderGood} from "@/service/api";
 import {DeleteOutlined} from "@ant-design/icons";
-
-import './index.css'
+import css from './index.module.css'
 import Image from "next/image";
 import big from "big.js";
 import moment from "moment";
 import Clipboard from "@/components/Clipboard";
+import {OrderItem, DataType, Good} from './interfaces'
+import BTC from '../../../public/btc.svg'
+import DOGE from '../../../public/doge.svg'
+import LTC from '../../../public/ltc.svg'
+import {cn} from "@/lib/utils";
 
-
-export interface OrderItem {
-    /**
-     * 总费用，例如：$120.9
-     */
-    cost?: string;
-    /**
-     * 日期
-     */
-    created_at?: number;
-    /**
-     * 电费，例如：$30
-     */
-    electricity_cost?: string;
-    /**
-     * 挖矿结束
-     */
-    end_at?: number;
-    /**
-     * 云算力合约产品详情
-     */
-    good?: Good;
-    /**
-     * 算力，如：100 T，单位为{good.unit}
-     */
-    hashrate?: string;
-    /**
-     * 合约费用，例如:  $90
-     */
-    hashrate_cost?: string;
-    /**
-     * 订单ID，如：E202323121312
-     */
-    order_id: string;
-    /**
-     * 支付到期时间
-     */
-    payment_expired_at?: number;
-    /**
-     *
-     * 支付完成的跳转链接，例如：https://www.oklink.com/btc/tx/4c64c6b961308665da715258a27f70169abbc2e15783692470f893cfdece88a2
-     */
-    payment_transcation_id: string;
-    /**
-     * 挖矿开始
-     */
-    start_at?: number;
-    /**
-     * 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
-     */
-    state?: number;
-    address?: string;
-    [property: string]: any;
+const getCurrencyIcon = (currency: string) => {
+    switch (currency) {
+        case 'BTC':
+            return <Image style={{marginRight: '5px'}} src={BTC} alt={'btc'} width={20}/>
+        case 'DOGE':
+            return <Image style={{marginRight: '5px'}} src={DOGE} alt={'doge'} width={20}/>
+        case 'LTC':
+            return <Image style={{marginRight: '5px'}} src={LTC} alt={'ltc'} width={20}/>
+        default:
+            return <Image style={{marginRight: '5px'}} src={BTC} alt={'btc'} width={20}/>
+    }
 }
 
-/**
- * 云算力合约产品详情
- */
-export interface Good {
-    algorithm: string;
-    currency: string[];
-    daily_electricity: string;
-    daily_income: string;
-    description: string;
-    end_at: number;
-    good_id: string;
-    income: string;
-    max_qty: string;
-    min_qty: string;
-    name: string;
-    power_consumption: string;
-    price: string;
-    remain_qty: string;
-    start_at: number;
-    step_qty: string;
-    unit: string;
-    [property: string]: any;
+const getStatusColor = (status: number) => {
+    switch (status) {
+        case 1:
+            return '#EA2A2A'
+        case 2:
+            return '#16C984'
+        case 3:
+            return '#EA2A2A'
+        case 4:
+            return '#333333'
+        default:
+            return '#999999'
+    }
 }
-interface DataType {
-    key: string;
-    name: string;
-    money: string;
-    address: string;
+
+const getFeeColor = (status: number) => {
+    switch (status) {
+        case 2:
+            return '#333333'
+        default:
+            return '#999999'
+    }
+
 }
+
 
 const columns: TableProps<OrderItem>['columns'] = [
     {
         title: '订单时间',
         dataIndex: 'created_at',
         render: (data) => {
-            return <div>{moment(data*1000).format('LLLL')}</div>
+            return <div>{moment(data * 1000).format('LLLL')}</div>
         },
         width: 200
     },
@@ -115,18 +73,28 @@ const columns: TableProps<OrderItem>['columns'] = [
         title: '套餐',
         dataIndex: 'good',
         render: (text, record, index) => {
-            return <div>{record.good?.name}</div>
+            return <div className={css.flexbox}>
+                {
+                    record.good?.currency.map((item, index) => {
+                        return <span key={index} style={{marginRight: '4px'}}>{getCurrencyIcon(item)}</span>
+                    })
+                }
+                {record.good?.name}</div>
         }
     },
     {
         title: '算力',
         dataIndex: 'hashrate',
+        render: (text, record, index) => {
+            return <div>{record.hashrate}{record?.good?.unit || ''}</div>
+        }
     },
     {
         title: '金额',
         dataIndex: 'hashrate_cost',
         render: (text, record, index) => {
-            return <div>${big(record.hashrate_cost || '').toFixed(4)}</div>
+            return <div style={{color: getFeeColor(record.state || 0)}}
+                        className={css.rowBold}>-${big(record.hashrate_cost || '').toFixed(4)}</div>
         }
     },
     {
@@ -134,44 +102,60 @@ const columns: TableProps<OrderItem>['columns'] = [
         dataIndex: 'state',
         render: (text, record) => {
             // 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
-            const res = ['待支付', '支付成功挖矿中', '支付超时', '挖矿结束']
-            return (<span>{res[(record.state || 1 )- 1]}</span>)
+            const res = ['待支付', '支付成功', '支付超时', '挖矿结束']
+            return (<span className={css.rowBold}
+                          style={{color: getStatusColor(record.state || 0)}}>{res[(record.state || 1) - 1]}</span>)
         },
         width: 100
     },
     Table.EXPAND_COLUMN,
 ];
 
-const data: DataType[] = [
+const data: DataType[] = [];
 
-];
-
-const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {status: number, link: string, source: string, goodId: string,record: any, reBuy: (data: any) => void}) => {
+const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
+    status: number,
+    link: string,
+    source: string,
+    goodId: string,
+    record: OrderListItem,
+    reBuy: (data: any) => void
+}) => {
+    const {Countdown} = Statistic;
     switch (status) {
         case 1:
-            return (<span style={{width: '100%'}}>
-                <Button type={"primary"} shape={"round"} onClick={() => reBuy(record)}>立即支付</Button>
-            </span>)
+            return (
+                <div>
+                    <Button type={"primary"} shape={"round"} onClick={() => reBuy(record)}>立即支付</Button>
+                    <div className={cn(css.countdownWrapper)}>
+                        <Countdown key={record.order_id}
+                                   valueStyle={{fontSize: '12px', color: '#EA2A2A', lineHeight: '23px', height: '23px'}}
+                                   value={(record?.payment_expired_at || 0) * 1000}/>
+                        <div>内完成支付</div>
+                    </div>
+                </div>
+            )
         case 2:
             return (
                 <div>
-                    <div>已支付</div>
-                    <div>
-                        TXID: <Clipboard str={source} />
-                    </div>
+                    <div style={{color: '#16C984'}}>已支付</div>
                 </div>
             )
         case 3:
             return (
-                <Button>
-                    <Link href={`/productDetail?good_id=${goodId}`}>重新购买</Link>
-                </Button>
+                <div>
+                    <Button type={"primary"} shape={"round"}>
+                        <Link href={`/productDetail?good_id=${goodId}`}>重新购买</Link>
+                    </Button>
+                    <div className={css.textAlignCenter}>
+                        <span className={css.timeout}>支付超时</span>
+                    </div>
+                </div>
             )
         default:
             return <span>{source}</span>
     }
 }
-
 
 
 const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: () => void, reBuy: (data: any) => void) => {
@@ -192,25 +176,74 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
     };
 
     return (<div>
-        <div className={'row-detail'}>
-            <div>币种: {data.good?.currency}</div>
-            <div>合约费用：<span className={'smallCost'}>${big(data.hashrate_cost).toFixed(4)}</span></div>
-            <div>支付状态: {<PaymentStatus record={data} reBuy={reBuy} goodId={data.good.good_id} status={data.state} link={data.payment_link}
-                                           source={data.payment_link_source}/>}</div>
-            <div>算力：{data.hashrate}{data.good.unit}</div>
-            <div>电费: <span className={'smallCost'}>${big(data.electricity_cost).toFixed(4)}</span></div>
-            <div></div>
-            <div>算法：{data.good.algorithm}</div>
-            <div>合计费用：<span style={{
-                fontWeight: 'bold',
-                fontSize: '20px',
-                color: '#333333',
-            }}>${big(data.cost).toFixed(4)}</span></div>
-            <div></div>
-            <div
-                style={{width: '600px'}}>挖矿日期： {new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}
+        <div className={css.rowDetail}>
+            <div className={css.item}>
+                <span className={css.label}>币种:</span>
+                <span className={css.value}>
+                   {data.good?.currency.map((item: string, index: number) => {
+                       return <div key={index} style={{
+                           marginRight: '4px',
+                           display: 'flex',
+                           width: '100%'
+                       }}>{getCurrencyIcon(item)}{item}</div>
+                   })}
+                </span>
             </div>
-            <div className={'delOrderBtn'}>
+            <div className={css.item}>
+                <span className={css.label}>合约费用：</span>
+                <span className={cn(css.smallCost, css.value)}>${big(data.hashrate_cost).toFixed(4)}</span>
+            </div>
+            <div className={css.item}>
+                <span className={css.label}>
+                    支付状态:
+                </span>
+                <span className={css.value}>
+                    {<PaymentStatus
+                        record={data}
+                        reBuy={reBuy}
+                        goodId={data.good.good_id}
+                        status={data.state}
+                        link={data.payment_link}
+                        source={data.payment_link_source}
+                    />}
+                </span>
+            </div>
+            <div className={css.item}>
+                <span className={css.label}>算力：</span>
+                <span className={css.value}>{data.hashrate}{data.good.unit}</span>
+            </div>
+            <div className={css.item}>
+                <span className={css.label}>电费：</span>
+                <span className={cn(css.value, css.smallCost)}>
+                    ${big(data.electricity_cost).toFixed(4)}
+                </span>
+            </div>
+            <div className={css.item}>
+                {
+                    data.state === 2 && (
+                        <>
+                            <span className={css.label}>TXID:</span>
+                            <span className={css.value}><Clipboard maxTextWidth={'67px'} linkUrl={data.payment_link}
+                                                                   str={data.payment_link_source}/></span>
+                        </>
+                    )
+                }
+            </div>
+            <div className={css.item}>
+                <span className={css.label}>算法：</span>
+                <span className={css.value}>{data.good.algorithm}</span>
+            </div>
+            <div className={css.item}>
+                <span className={css.label}>合计费用：</span>
+                <span className={cn(css.totalFeeText, css.value)}>${big(data.cost).toFixed(4)}</span>
+            </div>
+            <div></div>
+            <div className={css.item} style={{width: '600px'}}>
+                <span className={css.label}>挖矿日期：</span>
+                <span
+                    className={css.value}>{new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</span>
+            </div>
+            <div className={css.delOrderBtn}>
                 <Button type={"text"} icon={<DeleteOutlined/>} onClick={confirm}>删除订单</Button>
             </div>
             {
@@ -303,13 +336,14 @@ const MyOrder = () => {
             setPageInfo(res.pagination)
         })
     }
-    const reBuy = (data:OrderListItem) => {
+    const reBuy = (data: OrderListItem) => {
         setCurrentObj(data);
+        console.log(data)
     }
 
     return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
         <Modal open={false}>
-            <div >123</div>
+            <div>123</div>
         </Modal>
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>
@@ -323,9 +357,10 @@ const MyOrder = () => {
                     expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete, reBuy),
                     rowExpandable: (record) => true,
                     expandIcon: ({expanded, onExpand, record}) =>
-                        <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}} onClick={e => handleExpand(record)}>
+                        <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}}
+                             onClick={e => handleExpand(record)}>
                             <Image style={{
-                                rotate: expanded ? '180deg': '0deg',
+                                rotate: expanded ? '180deg' : '0deg',
                                 transition: 'all 0.3s'
                             }} src={ArrowUpOutlineBlack} alt={'arrow'} width={8}/>
                         </div>

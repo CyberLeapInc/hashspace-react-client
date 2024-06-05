@@ -10,6 +10,13 @@
     cursor: pointer;
     transition: all 0.2s;
     margin: 5px 0;
+    display: flex;
+}
+.text{
+    display: inline-block;
+    white-space: nowrap; /* 防止文本换行 */
+    overflow: hidden; /* 隐藏超出的内容 */
+    text-overflow: ellipsis; /* 显示省略号 */
 }
 .wrapper:hover{
     background: #F0F0F0;
