@@ -66,7 +66,7 @@ const KYC = () => {
              </Modal>
 
             {
-                state?.userInfo?.identity?.status === 0 &&
+                !state?.userInfo?.has_identity &&
                 <div className={'container-my'} style={{paddingTop: '100px'}}>
                     <div className={'id_card'}>
                         <Image className={'kyc-image'} src={KycNewImage} alt={'kyc new'}></Image>
@@ -82,7 +82,7 @@ const KYC = () => {
                 </div>
             }
             {
-                state?.userInfo?.identity?.status === 1 &&
+                state?.userInfo?.identity?.status === 1 || state?.userInfo?.identity?.status === 2 &&
                 <div className={'container-my'} style={{paddingTop: '100px'}}>
                     <div className={'id_card'}>
                         <Image className={'kyc-image'} src={KycWaitingImage} alt={'kyc new'}></Image>
