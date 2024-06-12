@@ -21,8 +21,8 @@ const Column = dynamic(() => import('@ant-design/plots').then(({ Column }) => Co
 })
 
 const data = [
-    { type: 'net_income', value: 116 },
-    { type: 'total_income', value: 1000 },
+    { type: 'hashrate_cost', value: 0 },
+    { type: 'total_income', value: 0 },
 ];
 
 const DemoColumn = ({data}: {data: any[]}) => {
@@ -45,8 +45,8 @@ const DemoColumn = ({data}: {data: any[]}) => {
                 labelFill: 'rgba(51, 51, 51, 1)',
                 tick: false,
                 labelFormatter: (v: string) => {
-                    if (v === 'net_income') {
-                        return '投资回报率'
+                    if (v === 'hashrate_cost') {
+                        return '云算力费用'
                     }
                     if (v === 'total_income') {
                         return '预期收益'
@@ -57,7 +57,7 @@ const DemoColumn = ({data}: {data: any[]}) => {
         },
         style: {
             fill: (data: any) => {
-                if (data.type === 'net_income') {
+                if (data.type === 'hashrate_cost') {
                     return '#3C53FF';
                 }
                 return '#393535';
@@ -141,14 +141,18 @@ const ProductDetail = () => {
     }
     const deb = useDebounceFn(() => {
         const fullRevenueRequest: FullRevenueRequest = {
-            price: String(getPrice('BTC')),
+            price: {
+                BTC: String(targetPrice),
+                DOGE: String(targetDogePrice),
+                LTC: String(targetLtcPrice),
+            },
             good_id: goodId,
             hashrate_qty: String(buyCount),
-            difficulty: getDifficulty('BTC') || '0',
+            difficulty: getDifficulty(goodDetail?.mining_currency || 'BTC') || '0',
         }
         fullRevenue(fullRevenueRequest).then(res => {
             setDataList([
-                { type: 'net_income', value: Number(res.net_income) },
+                { type: 'hashrate_cost', value: Number(hashrateCost) },
                 { type: 'total_income', value: Number(res.total_income) },
             ])
             setRevenueData({
@@ -246,13 +250,13 @@ const ProductDetail = () => {
                         </div>
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px'}}>
                             <div className={cn(css.chart, css.block)}>
+                                <div className={css.roi}>
+                                    <span>投资回报率: </span>
+                                    <span style={{color: '#3C53FF', fontWeight: 'bold'}}>{revenueData.roi}</span>
+                                </div>
                                 {/*@ts-ignore*/}
                                 <div style={{height: '170px', width: '100%'}}>
                                     <DemoColumn data={dataList}></DemoColumn>
-                                </div>
-                                <div className={css.range}>
-                                    <div className={css.text}>{revenueData.roi}</div>
-                                    <div className={css.text}>{revenueData.total_income}</div>
                                 </div>
                             </div>
                             <div className={cn(css.block)}>

@@ -96,7 +96,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         dataIndex: 'hashrate_cost',
         render: (text, record, index) => {
             return <div style={{color: getFeeColor(record.state || 0)}}
-                        className={css.rowBold}>-${big(record.hashrate_cost || '').toFixed(4)}</div>
+                        className={css.rowBold}>${big(record.hashrate_cost || '').toFixed(4)}</div>
         }
     },
     {
@@ -235,7 +235,9 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                     className={css.value}>{new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</span>
             </div>
             <div className={css.delOrderBtn}>
-                <Button type={"text"} icon={<DeleteOutlined/>} onClick={() => onDelete(data)}>删除订单</Button>
+                {
+                    data.state === 3 && <Button type={"text"} icon={<DeleteOutlined/>} onClick={() => onDelete(data)}>删除订单</Button>
+                }
             </div>
             {
                 data.state === 2 && <div style={{

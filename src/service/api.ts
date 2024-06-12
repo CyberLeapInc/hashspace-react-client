@@ -308,7 +308,7 @@ export interface Good {
      */
     currency?: string[];
     list?: GoodListItem[];
-    [property: string]: any;
+    mining_currency: string;
 }
 
 export interface GoodListItem {
@@ -317,9 +317,9 @@ export interface GoodListItem {
      */
     algorithm?: string;
     /**
-     * 可挖币种，例如：BTC, LTC, DOGE
+     * 收益币种，例如：BTC, LTC, DOGE
      */
-    currency?: string[];
+    currency: string[];
     /**
      * 日电费。单位为USD。后边为 /{unit}/D，例如：$0.00002342/T/D
      */
@@ -329,13 +329,17 @@ export interface GoodListItem {
      */
     daily_income?: string;
     /**
+     * 默认购买的算力数量，例如：100 T
+     */
+    default_buy_qty: string;
+    /**
      * 描述，例如：快速开始
      */
     description?: string;
     /**
      * 结束时间，秒级别时间戳
      */
-    end_at: number;
+    end_at?: number;
     /**
      * 云算力ID，例如：BTC001
      */
@@ -352,6 +356,10 @@ export interface GoodListItem {
      * 最小购买量，最少购买多少算力，例如购买最少10T算力
      */
     min_qty?: string;
+    /**
+     * 挖矿币种
+     */
+    mining_currency: string;
     /**
      * 商品名，例如： 30天新手
      */
@@ -371,7 +379,7 @@ export interface GoodListItem {
     /**
      * 开始时间，秒级别时间戳
      */
-    start_at: number;
+    start_at?: number;
     /**
      * 购买量步长，步长购买多少算力,  例如步长20T，只能购买30 , 50, 70, 90, 110 ...
      */
@@ -462,6 +470,7 @@ export interface GoodDetail {
      * 算力单位 T。G
      */
     unit: string;
+    mining_currency: string;
     [property: string]: any;
 }
 
@@ -1017,10 +1026,29 @@ export interface FullRevenueRequest {
     /**
      * 当前币价，例如：$ 75000.91
      */
-    price: string;
+    price: Price;
 }
 
-export interface FullRevenueResponse {
+/**
+ * 当前币价，例如：$ 75000.91
+ */
+export interface Price {
+    /**
+     * BTC币价
+     */
+    BTC?: string;
+    /**
+     * DOGE币价
+     */
+    DOGE?: string;
+    /**
+     * LTC币价
+     */
+    LTC?: string;
+    [property: string]: any;
+}
+
+export interface FullRevenueResponse  {
     /**
      * 总收入币种，例如：BTC
      */
@@ -1028,11 +1056,15 @@ export interface FullRevenueResponse {
     /**
      * 日收入币，例如：0.000045 BTC
      */
-    daily_coin_income: string;
+    daily_coin_income: DailyCoinIncome;
     /**
      * 日收入USD，例如：$1.32
      */
     daily_income: string;
+    /**
+     * 合约支出USD，例如：$150
+     */
+    hashrate_cost: string;
     /**
      * 净收入USD，例如：$81.3
      */
@@ -1042,7 +1074,7 @@ export interface FullRevenueResponse {
      */
     payback_day: number;
     /**
-     * 回本币价，例如：$73000.01
+     * 回本币价，例如：$73000.01; 如果价格为多个时如LTC，DOGE，该数据无效
      */
     payback_price: string;
     /**
@@ -1052,7 +1084,7 @@ export interface FullRevenueResponse {
     /**
      * 总收入币，例如：0.00025 BTC
      */
-    total_coin_income: string;
+    total_coin_income: TotalCoinIncome;
     /**
      * 总支出USD，例如：$303.3
      */
@@ -1061,7 +1093,38 @@ export interface FullRevenueResponse {
      * 总收入USD; 下单页的预期收益，例如：$222.23
      */
     total_income: string;
+    [property: string]: any;
 }
+export interface TotalCoinIncome {
+    /**
+     * BTC总币收益
+     */
+    BTC: string;
+    /**
+     * DOGE总币收益
+     */
+    DOGE: string;
+    /**
+     * LTC总币收益
+     */
+    LTC: string;
+    [property: string]: any;
+}
+/**
+ * 日收入币，例如：0.000045 BTC
+ */
+export interface DailyCoinIncome {
+    /**
+     * BTC日收益
+     */
+    BTC: string;
+    /**
+     * LTC日收益
+     */
+    LTC: string;
+    [property: string]: any;
+}
+
 
 export const fullRevenue = (data:FullRevenueRequest): Promise<FullRevenueResponse> => {
     return axiosInstance.post('/api/public/cloudhash/full-revenue', data)

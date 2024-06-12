@@ -26,7 +26,7 @@ const Card = function ({data}: {data: GoodListItem}) {
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">挖矿日期</div>
-                    <div className="card-single-bottom-value">{new Date(data.start_at * 1000 || 0).toLocaleDateString()} - {new Date(data.end_at * 1000 || 0).toLocaleDateString()}</div>
+                    <div className="card-single-bottom-value">{new Date((data?.start_at || 0) * 1000 || 0).toLocaleDateString()} - {new Date((data?.end_at || 0) * 1000 || 0).toLocaleDateString()}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">功耗</div>

@@ -147,3 +147,10 @@
     border-radius: 8px;
     border: 1px solid #3C53FF;
 }
+.roi{
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    line-height: 20px;
+    text-align: center;
+}
