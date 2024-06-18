@@ -1,0 +1,39 @@
+.footerCus{
+    background-color: #F5F7FF;
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    color: #333333;
+    line-height: 21px;
+    text-align: center;
+    font-style: normal;
+    width: 100%;
+}
+.footerContainer{
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 40px;
+    line-height: 35px;
+    box-sizing: content-box;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    text-align: left;
+    font-style: normal;
+}
+.footerContainerMobile{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.agreementsList{
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    width: 100%;
+}
+.agreement{
+    flex: 1;
+    text-align: center;
+}

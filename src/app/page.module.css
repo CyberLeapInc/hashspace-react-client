@@ -1,0 +1,70 @@
+.banner{
+    background-image: url("../../public/banner.png");
+    background-size: cover;
+    padding-top: 330px;
+    padding-bottom: 130px;
+}
+.title{
+    font-weight: bold;
+    font-size: 70px;
+    color: #333333;
+    line-height: 72px;
+    text-align: left;
+    font-style: normal;
+}
+.mobileTitle{
+    font-weight: bold;
+    font-size: 36px;
+    color: #333333;
+    line-height: 42px;
+    text-align: center;
+}
+.middle{
+    background: #EDF1FE;
+}
+.cardlist{
+    display: flex;
+    width: 100%;
+    gap: 27px;
+    padding-bottom: 60px;
+}
+.mobileCardList{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px;
+    text-align: center;
+}
+.card{
+    border-radius: 40px;
+    height: 250px;
+    min-width: 250px;
+    background-color: white;
+    flex: 1;
+    padding: 40px 44px;
+    box-sizing: border-box;
+}
+.cardImage{
+    height: 40px;
+    width: 40px;
+    margin:12px;
+}
+.centerCardImage{
+    margin: 0 auto 12px;
+}
+.questionTitle{
+    font-weight: bold;
+    font-size: 42px;
+    color: #333333;
+    line-height: 72px;
+    text-align: left;
+    font-style: normal;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.mobileQuestionTitle{
+    text-align: center;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 28px;
+}

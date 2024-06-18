@@ -7,11 +7,13 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import Image from "next/image";
-import { Collapse, Space } from 'antd';
-import {useState} from "react";
+import {useContext, useState} from "react";
 import ProImage from '../../public/pro-round.png';
 import CountImage from '../../public/count-round.png';
 import SafeImage from '../../public/safe-round.png'
+import css from './page.module.css'
+import {MyContext} from "@/service/context";
+import {cn} from "@/lib/utils";
 
 const text = `
   A dog is a type of domesticated animal.
@@ -19,7 +21,8 @@ const text = `
   it can be found as a welcome guest in many households across the world.
 `;
 
-const questionList = [{
+const questionList = [
+    {
     title: 'HashSpace是如何运作的？',
     text: '首先您需要在HashSpace选择一个算力合约，然后支付算力费用及电费。费用支付完成后，矿场合作方将会为您解决后续的配置上架、电力管理、矿场运维等复杂流程。您只需要在购买后设置您想要使用的矿池，并填写您在该矿池的账号，即可享受一站式的便捷服务，坐收挖矿收益。\n',
     index: 1,
@@ -83,27 +86,30 @@ const questionList = [{
 
 export default function Home() {
     const [questionOpen, setQuestionOpen] = useState(0);
+    const {state, dispatch} = useContext(MyContext)
     return (
-    <main className="dd">
+    <main>
       <div className=''>
-          <div className="banner">
+          <div className={css.banner}>
               <div style={{
-                  width: '1200px',
+                  maxWidth: '1200px',
                   margin: '0 auto'
               }}>
-                  <div className="title">
+                  <div className={cn(css.title, state.isMobile ? css.mobileTitle : css.pcTitle)}>
                       Expanding your<br/>
                       crypto space.
                   </div>
               </div>
 
           </div>
-          <div className="middle">
+          <div className={css.middle}>
               <div className="container-my">
-                  <div className="title2">为什么选择我们</div>
-                  <div className="cardlist">
-                      <div className="card">
-                          <div className="card-image">
+                  {
+                      !state.isMobile && <div className="title2">为什么选择我们</div>
+                  }
+                  <div className={cn(css.cardlist, state.isMobile? css.mobileCardList: '')}>
+                      <div className={css.card}>
+                          <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={ProImage} alt="pro"></Image>
                           </div>
                           <div className="card-title">专业团队</div>
@@ -111,8 +117,8 @@ export default function Home() {
                               className="card-text">我们对矿场进行严格筛选，确保每一处都符合高标准，并始终为您提供值得信赖的优质矿机，矿场及电力资源。
                           </div>
                       </div>
-                      <div className="card">
-                          <div className="card-image">
+                      <div className={css.card}>
+                          <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={CountImage} alt="pro"></Image>
                           </div>
                           <div className="card-title">算力自主</div>
@@ -120,8 +126,8 @@ export default function Home() {
                               className="card-text">用户自己选择矿池，自己支付电费，矿池直接支付收益，自己选择收款类型，您的各项服务都由您做主。
                           </div>
                       </div>
-                      <div className="card">
-                          <div className="card-image">
+                      <div className={css.card}>
+                          <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={SafeImage} alt="pro"></Image>
                           </div>
                           <div className="card-title">安全合规</div>
@@ -134,7 +140,7 @@ export default function Home() {
           </div>
           <div style={{paddingBottom: '40px', backgroundColor: "white"}}>
               <div className="container-my">
-                  <div className="question-title">常见问题</div>
+                  <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题</div>
                   {
                       questionList && questionList.map((item) => (
                           <Collapsible open={questionOpen === item.index} key={item.index} onClick={() => {
@@ -145,7 +151,7 @@ export default function Home() {
                               }
                           }} style={{transition: 'all 0.3s'}} className={questionOpen === item.index ? 'grayquestionopen' : 'grayquestion'}>
                               <CollapsibleTrigger className="collapse-title">
-                                  <span>
+                                  <span style={{maxWidth: '80%'}}>
                                       <div className="collapse-span">{item.index}</div>
                                       {item.title}
                                   </span>

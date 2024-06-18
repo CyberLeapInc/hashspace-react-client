@@ -158,12 +158,12 @@ const SecurityCenter: React.FC = () => {
                             <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={handleBindGoogle}>
                                 {
                                     state.userInfo.has_totp ? <Button shape={"round"} type={"text"} style={{
-                                        height: '44px',
-                                        width: '136px',
+                                        height: state.isMobile ? '28px' : '44px',
+                                        width: state.isMobile? '' : '136px',
                                         fontSize: '14px'
                                     }}>解绑</Button> : <Button shape={"round"} type={"primary"} style={{
-                                        height: '44px',
-                                        width: '136px',
+                                        height: state.isMobile ? '28px' : '44px',
+                                        width: state.isMobile? '' : '136px',
                                         fontSize: '14px'
                                     }}>绑定</Button>
                                 }
@@ -189,12 +189,12 @@ const SecurityCenter: React.FC = () => {
                             }}>
                                 {
                                     state.userInfo.phone_number ? <Button shape={"round"} type={"text"} style={{
-                                        height: '44px',
-                                        width: '136px',
+                                        height: state.isMobile ? '28px' : '44px',
+                                        width: state.isMobile? '' : '136px',
                                         fontSize: '14px'
                                     }}>换绑</Button> : <Button shape={"round"} type={"primary"} style={{
-                                        height: '44px',
-                                        width: '136px',
+                                        height: state.isMobile ? '28px' : '44px',
+                                        width: state.isMobile? '' : '136px',
                                         fontSize: '14px'
                                     }}>绑定</Button>
                                 }

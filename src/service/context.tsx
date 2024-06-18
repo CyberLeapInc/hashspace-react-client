@@ -5,12 +5,14 @@ import {Chain, getChainList, getUserInfo} from "@/service/api";
 import {useMount} from "ahooks";
 export interface State {
     userInfo: UserInfo;
+    isMobile: boolean,
     chainList: Chain[];
 }
 
 export enum ActionType {
     setUserInfo = 'SET_USER_INFO',
-    setChainList = 'SET_CHAIN_LIST'
+    setChainList = 'SET_CHAIN_LIST',
+    setIsMobile = 'SET_IS_MOBILE',
 }
 
 interface Action {
@@ -34,6 +36,7 @@ export const initialState: State = {
         },
         address: []
     },
+    isMobile: false,
     chainList: []
 };
 
@@ -49,13 +52,24 @@ const reducer = (state: State, action: Action): State => {
             return { ...state, userInfo: action.payload };
         case ActionType.setChainList:
             return { ...state, chainList: action.payload };
+        case ActionType.setIsMobile:
+            return { ...state, isMobile: action.payload };
         default:
             return state;
     }
 };
 
-export const MyContextProvider= ({ children }: { children: ReactNode }) => {
+export const MyContextProvider= ({ children, value }: { children: ReactNode,value: {
+        isMobile: boolean
+    } }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    useEffect(() => {
+        if (value) {
+            dispatch({ type: ActionType.setIsMobile, payload: value.isMobile });
+            console.log('000123j123o1j23j')
+            console.log(value)
+        }
+    }, [value]);
 
     useMount(() => {
         getUserInfo().then((res) => {
