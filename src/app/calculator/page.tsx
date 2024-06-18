@@ -10,7 +10,7 @@ import Image from "next/image";
 import {Button, Form, Input, Select} from 'antd';
 
 import './index.css'
-import {fullRevenue, FullRevenueResponse, getProductList, Good, GoodListItem} from "@/service/api";
+import {fullRevenue, FullRevenueResponse, getProductList, Good, GoodListItem, GoodWrapper} from "@/service/api";
 import {MyContext} from "@/service/context";
 import big from "big.js";
 import {undefined} from "zod";
@@ -175,8 +175,8 @@ const Calculator = () => {
     const {state, dispatch} = useContext(MyContext)
     const [mineCurrencyList, setMineCurrencyList] = useState(['BTC', 'LTC'])
     const [selectedMineCurrency, setSelectedMineCurrency] = useState<string>('BTC')
-    const [goodsList, setGoodsList] = useState<Good[]>([])
-    const [currentGood, setCurrentGood] = useState<Good | null>(null)
+    const [goodsList, setGoodsList] = useState<GoodWrapper[]>([])
+    const [currentGood, setCurrentGood] = useState<GoodWrapper | null>(null)
     const [goodItem, setGoodItem] = useState<GoodListItem | null>(null)
     const [goodItemList, setGoodItemList] = useState<GoodListItem[]>([])
     const [goodId, setGoodId] = useState<string>('')
@@ -215,7 +215,7 @@ const Calculator = () => {
     useEffect(() => {
         fullRevenue({
             price: currencyPrice,
-            difficulty: String(currencyDifficulty['BTC']) || '0',
+            difficulty: currentGood?.mining_currency === 'BTC' ? String(currencyDifficulty['BTC']) : '',
             good_id: goodId,
             hashrate_qty: String(buyCount)
         }).then(res => {

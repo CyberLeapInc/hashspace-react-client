@@ -61,7 +61,7 @@
     display: grid;
     grid-gap: 16px;
     grid-template-columns: 204px 204px 204px;
-    grid-template-rows: 168px 168px;
+    /*grid-template-rows: 168px 168px;*/
 }
 .calCard{
     background: #FFFFFF;
@@ -69,6 +69,7 @@
     border: 1px solid rgba(233,233,233,0.76);
     backdrop-filter: blur(0px);
     padding: 28px 24px;
+    min-height: 168px;
 }
 .form{
     flex: 1;
@@ -89,9 +90,10 @@
     font-weight: 600;
     font-size: 20px;
     color: #333333;
-    line-height: 28px;
+    line-height: 26px;
     margin-top: 16px;
-    display: flex; align-items: center;
+    display: flex;
+    align-items: center;
     gap: 5px;
 }
 .calCardInfo{
@@ -105,4 +107,16 @@
     font-weight: 600;
     font-size: 12px;
     color: #333333;
+}
+.incomeItem{
+    display: flex;
+    line-height: 20px;
+    padding: 4px 0;
+}
+.money{
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    text-align: left;
 }

@@ -42,7 +42,7 @@ const Card = function ({data}: {data: GoodListItem}) {
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">最小购买数量</div>
-                    <div className="card-single-bottom-value">{new big(data['max_qty'] || 0).toFixed(2)}{data.unit}</div>
+                    <div className="card-single-bottom-value">{new big(data['min_qty'] || 0).toFixed(2)}{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">预期收益</div>

@@ -298,11 +298,11 @@ export const getLoginHistory = function (): Promise<LoginHistoryResponse> {
 
 
 export interface GoodListResponse {
-    goods: Good[];
+    goods: GoodWrapper[];
     [property: string]: any;
 }
 
-export interface Good {
+export interface GoodWrapper {
     /**
      * 可挖币种，例如：BTC, LTC, DOGE
      */
@@ -1132,6 +1132,10 @@ export const fullRevenue = (data:FullRevenueRequest): Promise<FullRevenueRespons
 
 export interface OrderDetailResponse {
     /**
+     * 币的收益
+     */
+    coin_income: CoinIncome[];
+    /**
      * 币种，如 BTC
      */
     currency: string;
@@ -1139,7 +1143,7 @@ export interface OrderDetailResponse {
      * 算力曲线
      */
     history: HashrateHistoryItem[];
-    item: GoodDetail;
+    item: Item;
     /**
      * 矿池观察者链接，为url
      */
@@ -1153,7 +1157,7 @@ export interface OrderDetailResponse {
      */
     today_estimate_income: string;
     /**
-     * 昨日总收益；单位为币，如 0.0123123 BTC
+     * 总收益；单位为币，如 0.0123123 BTC
      */
     total_income: string;
     /**
@@ -1168,6 +1172,64 @@ export interface OrderDetailResponse {
      * 昨日收益；单位为币，如 0.000123123 BTC
      */
     yesterday_income: string;
+}
+
+export interface Item {
+    cost: string;
+    created_at: number;
+    electricity_cost: string;
+    end_at: number;
+    good: Good;
+    hashrate: string;
+    hashrate_cost: string;
+    payment_expired_at: number;
+    start_at: number;
+    state: number;
+    [property: string]: any;
+}
+
+export interface Good {
+    algorithm: string;
+    currency: string[];
+    daily_electricity: string;
+    daily_income: string;
+    description: string;
+    end_at: number;
+    good_id: string;
+    income: string;
+    max_qty: string;
+    min_qty: string;
+    name: string;
+    power_consumption: string;
+    price: string;
+    remain_qty: string;
+    start_at: number;
+    step_qty: string;
+    /**
+     * 算力单位
+     */
+    unit: string;
+    [property: string]: any;
+}
+
+export interface CoinIncome {
+    /**
+     * 币种
+     */
+    currency: string;
+    /**
+     * 今日已挖预估收益；单位为币，如 0.000013222 BTC
+     */
+    today_estimate_income: string;
+    /**
+     * 总收益；单位为币，如 0.0123123 BTC
+     */
+    total_income: string;
+    /**
+     * 昨日总收益；单位为币，如 0.0123123 BTC
+     */
+    yesterday_income: string;
+    [property: string]: any;
 }
 
 export interface HashrateHistoryItem {
@@ -1236,7 +1298,7 @@ export interface PaymentItem {
     /**
      * 收益，例如：0.012312313 BTC
      */
-    income?: string;
+    income?: Income[];
     /**
      * 收益币种，例如： BTC
      */
@@ -1265,6 +1327,31 @@ export interface PaymentItem {
      * 算力单位，例如T
      */
     unit: string;
+    [property: string]: any;
+}
+
+export interface Income {
+    /**
+     * 收益金额，例如：0.012312313 BTC
+     */
+    amount: string;
+    /**
+     * 收益币种，例如： BTC
+     */
+    currency: string;
+    /**
+     * 支付txid的URL
+     */
+    payment_link: string;
+    /**
+     * 支付txid
+     */
+    payment_link_source: string;
+    /**
+     * 支付状态，1-已支付；2-待支付
+     */
+    status: number;
+    [property: string]: any;
 }
 
 export const getPaymentList = (id:string): Promise<PaymentListResponse> => {

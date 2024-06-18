@@ -1,5 +1,5 @@
 'use client'
-import React, {useState, useEffect, useContext, useRef, useCallback, useMemo} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Image, {StaticImageData} from "next/image";
 import calAllgain from '../../../public/cal-allgain.png'
 import calAllPay from '../../../public/cal-allpay.png'
@@ -7,28 +7,64 @@ import calDailyGain from '../../../public/cal-dailygain.png'
 import calPayBackDay from '../../../public/cal-paybackday.png'
 import calPayBackMoney from '../../../public/cal-paybackmoney.png'
 import calProfit from '../../../public/cal-profit.png'
-import {getOrderInfo, OrderDetailResponse, HashrateHistoryItem, getPaymentList, PaymentItem} from "@/service/api";
-import { Table } from 'antd';
+import {
+    getOrderInfo,
+    getPaymentList,
+    HashrateHistoryItem,
+    Income,
+    OrderDetailResponse,
+    PaymentItem
+} from "@/service/api";
+import type {TableProps} from 'antd';
+import {Button, Table} from 'antd';
 import dynamic from 'next/dynamic';
-import type { TableProps } from 'antd';
-import { Button } from 'antd';
 import './index.css'
 import css from './index.module.css'
 import {MyContext} from "@/service/context";
 import big from "big.js";
+import CurrencyIcon from "@/components/CurrencyIcon";
+import {useOnMountUnsafe} from "@/lib/clientUtils";
+import {getToFixedLength} from "@/lib/utils";
 
 const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
     ssr: false
 })
 
+
+interface IncomeItemProps {
+    list: Income[]
+}
+const IncomeItem = ({list}:IncomeItemProps) => {
+    return <div>
+        {
+            list?.map((item, index) => (
+                <div key={index} className={css.incomeItem}>
+                    <CurrencyIcon currency={item.currency} />
+                    <div>{item.amount}</div>
+                </div>
+            ))
+        }
+    </div>
+}
+const IncomeStatus = ({list}:IncomeItemProps) => {
+    return <div>
+        {
+            list?.map((item, index) => (
+                <div key={index} className={css.incomeItem}>
+                    <div style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ?  '已支付' : '待支付' }</div>
+                </div>
+            ))
+        }
+    </div>
+}
+
 const columns: TableProps<PaymentItem>['columns'] = [
     { title: '日期', dataIndex: 'created_at' },
     { title: '理论算力', dataIndex: 'theory_hashrate' },
     { title: '实际算力', dataIndex: 'real_hashrate' },
-    { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`
-    },
-    { title: '收益', dataIndex: 'income' },
-    { title: '状态', dataIndex: 'status', render: (v) => v === 1 ? '已支付' : '待支付' },
+    { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
+    { title: '收益', dataIndex: 'income', render: (v) => <IncomeItem list={v}/> },
+    { title: '状态', dataIndex: 'status', render: (v, record) => <IncomeStatus list={record.income || []} /> },
 ];
 
 interface CardData {
@@ -63,18 +99,30 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     const getMoney = (currency: string, count: number|string) => {
         const priceNow = state.chainList.find((item) => item.currency === currency)?.last_usdt_price
         console.log(priceNow)
-        const res = big(count).times(big(priceNow || 0)).toFixed(4).toString();
-        return res;
+        return big(count).times(big(priceNow || 0)).toFixed(getToFixedLength());
     }
-    const getInfo = (key: keyof OrderDetailResponse): string => {
-        if (/income/.test(key)) {
-            return `$${getMoney(rawData.currency, rawData[key] as string || '0')}`
-        }
-        return ''
+    const getSummaryMoney = (key: keyof OrderDetailResponse): string => {
+        let list: string[] = []
+        rawData.coin_income.forEach(item => {
+            list.push(getMoney(item.currency, item[key]))
+        })
+        return list.reduce((a, b) => big(a).plus(b).toFixed(getToFixedLength()))
+    }
+    const getInfo = (key: keyof OrderDetailResponse) => {
+        return <div>
+            {
+                rawData.coin_income?.map((item) => {
+                    return <div key={item.currency}>{big(item[key]).toFixed(getToFixedLength(item.currency))} <span className={css.unit}>{item.currency}</span> </div>
+                })
+            }
+            <div className={css.money}>
+                ≈ ${getSummaryMoney(key)}
+            </div>
+        </div>
     }
     const getUnit = (key: keyof OrderDetailResponse): string => {
         if (/hashrate/.test(key)) {
-            return 'TH'
+            return rawData?.item?.good?.unit || ''
         }
         if (/income/.test(key)) {
             return rawData.currency
@@ -91,10 +139,20 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                     <Image className={css.image} src={image} alt={alt}></Image>
                     {title}
                 </div>
-                <div className={css.calCardCount}>{!getUnit(showKey) && "$"}{getShowKey(showKey)}
-                    <span className={css.unit}>{getUnit(showKey)}</span>
+                <div className={css.calCardCount}>
+                    {
+                        /income/.test(showKey) && getInfo(showKey)
+                    }
+                    {
+                        !/income/.test(showKey) && <>
+
+                            {!getUnit(showKey) && "$"}{getShowKey(showKey)}
+                            <span className={css.unit}>{getUnit(showKey)}</span>
+                        </>
+                    }
+
                 </div>
-                <div className={css.calCardInfo}>{getInfo(showKey)}</div>
+                {/*<div className={css.calCardInfo}>{getInfo(showKey)}</div>*/}
             </div>
         )
     )
@@ -129,13 +187,14 @@ const OrderInfo = () => {
     const [link, setLink] = useState('');
     const [paymentList, setPaymentList] = useState<PaymentItem[]>([]);
     const [orderInfo, setOrderInfo] = useState<OrderDetailResponse | null>(null);
-    useEffect(() => {
+    useOnMountUnsafe(() => {
         let tempOrderId = '';
         if (typeof window !== "undefined") {
             const searchParams = new URLSearchParams(window.location.search);
             tempOrderId = searchParams.get('orderId') || ''
             setOrderId(tempOrderId)
         }
+        console.log('bbbbbbb')
         getOrderInfo(tempOrderId).then((res) => {
             console.log(res)
             setLink(res.pool_observer_link)
@@ -145,7 +204,7 @@ const OrderInfo = () => {
             console.log(res)
             setPaymentList(res.list)
         })
-    }, [orderId])
+    })
 
     return (
         <div style={{ minHeight: 'calc(100vh - 232px)', paddingTop: '25px' }}>

@@ -36,3 +36,16 @@ export const getAmountColor = (state: number, type: number | undefined) => {
         }
     }
 }
+
+export const getToFixedLength = (currency?: string) => {
+    switch (currency) {
+        case 'BTC':
+            return 8
+        case 'DOGE':
+            return 2
+        case 'LTC':
+            return 4
+        default:
+            return 2
+    }
+}
