@@ -29,3 +29,11 @@
     line-height: 24px;
     margin-top: 24px;
 }
+.mobileContent{
+    line-height: 24px;
+}
+.content{
+    line-height: 58px;
+    display: flex;
+    align-items: center;
+}

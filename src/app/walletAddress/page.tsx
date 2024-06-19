@@ -10,13 +10,15 @@ import IconLtc from "../../../public/icon-ltc.png";
 import {bindAddressFinish, bindAddressStart, bindPhoneFinish, getTotpCode, getUserInfo} from "@/service/api";
 import css from './index.module.css'
 import {CodeSender} from "@/components/ui/codeSender";
+import Clipboard from "@/components/Clipboard";
 
 const styles = {
     container: {minHeight: 'calc(100vh - 232px)', paddingTop: '25px', paddingBottom: '25px'},
-    label: {lineHeight: '58px', fontSize: '16px', fontWeight: 600, color: '#333', width: '100px'},
-    address: {lineHeight: '58px', fontSize: '16px', fontWeight: 600, color: '#333'},
+    label: {fontSize: '16px', fontWeight: 600, color: '#333', width: '100px'},
+    address: {fontSize: '16px', fontWeight: 600, color: '#333'},
     button: {height: '44px', width: '136px', fontSize: '14px'},
-    buttonContainer: {marginLeft: 'auto', paddingTop: '7px'}
+    mobileButton: { lineHeight: '14px', fontSize: '14px'},
+    buttonContainer: {marginLeft: 'auto'}
 };
 
 const currencies = [
@@ -166,19 +168,27 @@ const AddressCard = ({currency, icon, getAddress}: {
             <Modal open={isShowBindModal} width={420} footer={''} onCancel={() => toggleBindModal(false)}>
                 <SetAddress ogAddress={addressDict['address']} key={modalKey} currency={currency} onFinish={handleBind}/>
             </Modal>
-            <div className={'card-column-box-row'}>
-                <div className={'card-column-box-row-label'}>
+            <div className={'card-column-box-row'} style={{
+                display: 'flex',
+                padding: state.isMobile ? '24px 16px ' : '24px',
+                alignItems: 'center'
+            }}>
+                <div className={'card-column-box-row-label'} style={{
+                    marginRight: state.isMobile? '16px' : '24px'
+                }}>
                     <Image width={58} src={icon} alt={currency}/>
                 </div>
-                <div style={styles.label}>{currency}</div>
-                <div style={styles.address}>
-                    {addressDict['address']}
+                <div className={state.isMobile ? css.mobileContent : css.content}>
+                    <div style={styles.label}>{currency}</div>
+                    <div style={styles.address}>
+                        { addressDict['address'] && <Clipboard str={addressDict['address']} maxTextWidth={state.isMobile? '150px' : ''} />}
+                    </div>
                 </div>
                 <div style={styles.buttonContainer}>
                     {
                         addressDict['address'] ?
-                            <Button shape={"round"} type={"text"} style={styles.button} onClick={() => setIsShowBindModal(true)}>更改</Button> :
-                            <Button shape={"round"} type={"primary"} style={styles.button} onClick={() => setIsShowBindModal(true)}>绑定</Button>
+                            <Button shape={"round"} type={"text"} style={state.isMobile ? styles.mobileButton : styles.button} onClick={() => setIsShowBindModal(true)}>更改</Button> :
+                            <Button shape={"round"} type={"primary"} style={state.isMobile ? styles.mobileButton : styles.button} onClick={() => setIsShowBindModal(true)}>绑定</Button>
                     }
                 </div>
             </div>

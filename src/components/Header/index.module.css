@@ -1,6 +1,7 @@
 .top{
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 }
 .mobileHeader{
     display: flex;
@@ -15,4 +16,20 @@
     font-size: 16px;
     color: #333333;
     padding:0 28px;
+}
+.logOutButton{
+    border: 1px solid #333333;
+    height: 32px;
+    align-items: center;
+    width: 130px;
+    margin-left: 26px;
+    margin-top: 15px;
+}
+.logInButton{
+    border: 1px solid #333333;
+    height: 32px;
+    align-items: center;
+}
+.logOutButtonPC{
+    margin: 15px auto;
 }

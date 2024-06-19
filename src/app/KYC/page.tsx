@@ -45,7 +45,8 @@ const KYC = () => {
     }
     return (
         <div style={{
-            height: 'calc(100vh - 239px)'
+            height: 'calc(100vh - 239px)',
+            backgroundColor: state.isMobile ?  "white" : ''
         }}>
              <Modal title={'开始KYC认证'} open={isModalOpen} style={{maxHeight: '600px'}} onCancel={() => closeModal()} footer={''}>
                 <div style={{

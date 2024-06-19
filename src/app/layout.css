@@ -165,18 +165,17 @@
     border: 1px solid rgba(233,233,233,0.76);
     display: flex;
     .card-column-box-row{
-        padding: 24px;
+        padding:24px 17px;
         display: flex;
         color: #333333;
         line-height: 22px;
         font-weight: 500;
+        justify-content: space-between;
         .card-column-box-row-label{
-            min-width: 100px;
             font-size: 16px;
         }
         .card-column-box-row-content{
             font-size: 14px;
-
         }
     }
 }

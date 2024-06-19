@@ -16,12 +16,13 @@ import Logo from "../../../public/logo.png";
 
 
 import css from './index.module.css'
-import {CloseOutlined, MenuOutlined} from "@ant-design/icons";
+import {CloseOutlined, LoginOutlined, MenuOutlined} from "@ant-design/icons";
 import {cn} from "@/lib/utils";
 
-const HoverContent = ({outState, onLogOut}: {
+const HoverContent = ({outState, onLogOut, isMobile = false}: {
     outState: State,
-    onLogOut: Function
+    onLogOut: Function,
+    isMobile: Boolean
 }) => {
     const routerLinkList = [
         {
@@ -52,9 +53,12 @@ const HoverContent = ({outState, onLogOut}: {
     ]
 
     return (
-        <div style={{width: '210px', fontSize: '14px', color: '#333', fontWeight: 400}}>
+        <div style={{fontSize: '14px', color: '#333', fontWeight: 400}}>
             <Space direction={"vertical"} size={0} style={{width: '100%'}}>
-                <Space>
+                <Space style={{
+                    padding: '0 26px',
+                    paddingTop: '26px'
+                }}>
                     <Image  style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'} />
                     <div>
                         <div style={{fontWeight: 400}}>{outState.userInfo.email}</div>
@@ -77,21 +81,32 @@ const HoverContent = ({outState, onLogOut}: {
                                             fontSize: '14px',
                                             display:'flex',
                                             verticalAlign: 'middle',
-                                            justifyContent: 'center'
+                                            justifyContent: isMobile? 'left' : 'center',
+                                            paddingLeft: isMobile ? '26px' : '',
+                                            height: '55px',
+                                            lineHeight: '55px',
+                                            alignItems: 'center',
                                         }} block type="text" size={"large"}>
                                         <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
                                             margin:'2px 8px 0 0'
                                         }}/>
-                                        {item.text}
+                                        <span>
+                                            {item.text}
+                                        </span>
                                     </Button>
                                 </Link>
-
-                                <DividerCus></DividerCus>
                             </div>
                         ))
                     }
-                    <div>
-                        <Button block type="text" size={"large"} onClick={() => onLogOut()}>退出账号</Button>
+                    {!isMobile && <DividerCus />}
+
+                    <div style={{
+                        width: '100%',
+                        display: 'flex'
+                    }}>
+                        <Button className={cn(css.logOutButton, !isMobile && css.logOutButtonPC)} icon={<LoginOutlined />} shape={'round'} type="default" onClick={() => onLogOut()}>
+                            退出账号
+                        </Button>
 
                     </div>
 
@@ -104,6 +119,7 @@ const HoverContent = ({outState, onLogOut}: {
 export const Header: React.FC = () => {
     const {state, dispatch} = useContext(MyContext)
     const [openDrawer, setOpenDrawer] = useState(false)
+    const [type, setType] = useState('')
     const router = useRouter();
     const logOut = () => {
         router.replace('/')
@@ -114,6 +130,10 @@ export const Header: React.FC = () => {
                 payload: {}
             })
         })
+    }
+    const openDrawerWithType = (type: string) => {
+        setType(type)
+        setOpenDrawer(true)
     }
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -142,7 +162,7 @@ export const Header: React.FC = () => {
                     <div className={css.top}>
                         {
                             !(state?.userInfo?.email) &&
-                            <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>
+                            <Button style={{marginLeft: 'auto'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
                                 <Link href="/login" legacyBehavior passHref>
                                     开始挖矿
                                 </Link>
@@ -150,12 +170,9 @@ export const Header: React.FC = () => {
                         }
                         {
                             (state?.userInfo?.email) && (
-                                <Popover content={() => <HoverContent outState={state} onLogOut={logOut}/>}>
-                                    <Image style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>
-                                    {/*<Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />*/}
-                                </Popover>                            )
+                                <Image onClick={() => openDrawerWithType('user')} style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>                        )
                         }
-                        <Button size={"large"} type={"text"} icon={<MenuOutlined />} onClick={() => setOpenDrawer(true)}/>
+                        <Button size={"large"} type={"text"} icon={<MenuOutlined />} onClick={() => openDrawerWithType('navi')}/>
                     </div>
                 </div>
                 <Drawer
@@ -168,39 +185,53 @@ export const Header: React.FC = () => {
                         padding: '0',
                     }}
                 >
-                    <div  onClick={() => setOpenDrawer(false)}>
-                        <div className={css.mobileHeader}>
-                            <div></div>
-                            <div>
-                                {
-                                    !(state?.userInfo?.email) &&
-                                    <Link href="/login" legacyBehavior passHref>
-                                        <Button ghost style={{marginLeft: 'auto'}} shape={'round'} size={'large'}
-                                                type={'primary'} onClick={() => setOpenDrawer(false)}>
-                                            开始挖矿
+                    {
+                        type === 'navi' && <div onClick={() => setOpenDrawer(false)}>
+                            <div className={css.mobileHeader}>
+                                <div></div>
+                                <div>
+                                    {
+                                        !(state?.userInfo?.email) &&
+                                        <Button style={{marginLeft: 'auto'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
+                                            <Link href="/login" legacyBehavior passHref>
+                                                开始挖矿
+                                            </Link>
                                         </Button>
-                                    </Link>
 
-                                }
-                                <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
-                                        onClick={() => setOpenDrawer(false)}/>
+                                    }
+                                    <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
+                                            onClick={() => setOpenDrawer(false)}/>
+                                </div>
+                            </div>
+                            <div className={css.mobileList}>
+                                <Link href="/" legacyBehavior passHref>
+                                    首页
+                                </Link>
+                                <Link href="/productList" legacyBehavior passHref>
+                                    云算力
+                                </Link>
+                                <Link href="/calculator" legacyBehavior passHref>
+                                    计算器
+                                </Link>
+                                <Link href="/login" legacyBehavior passHref>
+                                    关于
+                                </Link>
                             </div>
                         </div>
-                        <div className={css.mobileList}>
-                            <Link href="/" legacyBehavior passHref>
-                                首页
-                            </Link>
-                            <Link href="/productList" legacyBehavior passHref>
-                                云算力
-                            </Link>
-                            <Link href="/calculator" legacyBehavior passHref>
-                                计算器
-                            </Link>
-                            <Link href="/login" legacyBehavior passHref>
-                                关于
-                            </Link>
+                    }
+                    {
+                        type === 'user' && <div  onClick={() => setOpenDrawer(false)}>
+                            <div className={css.mobileHeader}>
+                                <div></div>
+                                <div  className={css.top}>
+                                    <Image style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>
+                                    <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
+                                            onClick={() => setOpenDrawer(false)}/>
+                                </div>
+                            </div>
+                            <HoverContent isMobile={state.isMobile} outState={state} onLogOut={logOut}/>
                         </div>
-                    </div>
+                    }
                 </Drawer>
             </div>
         </header>
@@ -239,7 +270,11 @@ export const Header: React.FC = () => {
                     }
                     {
                         (state?.userInfo?.email) && (
-                            <Popover content={() => <HoverContent outState={state} onLogOut={logOut}/>}>
+                            <Popover overlayInnerStyle={{
+                                padding: 0,
+                                borderRadius: '20px',
+                                minWidth: '210px'
+                            }} content={() => <HoverContent isMobile={state.isMobile} outState={state} onLogOut={logOut}/>}>
                                 <Image style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>
                                 {/*<Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />*/}
                             </Popover>

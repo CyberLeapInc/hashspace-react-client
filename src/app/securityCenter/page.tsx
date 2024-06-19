@@ -144,7 +144,9 @@ const SecurityCenter: React.FC = () => {
                     </div>
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
-                            <div className={'card-column-box-row-label'}>
+                            <div className={'card-column-box-row-label'} style={{
+                                marginRight: state.isMobile? '8px' : '16px'
+                            }}>
                                 <Image width={58} src={IconGoogle} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
@@ -157,22 +159,16 @@ const SecurityCenter: React.FC = () => {
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={handleBindGoogle}>
                                 {
-                                    state.userInfo.has_totp ? <Button shape={"round"} type={"text"} style={{
-                                        height: state.isMobile ? '28px' : '44px',
-                                        width: state.isMobile? '' : '136px',
-                                        fontSize: '14px'
-                                    }}>解绑</Button> : <Button shape={"round"} type={"primary"} style={{
-                                        height: state.isMobile ? '28px' : '44px',
-                                        width: state.isMobile? '' : '136px',
-                                        fontSize: '14px'
-                                    }}>绑定</Button>
+                                    state.userInfo.has_totp ? <Button shape={"round"} type={"text"}>解绑</Button> : <Button shape={"round"} type={"primary"} >绑定</Button>
                                 }
 
                             </div>
                         </div>
                         <DividerCus></DividerCus>
                         <div className={'card-column-box-row'}>
-                            <div className={'card-column-box-row-label'}>
+                            <div className={'card-column-box-row-label'} style={{
+                                marginRight: state.isMobile? '8px' : '16px'
+                            }}>
                                 <Image width={58} src={IconPhone} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
@@ -188,15 +184,7 @@ const SecurityCenter: React.FC = () => {
                                 setIsShowBindPhone(true)
                             }}>
                                 {
-                                    state.userInfo.phone_number ? <Button shape={"round"} type={"text"} style={{
-                                        height: state.isMobile ? '28px' : '44px',
-                                        width: state.isMobile? '' : '136px',
-                                        fontSize: '14px'
-                                    }}>换绑</Button> : <Button shape={"round"} type={"primary"} style={{
-                                        height: state.isMobile ? '28px' : '44px',
-                                        width: state.isMobile? '' : '136px',
-                                        fontSize: '14px'
-                                    }}>绑定</Button>
+                                    state.userInfo.phone_number ? <Button shape={"round"} type={"text"} >换绑</Button> : <Button shape={"round"} type={"primary"} >绑定</Button>
                                 }
 
                             </div>
@@ -209,7 +197,7 @@ const SecurityCenter: React.FC = () => {
                     </div>
                     <Table
                         rowKey={'created_at'}
-                        columns={columns}
+                        columns={state.isMobile ? columns.slice(0, columns.length - 1) : columns}
                         dataSource={list}
                         pagination={false}
                     ></Table>
