@@ -7,14 +7,15 @@ import { cn } from "@/lib/utils"
 
 const Tabs = TabsPrimitive.Root
 
+
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {isMobile?: boolean}
+>(({ className,isMobile, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     style={{
-        height: '68px',
+        height: isMobile ? '56px' :  '68px',
         padding: '8px',
         borderRadius: '35px',
         backgroundColor: 'white'
@@ -30,13 +31,13 @@ TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {isMobile?: boolean}
+>(({ className, isMobile, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     style={{
         flex: 1,
-        height: '52px',
+        height: isMobile ? '40px' : '52px',
         borderRadius: '26px',
         width: '184px'
     }}

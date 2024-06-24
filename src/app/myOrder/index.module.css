@@ -8,6 +8,13 @@
     vertical-align: middle;
     width: 100%;
 }
+.mobileRowDetail{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    padding-top: 20px;
+}
 .smallCost{
     font-weight: 500 !important;
     font-size: 16px !important;
@@ -15,7 +22,7 @@
 }
 .delOrderBtn{
     position: absolute;
-    bottom: 0px;
+    top: -20px;
     right: 0px;
     width: 100px;
     height: 50px;

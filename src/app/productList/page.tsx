@@ -1,19 +1,21 @@
 'use client'
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import './index.css'
-import {Button} from "@/components/ui/button";
+import {Button} from "antd";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getProductList, GoodListItem} from "@/service/api";
 import big from 'big.js';
 import Link from "next/link";
 import SoldOut from '../../../public/soldOut.png'
 import Image from "next/image";
+import {cn} from "@/lib/utils";
+import {MyContext} from "@/service/context";
 
 // @ts-ignore
-const Card = function ({data}: {data: GoodListItem}) {
+const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
     return (
-        <div className="card-single">
+        <div className={cn('card-single', isMobile? 'mobile-card-single' : '')}>
             <div className="card-single-top">
                 <div className={'card-single-top-a'}>{data.name}</div>
                 <div className={'card-single-top-b'}>$ {(data.price||'').slice(0, 4)}/{data.unit}</div>
@@ -76,6 +78,7 @@ const Card = function ({data}: {data: GoodListItem}) {
 export default function ProductList() {
     const [list, setList] = useState<Array<any>>([])
     const [listTwo, setListTow] = useState<Array<any>>([])
+    const {state, dispatch} = useContext(MyContext);
 
     useOnMountUnsafe(() => {
         getProductList().then(res=> {
@@ -96,18 +99,19 @@ export default function ProductList() {
             }}>
                     <div style={{
                         margin: '0 auto',
-                        width: '384px',
+                        maxWidth: '384px',
+                        width: '77%',
                     }}>
-                        <TabsList className="tabs-list">
-                            <TabsTrigger value="btc">BTC 云算力</TabsTrigger>
-                            <TabsTrigger value="ltc">LTC/DOGE 云算力</TabsTrigger>
+                        <TabsList isMobile={state.isMobile} className={cn('tabs-list', state.isMobile ? 'mobile-tabs-list' : '')}>
+                            <TabsTrigger isMobile={state.isMobile} value="btc">BTC 云算力</TabsTrigger>
+                            <TabsTrigger isMobile={state.isMobile} value="ltc">LTC/DOGE 云算力</TabsTrigger>
                         </TabsList>
                     </div>
-                    <TabsContent value="btc" className={'card-tabs-content'}>
+                    <TabsContent value="btc" className={cn('card-tabs-content',state.isMobile ? 'mobile-card-tabs-content' : '')}>
                         {
                             list.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item} key={item.good_id}></Card>
+                                return <Card isMobile={state.isMobile} data={item} key={item.good_id}></Card>
                             })
                         }
                     </TabsContent>
@@ -115,7 +119,7 @@ export default function ProductList() {
                         {
                             listTwo.map((item) => {
                                 // eslint-disable-next-line react/jsx-key
-                                return <Card data={item} key={item.good_id}></Card>
+                                return <Card isMobile={state.isMobile} data={item} key={item.good_id}></Card>
                             })
                         }
                     </TabsContent>

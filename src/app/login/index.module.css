@@ -1,0 +1,94 @@
+.pcWrapper{
+    width: 100%;
+    min-height: calc(100vh - 235px);
+    padding-bottom: 77px;
+    position: relative;
+    padding-top: 100px;
+}
+.logospace{
+    font-size: 18px;
+    color: #393535;
+    line-height: 35px;
+    text-align: left;
+    font-style: normal;
+    display: flex;
+    font-weight: bold;
+}
+.logoImg{
+    margin-right: 10px;
+}
+.mobileWrapper{
+    padding-top: 40px;
+    background-color: white;
+    height: calc(100vh - 56px - 78px);
+}
+.loginCard {
+    width: 420px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    margin: 0 auto;
+    padding: 32px 32px;
+}
+.mobileLoginCard{
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 0 28px;
+}
+
+.loginHello {
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: left;
+    font-style: normal;
+    margin-top: 16px;
+}
+.moblieLoginHello{
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
+.loginTitleText {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    line-height: 40px;
+    text-align: left;
+    font-style: normal;
+}
+.errorMessage{
+    font-weight: 400;
+    font-size: 12px;
+    color: #EA2A2A;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+
+.loginSmallText {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+    margin: 4px 0 10px;
+}
+
+.loginValidate {
+    font-weight: 400;
+    font-size: 12px !important;
+    color: #666666;
+    line-height: 24px;
+    text-align: left;
+    font-style: normal;
+}
+
+.fixedZone{
+    position: fixed !important;
+    bottom: 120px;
+    width: 80vw !important;
+    left: calc(50% - 40vw);
+}

@@ -1,5 +1,6 @@
 .id_card{
-    width: 420px;
+    max-width: 420px;
+    width: 100%;
     /*height: 334px;*/
     background: #FFFFFF;
     border-radius: 20px;

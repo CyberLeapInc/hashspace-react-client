@@ -119,7 +119,7 @@ const KYC = () => {
                 <div className={'container-my'} style={{paddingTop: '100px'}}>
                     <div className={'id_card'}>
                         <Image className={'kyc-image'} src={KycSuccess} alt={'kyc success'}></Image>
-                        <div className={'kyc-text'}>您已通过KYC</div>
+                        <div className={'kyc-text'}>您的KYC审核已通过</div>
                     </div>
                 </div>
             }

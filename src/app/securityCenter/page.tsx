@@ -113,12 +113,12 @@ const SecurityCenter: React.FC = () => {
         })
         return () => {}
     })
-    return <div style={{minHeight: 'calc(100vh - 232px)',paddingTop: '25px',paddingBottom: '25px'}}>
+    return <div style={{minHeight: 'calc(100vh - 232px)', margin: state.isMobile? '0 16px' : '',paddingTop: '25px',paddingBottom: '25px'}}>
         {state.userInfo.email && <div className={'container-my'}>
             <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
                 <Card bordered={false}>
                     <div className={'card-column-box-title'}>
-                        账号安全
+                        账户安全
                     </div>
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
@@ -147,15 +147,17 @@ const SecurityCenter: React.FC = () => {
                             <div className={'card-column-box-row-label'} style={{
                                 marginRight: state.isMobile? '8px' : '16px'
                             }}>
-                                <Image width={58} src={IconGoogle} alt={'google'}/>
+                                <Image width={state.isMobile ? 40 : 58} src={IconGoogle} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
                                 <Flex style={{verticalAlign: 'middle'}}>Google验证
                                     <Tips text={state.userInfo.has_totp ? '已绑定' : '未绑定'}
                                           type={state.userInfo.has_totp ? 'success' : 'danger'}/>
                                 </Flex>
-                                <DividerCus margin={6} visible={false}></DividerCus>
-                                <div>保护你的账户安全</div>
+                                {
+                                    !state.isMobile && <DividerCus margin={6} visible={false} />
+                                }
+                                <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400,}}>保护你的账户安全</div>
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={handleBindGoogle}>
                                 {
@@ -169,15 +171,17 @@ const SecurityCenter: React.FC = () => {
                             <div className={'card-column-box-row-label'} style={{
                                 marginRight: state.isMobile? '8px' : '16px'
                             }}>
-                                <Image width={58} src={IconPhone} alt={'google'}/>
+                                <Image width={state.isMobile ? 40 : 58} src={IconPhone} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
                                 <Flex style={{verticalAlign: 'middle'}}>手机
                                     <Tips text={state.userInfo.phone_number ? '已绑定' : '未绑定'}
                                           type={state.userInfo.phone_number ? 'success' : 'danger'}/>
                                 </Flex>
-                                <DividerCus margin={6} visible={false}></DividerCus>
-                                <div>保护你的账户安全</div>
+                                {
+                                    !state.isMobile && <DividerCus margin={6} visible={false} />
+                                }
+                                <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400}}>保护你的账户安全</div>
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={() => {
                                 setCounter(++counter)

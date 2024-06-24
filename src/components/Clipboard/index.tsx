@@ -5,7 +5,7 @@ import {message} from "antd";
 import css from './index.module.css'
 import { CopyOutlined } from "@ant-design/icons";
 
-export const Clipboard = ({str = '', linkUrl = '', maxTextWidth = '100%'}: {str: string, linkUrl?: string, maxTextWidth?:string}) => {
+export const Clipboard = ({str = '', linkUrl = '', maxTextWidth = '100%', style = {}}: {str: string, linkUrl?: string, maxTextWidth?:string, style?: Record<string, string>}) => {
     const [data, setData] = useState(str)
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -21,7 +21,8 @@ export const Clipboard = ({str = '', linkUrl = '', maxTextWidth = '100%'}: {str:
     return (<>
         <div className={css.wrapper} onClick={handleCopy}>
             <span className={css.text} style={{
-                maxWidth: maxTextWidth
+                maxWidth: maxTextWidth,
+                ...style
             }}>
                 {
                     linkUrl && <a href={linkUrl} target="_blank" rel="noreferrer noopener">{str}</a>

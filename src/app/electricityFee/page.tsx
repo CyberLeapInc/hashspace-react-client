@@ -3,7 +3,7 @@ import React, {useContext, useRef, useState} from "react";
 import css from './index.module.css'
 import DollarBlue from '../../../public/dollarBlue.png';
 import Image from "next/image";
-import {Button, Table, TableProps, Modal,Statistic, Popover} from "antd";
+import {Button, Table, TableProps, Modal, Statistic, Popover, Divider} from "antd";
 import {getElectricityInfo, ElectricityResponse, ElectricityList, chargeElectricity} from "@/service/api";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import NumberSelector from "@/components/NumberSelector";
@@ -12,6 +12,9 @@ import BuyProduct from "@/components/BuyProduct";
 import Clipboard from "@/components/Clipboard";
 import {FinishPayment} from "@/components/FinishPayment";
 import {getStateTextColor, getAmountColor} from "@/lib/utils";
+import DividerCus from "@/components/ui/dividerCus";
+import AppContext from "antd/es/app/context";
+import {MyContext} from "@/service/context";
 
 
 interface ChargeFeeProps {
@@ -143,6 +146,7 @@ const ElectricityFee = () => {
     const closeModal = () => {
         setIsModalOpen(false)
     }
+    const {state} = useContext(MyContext)
     const closeBuyProductModal = () => {
         setBuyProductKey(prevState => prevState+1)
         getElectricityInfo({
@@ -247,44 +251,80 @@ const ElectricityFee = () => {
                     setTimeStatus={() => {}}
                 />
             </Modal>
-            <div className={css.top}>
-                <div className={css.box} style={{flex: 2}}>
-                    <div className={css.boxMain}>
-                        <div className={css.boxMainTitle}>
-                            <Image width={28} src={DollarBlue} alt={'dollar'}/>
-                            <span className={css.boxMainTitleText}>电费余额</span>
+            {
+                !state.isMobile && (
+                    <div className={css.top}>
+                        <div className={css.box} style={{flex: 2}}>
+                            <div className={css.boxMain}>
+                                <div className={css.boxMainTitle}>
+                                    <Image width={28} src={DollarBlue} alt={'dollar'}/>
+                                    <span className={css.boxMainTitleText}>电费余额</span>
+                                </div>
+                                <div className={css.bigText}>$ {electricityInfo.balance || 0}</div>
+                            </div>
+                            <div className={css.boxAction}>
+                                <Button type={"primary"} shape={"round"} block
+                                        onClick={() => setIsModalOpen(true)}
+                                        style={{height: '52px', marginTop: '50px'}}>充值</Button>
+                            </div>
                         </div>
-                        <div className={css.bigText}>$ {electricityInfo.balance || 0}</div>
+                        <div className={css.box} style={{flex: 1}}>
+                            <div className={css.boxMain} style={{padding: '15px 10px'}}>
+                                <div className={css.boxMainTitle}>
+                                    <Image width={28} src={DollarBlue} alt={'dollar'}/>
+                                    <span className={css.boxMainTitleText}>预计可挖</span>
+                                </div>
+                                <div className={css.smallText}>{electricityInfo.estimate_remain_day || 0}天</div>
+                            </div>
+                        </div>
+                        <div className={css.box} style={{flex: 1}}>
+                            <div className={css.boxMain} style={{padding: '15px 10px'}}>
+                                <div className={css.boxMainTitle}>
+                                    <Image width={28} src={DollarBlue} alt={'dollar'}/>
+                                    <span className={css.boxMainTitleText}>昨日电费</span>
+                                </div>
+                                <div className={css.smallText}>$ {electricityInfo.yesterday_cost || 0}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div className={css.boxAction}>
+                )
+            }
+            {
+                state.isMobile && (
+                    <div className={css.mobileBox} style={{flexDirection: 'column'}}>
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <div className={css.boxMainTitle} style={{lineHeight: '24px', fontSize: '12px'}}>
+                                    <Image width={24} src={DollarBlue} alt={'dollar'}/>
+                                    <span className={css.boxMainTitleText}>电费余额</span>
+                                </div>
+                                <div className={css.bigText}
+                                     style={{fontSize: '24px', marginTop: '12px'}}>$ {electricityInfo.balance || 0}</div>
+                            </div>
+                            <Divider style={{height: '60px', margin: '0 16px'}} type={"vertical"}></Divider>
+                            <div>
+                                <div className={css.mobileLine}>
+                                    <span>预计可挖</span>
+                                    <span
+                                        className={css.mobileLineStrong}>{electricityInfo.estimate_remain_day || 0}天</span>
+                                </div>
+                                <div className={css.mobileLine} style={{marginTop: '26px'}}>
+                                    <span>昨日电费</span>
+                                    <span className={css.mobileLineStrong}>$ {electricityInfo.yesterday_cost || 0}</span>
+                                </div>
+
+                            </div>
+                        </div>
                         <Button type={"primary"} shape={"round"} block
                                 onClick={() => setIsModalOpen(true)}
-                                style={{height: '52px', marginTop: '50px'}}>充值</Button>
+                                style={{height: '52px', marginTop: '20px'}}>充值</Button>
                     </div>
-                </div>
-                <div className={css.box} style={{flex: 1}}>
-                    <div className={css.boxMain} style={{padding: '15px 10px'}}>
-                        <div className={css.boxMainTitle}>
-                            <Image width={28} src={DollarBlue} alt={'dollar'}/>
-                            <span className={css.boxMainTitleText}>预计可挖</span>
-                        </div>
-                        <div className={css.smallText}>{electricityInfo.estimate_remain_day || 0}天</div>
-                    </div>
-                </div>
-                <div className={css.box} style={{flex: 1}}>
-                    <div className={css.boxMain} style={{padding: '15px 10px'}}>
-                        <div className={css.boxMainTitle}>
-                            <Image width={28} src={DollarBlue} alt={'dollar'}/>
-                            <span className={css.boxMainTitleText}>昨日电费</span>
-                        </div>
-                        <div className={css.smallText}>$ {electricityInfo.yesterday_cost || 0}</div>
-                    </div>
-                </div>
-            </div>
-            <div></div>
+                )
+            }
             <div className={'cal-card-big'} style={{marginTop: '20px'}}>
                 <div className={'login-hello'}>我的订单</div>
                 <Table
+                    scroll={{x: 850}}
                     columns={columns}
                     dataSource={electricityInfo.list}
                 />

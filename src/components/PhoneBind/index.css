@@ -20,6 +20,7 @@
 #cf-turnstile{
     iframe{
         margin-top: 20px;
-        width: 370px !important;
+        width: 100% !important;
+        max-width: 370px !important;
     }
 }

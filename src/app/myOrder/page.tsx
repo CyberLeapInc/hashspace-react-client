@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Table, Modal, Statistic} from 'antd';
 import type {TableProps} from 'antd';
 import Link from "next/link";
@@ -18,6 +18,8 @@ import LTC from '../../../public/ltc.svg'
 import {cn} from "@/lib/utils";
 import {FinishPayment} from "@/components/FinishPayment";
 import {EasyConfirmContent} from "@/components/EasyConfirmContent";
+import {state} from "sucrase/dist/types/parser/traverser/base";
+import {MyContext} from "@/service/context";
 
 const getCurrencyIcon = (currency: string) => {
     switch (currency) {
@@ -70,6 +72,7 @@ const columns: TableProps<OrderItem>['columns'] = [
     {
         title: '订单ID',
         dataIndex: 'order_id',
+        width: 200
     },
     {
         title: '套餐',
@@ -82,14 +85,16 @@ const columns: TableProps<OrderItem>['columns'] = [
                     })
                 }
                 {record.good?.name}</div>
-        }
+        },
+        width: 200
     },
     {
         title: '算力',
         dataIndex: 'hashrate',
         render: (text, record, index) => {
             return <div>{record.hashrate}{record?.good?.unit || ''}</div>
-        }
+        },
+        width: 100
     },
     {
         title: '金额',
@@ -97,7 +102,8 @@ const columns: TableProps<OrderItem>['columns'] = [
         render: (text, record, index) => {
             return <div style={{color: getFeeColor(record.state || 0)}}
                         className={css.rowBold}>${big(record.hashrate_cost || '').toFixed(4)}</div>
-        }
+        },
+        width: 100
     },
     {
         title: '状态',
@@ -154,15 +160,21 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
                     </div>
                 </div>
             )
+        case 4:
+            return (
+                <div>
+                    <div style={{color: ''}}>挖矿结束</div>
+                </div>
+            )
         default:
             return <span>{source}</span>
     }
 }
 
 
-const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (data: any) => void, reBuy: (data: any) => void) => {
+const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (data: any) => void, reBuy: (data: any) => void, isMobile?: boolean) => {
     return (<div>
-        <div className={css.rowDetail}>
+        <div className={isMobile? css.mobileRowDetail: css.rowDetail}>
             <div className={css.item}>
                 <span className={css.label}>币种:</span>
                 <span className={css.value}>
@@ -179,11 +191,12 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                 <span className={css.label}>合约费用:</span>
                 <span className={cn(css.smallCost, css.value)}>${big(data.hashrate_cost).toFixed(4)}</span>
             </div>
-            <div className={css.item}>
+            {
+                !isMobile && <div className={css.item}>
                 <span className={css.label}>
                     支付状态:
                 </span>
-                <span className={css.value}>
+                    <span className={css.value}>
                     {<PaymentStatus
                         record={data}
                         reBuy={reBuy}
@@ -193,7 +206,8 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                         source={data.payment_link_source}
                     />}
                 </span>
-            </div>
+                </div>
+            }
             <div className={css.item}>
                 <span className={css.label}>算力:</span>
                 <span className={css.value}>{data.hashrate}{data.good.unit}</span>
@@ -206,7 +220,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             </div>
             <div className={css.item}>
                 {
-                    data.state === 2 && (
+                    ( data.state === 2 || data.state === 4) && (
                         <>
                             <span className={css.label}>TXID:</span>
                             <span className={css.value}>
@@ -240,7 +254,24 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                 }
             </div>
             {
-                data.state === 2 && <div style={{
+                isMobile && <div className={css.item}>
+                <span className={css.label}>
+                    支付状态:
+                </span>
+                    <span className={css.value}>
+                    {<PaymentStatus
+                        record={data}
+                        reBuy={reBuy}
+                        goodId={data.good.good_id}
+                        status={data.state}
+                        link={data.payment_link}
+                        source={data.payment_link_source}
+                    />}
+                </span>
+                </div>
+            }
+            {
+                ( data.state === 2 || data.state === 4) && <div style={{
                     position: 'absolute',
                     top: '-8px',
                     right: '0'
@@ -266,6 +297,7 @@ const MyOrder = () => {
     const [modal, contextHolder] = Modal.useModal();
     const [currentObj, setCurrentObj] = useState<OrderListItem | null>(null)
     const [deleteObj, setDeleteObj] = useState<OrderListItem | null>(null)
+    const {state} = useContext(MyContext);
 
     const handleExpand = (record: any) => {
         const keys = [...expandedRowKeys];
@@ -311,7 +343,7 @@ const MyOrder = () => {
         })
     }
 
-    return <div style={{minHeight: 'calc(100vh - 232px)', paddingTop: '25px'}}>
+    return <div style={{minHeight: 'calc(100vh - 232px)', padding: '25px 16px 20px'}}>
         <Modal open={currentObj!==null} width={420} footer={''} onCancel={() => setCurrentObj(null)}>
             <FinishPayment
                 fixPos={8}
@@ -345,13 +377,15 @@ const MyOrder = () => {
         <div className={'cal-card-big'}>
             <div className={'login-hello'}>我的订单</div>
             <Table
+                scroll={{ x: 850 }}
                 // @ts-ignore
                 columns={columns}
                 dataSource={orderList}
                 rowKey={'order_id'}
                 expandable={{
+                    fixed: true,
                     expandedRowKeys: expandedRowKeys,
-                    expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete, reBuy),
+                    expandedRowRender: (record) => RenderExpandData(record, modal, contextHolder, onDelete, reBuy, state.isMobile),
                     rowExpandable: (record) => true,
                     expandIcon: ({expanded, onExpand, record}) =>
                         <div style={{width: '30px', height: '30px', padding: '11px', cursor: 'pointer'}}
@@ -360,7 +394,7 @@ const MyOrder = () => {
                                 rotate: expanded ? '180deg' : '0deg',
                                 transition: 'all 0.3s'
                             }} src={ArrowUpOutlineBlack} alt={'arrow'} width={8}/>
-                        </div>
+                        </div>,
                 }}
             />
         </div>

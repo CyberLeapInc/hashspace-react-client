@@ -7,10 +7,13 @@ import {finishTotp, getTotpCode, startTotp, unbindTotpFinish, unbindTotpStart} f
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {QRCodeSVG} from "qrcode.react";
 import {MyContext} from "@/service/context";
+import Clipboard from "@/components/Clipboard";
+import {QRCode} from "antd";
 
 export const TwoFactorAuth = ({ onSuccess } : {
     onSuccess: () => void
 }) => {
+    const {state} = useContext(MyContext);
     const [code, setCode] = useState('')
     const [googleCode, setGoogleCode] = useState('')
     const [sessionId, setSessionId] = useState('')
@@ -70,7 +73,7 @@ export const TwoFactorAuth = ({ onSuccess } : {
         })
     }
 
-    return <div style={{width: '776px', display: 'flex', gap: '30px'}}>
+    return <div style={{fontSize: state.isMobile? '12px' : '14px', width: state.isMobile? '100%' : '776px', display: 'flex', gap: state.isMobile? '0' : '30px', flexDirection: state.isMobile? 'column' : 'row'}}>
         {contextHolder}
         <div style={{flex: 1}}>
             <div className={'step-row'}>
@@ -83,80 +86,86 @@ export const TwoFactorAuth = ({ onSuccess } : {
                 <div className={'step-intro'}>
                     <div>扫描下方二维码。</div>
                     <div>
-                        <QRCodeSVG value={qrcodeUrl} />
+                        <QRCode style={{margin: '10px 0'}} value={qrcodeUrl} />
                     </div>
                     <div>或者输入密钥</div>
-                    <div style={{fontWeight: "bold"}}>{secret}</div>
+                    <div style={{fontWeight: "bold", fontSize: '12px'}}><Clipboard style={{
+                        fontSize: '11px',
+                    }} str={secret} /></div>
                 </div>
 
             </div>
         </div>
         <div style={{flex: 1}}>
             <div className={'step-row'}>
-                <div  className={'step-index'}>1</div>
+                <div  className={'step-index'}>3</div>
                 <div className={'step-intro'}>
                     <div>
                         Google身份验证器配置完成后，会显示一个6位数字，每隔30秒变化一次，这个数字即为您的Google验证码。
                     </div>
-                    <div>
-                        <div className={'login-title-text'}>邮箱验证码</div>
-                    </div>
-                    <Input
-                        status={codeErrorStatus ? 'error' : ''}
-                        style={{
-                            height: '50px'
-                        }}
-                        maxLength={6}
-                        type={'text'}
-                        value={code}
-                        size={'large'}
-                        onChange={(e) => {
-                            setCode(e.target.value)
-                            setCodeErrorStatus(false)
-                        }}
-                        placeholder={'请输入验证码'}
-                    ></Input>
-                    {
-                        codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
-                    }
-                    <div>
-                        <div className={'login-title-text'}>Google验证码</div>
-                    </div>
-                    <Input
-                        style={{
-                            height: '50px'
-                        }}
-                        status={totpCodeErrorStatus ? 'error' : ''}
-                        maxLength={6}
-                        type={'text'}
-                        value={googleCode}
-                        size={'large'}
-                        onChange={(e) => {
-                            setGoogleCode(e.target.value)
-                            setTotpCodeErrorStatus(false)
-                        }}
-                        placeholder={'请输入验证码'}
-                    ></Input>
-                    {
-                        totpCodeErrorStatus && <div className={'errorMessage'}>Google验证码错误</div>
-                    }
-                    <Button
-                        type="primary" block size={'large'} shape={'round'}
-                        style={{
-                            marginTop: '40px'
-                        }}
-                        disabled={!(code.length === 6 && googleCode.length === 6 && !codeErrorStatus && !totpCodeErrorStatus && !loading)}
-                        onClick={onConfirm}
-                        loading={loading}
-                    >确认绑定</Button>
                 </div>
+            </div>
+            <div  style={{
+                marginLeft: state.isMobile?'0' :'40px'
+            }}>
+                <div>
+                    <div className={'login-title-text'}>邮箱验证码</div>
+                </div>
+                <Input
+                    status={codeErrorStatus ? 'error' : ''}
+                    style={{
+                        height: '50px'
+                    }}
+                    maxLength={6}
+                    type={'text'}
+                    value={code}
+                    size={'large'}
+                    onChange={(e) => {
+                        setCode(e.target.value)
+                        setCodeErrorStatus(false)
+                    }}
+                    placeholder={'请输入验证码'}
+                ></Input>
+                {
+                    codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
+                }
+                <div>
+                    <div className={'login-title-text'}>Google验证码</div>
+                </div>
+                <Input
+                    style={{
+                        height: '50px'
+                    }}
+                    status={totpCodeErrorStatus ? 'error' : ''}
+                    maxLength={6}
+                    type={'text'}
+                    value={googleCode}
+                    size={'large'}
+                    onChange={(e) => {
+                        setGoogleCode(e.target.value)
+                        setTotpCodeErrorStatus(false)
+                    }}
+                    placeholder={'请输入验证码'}
+                ></Input>
+                {
+                    totpCodeErrorStatus && <div className={'errorMessage'}>Google验证码错误</div>
+                }
+                <Button
+                    type="primary" block size={'large'} shape={'round'}
+                    style={{
+                        marginTop: '40px'
+                    }}
+                    disabled={!(code.length === 6 && googleCode.length === 6 && !codeErrorStatus && !totpCodeErrorStatus && !loading)}
+                    onClick={onConfirm}
+                    loading={loading}
+                >确认绑定</Button>
             </div>
         </div>
     </div>
 
 }
 
-export const UnbindTowFactorAuth = ({ onSuccess } : {
+export const UnbindTowFactorAuth = ({onSuccess}: {
     onSuccess: () => void
 }) => {
     const {state} = useContext(MyContext);

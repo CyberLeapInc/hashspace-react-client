@@ -6,12 +6,14 @@ import {ActionType, MyContext} from "@/service/context";
 import { useRouter } from 'next/navigation';
 import Logo from '../../../public/logo.png'
 import {cloudFlareSiteKey} from "@/lib/constant";
+import css from './index.module.css'
 
 
 import {Turnstile} from '@marsidev/react-turnstile'
 import {getLoginCode, getUserInfo, login, startLogin} from "@/service/api";
 import './index.css';
 import Image from "next/image";
+import {cn} from "@/lib/utils";
 
 type FieldType = {
     username?: string;
@@ -133,27 +135,26 @@ const CryptoPage: React.FC = () => {
     const onErr = () => {}
 
     return (
-        <div style={{
-            width: '100%',
-            minHeight: 'calc(100vh - 329px)',
-            paddingBottom: '77px',
-            position: "relative"
-        }}>
+        <div className={state.isMobile ? css.mobileWrapper : css.pcWrapper}>
             {contextHolder}
-            <div className="container-my">
-                <div className={'login-card'}>
-                    <div className="logospace">
-                        <Image className="label_2" src={Logo} alt={'logo'} />
-                        Hash Space
-                    </div>
+            <div>
+                <div className={state.isMobile? css.mobileLoginCard : css.loginCard}>
+                    {
+                        !state.isMobile && (
+                            <div className={css.logospace}>
+                                <Image className={css.logoImg} src={Logo} alt={'logo'}/>
+                                Hash Space
+                            </div>
+                        )
+                    }
                     {
                         step === 0 && (
                             <div>
-                                <div className={'login-hello'}>欢迎加入 Hash Space</div>
-                                <div className={'login-small-text'}>邮箱</div>
+                                <div className={cn(css.loginHello, state.isMobile? css.moblieLoginHello : '')}>欢迎加入 Hash Space</div>
+                                <div className={css.loginSmallText}>邮箱</div>
                                 <Input
                                     style={{
-                                        height:'50px',
+                                        height: '50px',
                                     }}
                                     size={'large'}
                                     type={'email'}
@@ -163,7 +164,7 @@ const CryptoPage: React.FC = () => {
                                 ></Input>
                                 {
                                     status !== 'solved' && <Turnstile
-                                    key={captchaRefreshKey}
+                                        key={captchaRefreshKey}
                                         onError={() => setStatus('error')}
                                         onExpire={() => {
                                             setStatus('expired')
@@ -178,9 +179,13 @@ const CryptoPage: React.FC = () => {
                                 <Button
                                     style={{
                                         marginTop: '40px',
-                                        height:'50px'
+                                        height: '50px'
                                     }}
-                                    disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'} shape={'round'} onClick={() => {
+                                    className={
+                                        state.isMobile? css.fixedButton : ''
+                                    }
+                                    disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'}
+                                    shape={'round'} onClick={() => {
                                     submitEmail()
                                 }}>下一步</Button>
                             </div>
@@ -189,14 +194,14 @@ const CryptoPage: React.FC = () => {
                     {
                         step === 1 && (
                             <div>
-                                <div className={'login-hello'}>验证</div>
+                                <div className={css.loginHello}>验证</div>
                                 <Space direction={"vertical"} size={"large"} style={{width: '100%'}}>
-                                    <div >
-                                        <div className={'login-title-text'}>邮箱</div>
+                                    <div>
+                                        <div className={css.loginTitleText}>邮箱</div>
                                         <Input
                                             status={codeErrorStatus ? 'error' : ''}
                                             style={{
-                                                height:'50px'
+                                                height: '50px'
                                             }}
                                             maxLength={6}
                                             type={'text'}
@@ -209,19 +214,19 @@ const CryptoPage: React.FC = () => {
                                             placeholder={'请输入验证码'}
                                         ></Input>
                                         {
-                                            codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
+                                            codeErrorStatus && <div className={css.errorMessage}>邮箱验证码错误</div>
                                         }
                                         <div
-                                            className={'login-small-text'}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
+                                            className={css.loginSmallText}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
                                         </div>
                                     </div>
                                     {totpEnabled && (
                                         <div>
-                                            <div className={'login-title-text'}>Google Authenticator验证码</div>
+                                            <div className={css.loginTitleText}>Google Authenticator验证码</div>
                                             <Input
                                                 status={totpCodeErrorStatus ? 'error' : ''}
                                                 style={{
-                                                    height:'50px'
+                                                    height: '50px'
                                                 }}
                                                 maxLength={6}
                                                 type={'text'}
@@ -234,20 +239,23 @@ const CryptoPage: React.FC = () => {
                                                 placeholder={'请输入验证码'}
                                             ></Input>
                                             {
-                                                totpCodeErrorStatus && <div className={'errorMessage'}>Google Authenticator验证码错误</div>
+                                                totpCodeErrorStatus &&
+                                                <div className={css.errorMessage}>Google Authenticator验证码错误</div>
                                             }
                                             <div
-                                                className={'login-small-text'}>请打开您的Google Authenticator，输入6位验证码
+                                                className={css.loginSmallText}>请打开您的Google Authenticator，输入6位验证码
                                             </div>
                                         </div>
                                     )}
-                                    <Space direction={"vertical"} size={'small'} style={{width: '100%'}}>
+                                    <Space className={
+                                        state.isMobile? css.fixedZone : ''
+                                    } direction={"vertical"} size={'small'} style={{width: '100%'}}>
                                         <Checkbox onChange={onChange}
-                                                  className={'login-validate'}>创建账户即表示我同意币安的《服务条款》和《隐私政策》</Checkbox>
+                                                  className={css.loginValidate}>创建账户即表示我同意币安的《服务条款》和《隐私政策》</Checkbox>
                                         <Button type="primary" block size={'large'} shape={'round'}
                                                 disabled={!agree || !(code.length === 6) || (totpEnabled && totpCode.length !== 6) || codeErrorStatus || totpCodeErrorStatus}
                                                 style={{
-                                                    height:'50px'
+                                                    height: '50px'
                                                 }}
                                                 onClick={() => {
                                                     onVerify()
@@ -260,6 +268,7 @@ const CryptoPage: React.FC = () => {
                 </div>
             </div>
         </div>
+
     );
 };
 

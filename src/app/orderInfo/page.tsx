@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext, useEffect, useState} from 'react';
+import React, {memo, useContext, useEffect, useState} from 'react';
 import Image, {StaticImageData} from "next/image";
 import calAllgain from '../../../public/cal-allgain.png'
 import calAllPay from '../../../public/cal-allpay.png'
@@ -25,6 +25,7 @@ import big from "big.js";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getToFixedLength} from "@/lib/utils";
+import {state} from "sucrase/dist/types/parser/traverser/base";
 
 const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
     ssr: false
@@ -103,10 +104,11 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     }
     const getSummaryMoney = (key: keyof OrderDetailResponse): string => {
         let list: string[] = []
+        console.log(rawData)
         rawData.coin_income.forEach(item => {
             list.push(getMoney(item.currency, item[key]))
         })
-        return list.reduce((a, b) => big(a).plus(b).toFixed(getToFixedLength()))
+        return list.length ? list.reduce((a, b) => big(a).plus(b).toFixed(getToFixedLength())) : '0'
     }
     const getInfo = (key: keyof OrderDetailResponse) => {
         return <div>
@@ -134,12 +136,12 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     }
     return (
         (
-            <div className={css.calCard}>
-                <div className={css.calCardTitle}>
+            <div className={state.isMobile ? css.mobileCalCard : css.calCard}>
+                <div className={css.calCardTitle} style={{fontSize: state.isMobile ? '12px' : '14px'}}>
                     <Image className={css.image} src={image} alt={alt}></Image>
                     {title}
                 </div>
-                <div className={css.calCardCount}>
+                <div className={css.calCardCount}  style={{fontSize: state.isMobile ? '20px' : '16px'}}>
                     {
                         /income/.test(showKey) && getInfo(showKey)
                     }
@@ -147,7 +149,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                         !/income/.test(showKey) && <>
 
                             {!getUnit(showKey) && "$"}{getShowKey(showKey)}
-                            <span className={css.unit}>{getUnit(showKey)}</span>
+                            <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{getUnit(showKey)}</span>
                         </>
                     }
 
@@ -158,8 +160,10 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     )
 };
 
-const DemoArea = ({dataList}: {
-    dataList: HashrateHistoryItem[]
+
+const DemoArea = ({dataList, isMobile}: {
+    dataList: HashrateHistoryItem[],
+    isMobile: boolean
 }) => {
     const [realData, setRealData] = useState<HashrateHistoryItem[]>(dataList);
     useEffect(() => {
@@ -177,9 +181,9 @@ const DemoArea = ({dataList}: {
         marginBottom: 0,
         marginTop: 50,
         paddingBottom: 25,
-        height: 350,
+        height: isMobile ? 202 : 350,
     };
-    return <Area width={410} {...config} data={realData}/>;
+    return <Area width={isMobile ? 332 : 410} {...config} data={realData}/>;
 };
 
 const OrderInfo = () => {
@@ -187,6 +191,7 @@ const OrderInfo = () => {
     const [link, setLink] = useState('');
     const [paymentList, setPaymentList] = useState<PaymentItem[]>([]);
     const [orderInfo, setOrderInfo] = useState<OrderDetailResponse | null>(null);
+    const {state, dispatch} = useContext(MyContext)
     useOnMountUnsafe(() => {
         let tempOrderId = '';
         if (typeof window !== "undefined") {
@@ -207,29 +212,50 @@ const OrderInfo = () => {
     })
 
     return (
-        <div style={{ minHeight: 'calc(100vh - 232px)', paddingTop: '25px' }}>
-            <div className={css.calCardBig}>
+        <div style={{ minHeight: 'calc(100vh - 232px)', paddingTop: '25px', margin: state.isMobile ? '0 16px 20px' : '' }}>
+            <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                 <div className={css.flexWrap}>
                     <div className={css.intro}>
                         <div className={css.loginHello}>算力数据</div>
-                        <div className={css.calCardList}>
+                        <div className={state.isMobile ? css.mobileCalCardList : css.calCardList}>
                             {cardData.map((card, index) => (
                                 <Card rawData={orderInfo} key={index} {...card} />
                             ))}
                         </div>
                     </div>
-                    <div className={css.divider}></div>
-                    <div className={css.form}>
-                        <div className={css.loginHello} style={{ display: 'flex', justifyContent: 'space-between' }}>算力数据
-                            <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
-                        </div>
-                        <DemoArea dataList={orderInfo?.history || []}/>
-                    </div>
+                    {
+                        !state.isMobile && (
+                            <>
+                                <div className={css.divider}></div>
+                                <div className={css.form}>
+                                    <div className={css.loginHello}
+                                         style={{display: 'flex', justifyContent: 'space-between'}}>算力数据
+                                        <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                                    </div>
+                                    <DemoArea isMobile={false} dataList={orderInfo?.history || []}/>
+                                </div>
+                            </>
+                        )
+                    }
                 </div>
             </div>
-            <div className={css.calCardBig}>
+            {
+                state.isMobile && (
+                    <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
+                        <div className={css.form}>
+                            <div className={css.loginHello} style={{display: 'flex', justifyContent: 'space-between'}}>
+                                算力曲线
+                            </div>
+                            <DemoArea isMobile={true} dataList={orderInfo?.history || []}/>
+                            <Button className={css.blockBtn} href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                        </div>
+                    </div>
+                )
+            }
+            <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                 <div className={css.loginHello}>收益明细</div>
                 <Table
+                    scroll={{ x: 850 }}
                     columns={columns}
                     dataSource={paymentList}
                     bordered

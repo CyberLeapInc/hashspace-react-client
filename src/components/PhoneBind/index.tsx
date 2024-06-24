@@ -88,8 +88,8 @@ export const PhoneBind = ({
                     <div className={'login-title-text'}>原手机号</div>
                     <div className={'phoneGroup phoneGroup-disable'}>
                         <span>+</span>
-                        <Input disabled style={{width: '34px'}} bordered={false} size={"large"} maxLength={2} value={state.userInfo.phone_country_code}/>
-                        <Input disabled size={"large"}  bordered={false} style={{width: '80%'}} value={state.userInfo.phone_number} />
+                        <Input disabled style={{width: '34px', color: '#999'}} bordered={false} size={"large"} maxLength={2} value={state.userInfo.phone_country_code}/>
+                        <Input disabled size={"large"}  bordered={false} style={{width: '80%',color: '#999'}} value={state.userInfo.phone_number} />
                     </div>
                     <CodeSender
                         onError={() => {
