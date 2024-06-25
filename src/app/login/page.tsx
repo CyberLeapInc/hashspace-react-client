@@ -14,6 +14,7 @@ import {getLoginCode, getUserInfo, login, startLogin} from "@/service/api";
 import './index.css';
 import Image from "next/image";
 import {cn} from "@/lib/utils";
+import {CodeSender} from "@/components/ui/codeSender";
 
 type FieldType = {
     username?: string;
@@ -53,27 +54,30 @@ const CryptoPage: React.FC = () => {
     }
     const router = useRouter();
 
+    const getEmailCode = (sessionId: string) => {
+        return getLoginCode(sessionId).then(res => {
+        }).catch(e => {
+            if (e.details.type === 'SessionExpired') {
+                messageApi.open({
+                    type: 'error',
+                    content: '回话session过期，请刷新页面重试',
+                });
+            }
+            if (e.details.type === 'SendCodeTooFrequent') {
+                messageApi.open({
+                    type: 'error',
+                    content: `验证码请求过于频繁，请${e.details.left_second || 0}后重试`,
+                });
+            }
+        })
+    }
+
     const submitEmail = () => {
         startLogin(email, cloudFlareToken).then((res) => {
             console.log(res)
             setSessionId(res.session_id || '')
             setTotpEnabled(res.totp_enabled || false)
-            getLoginCode(res.session_id).then(res => {
-                setStep(1)
-            }).catch(e => {
-                if (e.details.type === 'SessionExpired') {
-                    messageApi.open({
-                        type: 'error',
-                        content: '回话session过期，请刷新页面重试',
-                    });
-                }
-                if (e.details.type === 'SendCodeTooFrequent') {
-                    messageApi.open({
-                        type: 'error',
-                        content: `验证码请求过于频繁，请${e.details.left_second || 0}后重试`,
-                    });
-                }
-            })
+            setStep(1)
         }).catch(e => {
             setStatus('no')
             setCaptchaRefreshKey(prevState => prevState+1)
@@ -197,27 +201,27 @@ const CryptoPage: React.FC = () => {
                                 <div className={css.loginHello}>验证</div>
                                 <Space direction={"vertical"} size={"large"} style={{width: '100%'}}>
                                     <div>
-                                        <div className={css.loginTitleText}>邮箱</div>
-                                        <Input
-                                            status={codeErrorStatus ? 'error' : ''}
-                                            style={{
-                                                height: '50px'
+                                        <CodeSender
+                                            immidity={true}
+                                            onError={() => {
+                                                setStatus('no')
+                                                setCaptchaRefreshKey(prevState => prevState+1)
                                             }}
-                                            maxLength={6}
-                                            type={'text'}
+                                            errorStatus={codeErrorStatus}
                                             value={code}
-                                            size={'large'}
                                             onChange={(e) => {
-                                                setCode(e.target.value)
+                                                console.log(e)
+                                                setCode(e)
                                                 setCodeErrorStatus(false)
                                             }}
-                                            placeholder={'请输入验证码'}
-                                        ></Input>
+                                            onSend={() => getEmailCode(sessionId)}
+                                            disabled={status !== 'solved'}
+                                        />
                                         {
                                             codeErrorStatus && <div className={css.errorMessage}>邮箱验证码错误</div>
                                         }
                                         <div
-                                            className={css.loginSmallText}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
+                                            className={css.message} >请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
                                         </div>
                                     </div>
                                     {totpEnabled && (
@@ -243,7 +247,7 @@ const CryptoPage: React.FC = () => {
                                                 <div className={css.errorMessage}>Google Authenticator验证码错误</div>
                                             }
                                             <div
-                                                className={css.loginSmallText}>请打开您的Google Authenticator，输入6位验证码
+                                                className={css.message}>请打开您的Google Authenticator，输入6位验证码
                                             </div>
                                         </div>
                                     )}

@@ -9,10 +9,9 @@ import {QRCodeSVG} from "qrcode.react";
 import {MyContext} from "@/service/context";
 import Clipboard from "@/components/Clipboard";
 import {QRCode} from "antd";
+import {CodeSender} from "@/components/ui/codeSender";
 
-export const TwoFactorAuth = ({ onSuccess } : {
-    onSuccess: () => void
-}) => {
+export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
     const {state} = useContext(MyContext);
     const [code, setCode] = useState('')
     const [googleCode, setGoogleCode] = useState('')
@@ -24,6 +23,14 @@ export const TwoFactorAuth = ({ onSuccess } : {
     const [totpCodeErrorStatus, setTotpCodeErrorStatus] = useState(false);
     const [loading, setLoading] = useState(false)
 
+    const getEmailCode = (sessionId: string) => {
+        return getTotpCode({
+            session_id: sessionId,
+            scene: 1
+        }).then(res => {
+            console.log(res)
+        })
+    }
 
     useOnMountUnsafe(() => {
         startTotp().then(res => {
@@ -31,10 +38,6 @@ export const TwoFactorAuth = ({ onSuccess } : {
             setSecret(res.secret);
             setQrcodUrl(res.qrcode_url);
             console.log(res);
-            getTotpCode({
-                session_id: res.session_id,
-                scene: 1
-            })
         })
     })
 
@@ -108,24 +111,23 @@ export const TwoFactorAuth = ({ onSuccess } : {
             <div  style={{
                 marginLeft: state.isMobile?'0' :'40px'
             }}>
-                <div>
-                    <div className={'login-title-text'}>邮箱验证码</div>
-                </div>
-                <Input
-                    status={codeErrorStatus ? 'error' : ''}
-                    style={{
-                        height: '50px'
-                    }}
-                    maxLength={6}
-                    type={'text'}
-                    value={code}
-                    size={'large'}
-                    onChange={(e) => {
-                        setCode(e.target.value)
-                        setCodeErrorStatus(false)
-                    }}
-                    placeholder={'请输入验证码'}
-                ></Input>
+                {
+                    sessionId && <CodeSender
+                        immidity={true}
+                        onError={() => {
+                            setCodeErrorStatus(true)
+                        }}
+                        errorStatus={codeErrorStatus}
+                        value={code}
+                        onChange={(e) => {
+                            console.log(e)
+                            setCode(e)
+                            setCodeErrorStatus(false)
+                        }}
+                        onSend={() => getEmailCode(sessionId)}
+                        disabled={false}
+                    />
+                }
                 {
                     codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
                 }
@@ -165,20 +167,25 @@ export const TwoFactorAuth = ({ onSuccess } : {
 
 }
 
-export const UnbindTowFactorAuth = ({onSuccess}: {
-    onSuccess: () => void
-}) => {
+export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
     const {state} = useContext(MyContext);
-    const [googleCode, setGoogleCode] = useState('')
+    const [code, setCode] = useState('')
     const [sessionId, setSessionId] = useState('')
     const [codeErrorStatus, setCodeErrorStatus] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const [loading, setLoading] = useState(false)
-
+    const getEmailCode = (sessionId: string) => {
+        return getTotpCode({
+            session_id: sessionId,
+            scene: 3
+        }).then(res => {
+            console.log(res)
+        })
+    }
     const onConfirm = () => {
         setLoading(true)
         unbindTotpFinish({
-            code: googleCode,
+            code: code,
             session_id: sessionId
         }).then(_ => {
             console.log('success');
@@ -199,11 +206,6 @@ export const UnbindTowFactorAuth = ({onSuccess}: {
     useOnMountUnsafe(() => {
         unbindTotpStart().then(res => {
             setSessionId(res.session_id);
-            console.log(res);
-            getTotpCode({
-                session_id: res.session_id,
-                scene: 3
-            })
         })
     })
 
@@ -214,21 +216,23 @@ export const UnbindTowFactorAuth = ({onSuccess}: {
         <div>
             <div className={'login-title-text'}>邮箱验证码</div>
         </div>
-        <Input
-            style={{
-                height: '50px'
-            }}
-            status={codeErrorStatus ? 'error' : ''}
-            maxLength={6}
-            type={'text'}
-            value={googleCode}
-            size={'large'}
-            onChange={(e) => {
-                setGoogleCode(e.target.value)
-                setCodeErrorStatus(false)
-            }}
-            placeholder={'请输入验证码'}
-        ></Input>
+        {
+            sessionId && <CodeSender
+                immidity={true}
+                onError={() => {
+                    setCodeErrorStatus(true)
+                }}
+                errorStatus={codeErrorStatus}
+                value={code}
+                onChange={(e) => {
+                    console.log(e)
+                    setCode(e)
+                    setCodeErrorStatus(false)
+                }}
+                onSend={() => getEmailCode(sessionId)}
+                disabled={false}
+            />
+        }
         {
             codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
         }
@@ -237,7 +241,7 @@ export const UnbindTowFactorAuth = ({onSuccess}: {
             style={{
                 marginTop: '40px'
             }}
-            disabled={!(googleCode.length === 6 && !loading && !codeErrorStatus)}
+            disabled={!(code.length === 6 && !loading && !codeErrorStatus)}
             loading={loading}
             onClick={onConfirm}
         >确认</Button>

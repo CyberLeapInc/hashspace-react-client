@@ -1,6 +1,6 @@
 'use client'
 import React, {useContext, useState} from "react";
-import {Button, Card, Flex, Input, Modal, Space} from "antd";
+import {Button, Card, Flex, Input, message, Modal, Space} from "antd";
 import DividerCus from "@/components/ui/dividerCus";
 import {ActionType, MyContext} from "@/service/context";
 import Image, {StaticImageData} from "next/image";
@@ -49,6 +49,8 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
             if (!res.session_id) return;
             setSessionId(res.session_id);
             setStep(1)
+        }).catch(e => {
+            message.error(e.message)
         })
     }
 
@@ -59,6 +61,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         }).then(res => {
             setIsSendCode(true)
         }).catch(e => {
+            message.error(e.message || '发送失败')
             setIsSendCode(false)
         })
     }
@@ -78,7 +81,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         bindAddressFinish(query).then(res => {
             console.log(res)
         }).catch(e => {
-            console.log(e)
+            message.error(e.message || '绑定失败')
         }).finally(() => {
             onFinish('finish')
         })
@@ -159,6 +162,8 @@ const AddressCard = ({currency, icon, getAddress}: {
                 payload: res
             })
             toggleBindModal(false);
+        }).catch((e: any) => {
+            message.error(e.message || '获取用户信息失败')
         })
     }
 

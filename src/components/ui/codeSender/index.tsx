@@ -94,7 +94,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     loading={sending}
                     disabled={((sending || (timer < TIMER_CONST)) && timer !== 0) || disabled}
                 >
-                    {timer === 0 ? '发送验证码' : `${timer}秒后重试`}
+                    {timer === 0 ? <span style={{color: '#3C53FF'}}>发送验证码</span> : <span style={{color: '#A1A3AB'}}>{`${timer}秒后重试`}</span>}
                 </Button>
             </div>
         </div>
