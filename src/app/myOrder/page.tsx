@@ -65,7 +65,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         title: '订单时间',
         dataIndex: 'created_at',
         render: (data) => {
-            return <div>{moment(data * 1000).format('LLLL')}</div>
+            return <div>{moment(data * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
         },
         width: 200
     },
@@ -321,8 +321,7 @@ const MyOrder = () => {
             setOrderList(res.list);
             setPageInfo(res.pagination)
         })
-
-    }, [setOrderList, getOrderList])
+    }, [setOrderList])
     const onDelete = (data: any) => {
         if (!data) return
         setDeleteObj(data)
@@ -347,7 +346,7 @@ const MyOrder = () => {
         <Modal open={currentObj!==null} width={420} footer={''} onCancel={() => setCurrentObj(null)}>
             <FinishPayment
                 fixPos={8}
-                amount={currentObj?.payment_request.total_cost || '0'}
+                amount={currentObj?.payment_request.transfer_amount || '0'}
                 duration={(currentObj?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
                 currentCurrency={{
                     currency: currentObj?.payment_request.currency || '',

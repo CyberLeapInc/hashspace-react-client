@@ -26,7 +26,7 @@ export const FinishPayment: React.FC<{
         <div>
             <div className={css.title}>支付详情</div>
             <div className={css.tip}>待转账金额</div>
-            <div className={css.money}>{currentCurrency.currency} {big(amount).toFixed(fixPos).toString()}</div>
+            <div className={css.money}>{big(amount).toFixed(fixPos).toString()} {currentCurrency.currency}</div>
             <Counter key={duration} timeLeft={duration} onCountFinish={setTimeStatus}/>
             <div className={css.row}>
                 <div>订单ID</div>

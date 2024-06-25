@@ -15,7 +15,7 @@ import {
     OrderDetailResponse,
     PaymentItem
 } from "@/service/api";
-import type {TableProps} from 'antd';
+import {Popover, TableProps} from 'antd';
 import {Button, Table} from 'antd';
 import dynamic from 'next/dynamic';
 import './index.css'
@@ -24,8 +24,10 @@ import {MyContext} from "@/service/context";
 import big from "big.js";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
-import {getToFixedLength} from "@/lib/utils";
+import {getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import {state} from "sucrase/dist/types/parser/traverser/base";
+import Clipboard from "@/components/Clipboard";
+import moment from "moment";
 
 const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
     ssr: false
@@ -41,28 +43,43 @@ const IncomeItem = ({list}:IncomeItemProps) => {
             list?.map((item, index) => (
                 <div key={index} className={css.incomeItem}>
                     <CurrencyIcon currency={item.currency} />
-                    <div>{item.amount}</div>
+                    <div>{Number(item.amount).toFixed(getToFixedLength(item.currency))}</div>
                 </div>
             ))
         }
     </div>
 }
+const paidContent = (item: Income) => {
+    return <div style={{display: 'flex', justifyContent: 'center', lineHeight: '42px', backgroundColor: '#F7F7F7', padding: '0 8px', borderRadius: '7px'}}><span>TXID:</span> <Clipboard maxTextWidth={'150px'} str={item.payment_link_source} linkUrl={item.payment_link} /></div>
+
+}
 const IncomeStatus = ({list}:IncomeItemProps) => {
     return <div>
         {
             list?.map((item, index) => (
-                <div key={index} className={css.incomeItem}>
-                    <div style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ?  '已支付' : '待支付' }</div>
-                </div>
+                <>{item.status === 1 ?
+                    <Popover key={item.payment_link_source} zIndex={999} content={() => paidContent(item)}>
+                        <div key={index} className={css.incomeItem}>
+                            <div
+                                style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
+                        </div>
+                    </Popover>
+                    : <div key={index} className={css.incomeItem}>
+                        <div
+                            style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
+                    </div>
+                }</>
+
+
             ))
         }
     </div>
 }
 
 const columns: TableProps<PaymentItem>['columns'] = [
-    { title: '日期', dataIndex: 'created_at' },
-    { title: '理论算力', dataIndex: 'theory_hashrate' },
-    { title: '实际算力', dataIndex: 'real_hashrate' },
+    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('YYYY/MM/DD HH:mm:ss'), width: 200},
+    {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => parseHashrateByNumber(v, 0).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
+    { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  parseHashrateByNumber(v, 2).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
     { title: '收益', dataIndex: 'income', render: (v) => <IncomeItem list={v}/> },
     { title: '状态', dataIndex: 'status', render: (v, record) => <IncomeStatus list={record.income || []} /> },
@@ -98,6 +115,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
         return rawData[key] as string || '0'
     }
     const getMoney = (currency: string, count: number|string) => {
+        if (!state.chainList) return '0';
         const priceNow = state.chainList.find((item) => item.currency === currency)?.last_usdt_price
         console.log(priceNow)
         return big(count).times(big(priceNow || 0)).toFixed(getToFixedLength());
@@ -124,7 +142,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     }
     const getUnit = (key: keyof OrderDetailResponse): string => {
         if (/hashrate/.test(key)) {
-            return rawData?.item?.good?.unit || ''
+            return rawData?.item?.good?.unit+'H/s' || ''
         }
         if (/income/.test(key)) {
             return rawData.currency
@@ -148,7 +166,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                     {
                         !/income/.test(showKey) && <>
 
-                            {!getUnit(showKey) && "$"}{getShowKey(showKey)}
+                            {!getUnit(showKey) && "$"}{Number(getShowKey(showKey)).toFixed(getToFixedLength())}
                             <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{getUnit(showKey)}</span>
                         </>
                     }
@@ -161,9 +179,10 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
 };
 
 
-const DemoArea = ({dataList, isMobile}: {
+const DemoArea = ({dataList, isMobile, unit}: {
     dataList: HashrateHistoryItem[],
     isMobile: boolean
+    unit: string
 }) => {
     const [realData, setRealData] = useState<HashrateHistoryItem[]>(dataList);
     useEffect(() => {
@@ -172,18 +191,28 @@ const DemoArea = ({dataList, isMobile}: {
     }, [dataList]);
     const config = {
         xField: (d: any) => {
-            return new Date(d.created_at * 1000).toDateString();
+            return moment(d.created_at * 1000).format('YYYY/MM/DD');
         },
-        yField: 'hashrate',
+        yField: (d: any) => {
+            return Number(d.hashrate)
+        },
         style: {
             fill: 'linear-gradient(90deg, rgba(215, 173, 255, 0.3) 100%, rgba(104, 167, 255, 0.80) 0%)',
         },
+        interaction: {
+            tooltip: { render: (event: string, { title, items }: {title: string; items: any}) => <div>
+                    <div>日期：{title}</div>
+                    <div>算力：{items[0].value.toFixed(2).toString()+ unit + 'H/s'}</div>
+                </div>,},
+        },
         marginBottom: 0,
-        marginTop: 50,
+        marginTop: 20,
         paddingBottom: 25,
-        height: isMobile ? 202 : 350,
+        paddingLeft: 20,
+        height: isMobile ? 202 : 330,
     };
-    return <Area width={isMobile ? 332 : 410} {...config} data={realData}/>;
+    // @ts-ignore
+    return <Area width={isMobile ? 332 : 410} {...config} data={realData}></Area>;
 };
 
 const OrderInfo = () => {
@@ -232,7 +261,7 @@ const OrderInfo = () => {
                                          style={{display: 'flex', justifyContent: 'space-between'}}>算力数据
                                         <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
                                     </div>
-                                    <DemoArea isMobile={false} dataList={orderInfo?.history || []}/>
+                                    <DemoArea unit={orderInfo?.item.good.unit || ''} isMobile={false} dataList={orderInfo?.history || []}/>
                                 </div>
                             </>
                         )
@@ -246,7 +275,7 @@ const OrderInfo = () => {
                             <div className={css.loginHello} style={{display: 'flex', justifyContent: 'space-between'}}>
                                 算力曲线
                             </div>
-                            <DemoArea isMobile={true} dataList={orderInfo?.history || []}/>
+                            <DemoArea  unit={orderInfo?.item.good.unit || ''} isMobile={true} dataList={orderInfo?.history || []}/>
                             <Button className={css.blockBtn} href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
                         </div>
                     </div>

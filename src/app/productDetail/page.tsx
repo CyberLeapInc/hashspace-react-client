@@ -164,7 +164,7 @@ const ProductDetail = () => {
 
     useEffect(()=> {
         deb.run()
-    }, [targetPrice, goodId, buyCount, getPrice])
+    }, [targetPrice, goodId, buyCount, getPrice,deb])
 
     const medianAndMax = (min: number, max: number, step: number) => {
         let values = [];
@@ -273,6 +273,9 @@ const ProductDetail = () => {
                             <div className={css.label}>选择数量</div>
                                 <div className={css.info}>
                                     <NumberSelector
+                                        styles={{
+                                            width: state.isMobile ? '' : '356px'
+                                        }}
                                         unit={goodDetail?.unit || ''}
                                         min={Number(goodDetail?.min_qty) || 0}
                                         max={Number(goodDetail?.max_qty)}
@@ -298,6 +301,9 @@ const ProductDetail = () => {
                                 <div className={css.label}>电费天数</div>
                                 <div className={css.info}>
                                     <NumberSelector
+                                        styles={{
+                                            width: state.isMobile ? '' : '356px'
+                                        }}
                                         min={1}
                                         max={9999999}
                                         step={1}

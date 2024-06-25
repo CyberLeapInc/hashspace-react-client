@@ -108,11 +108,13 @@
 }
 .card-tabs-content{
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
+    gap: 20px;
     margin: 0 !important;
 
 }
 .mobile-card-tabs-content{
     flex-direction: column;
     width: 100%;
+    gap: 0;
 }

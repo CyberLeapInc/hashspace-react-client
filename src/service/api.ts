@@ -752,6 +752,7 @@ export interface PaymentRequest {
      * 交易ID
      */
     trace_id: string;
+    transfer_amount: string;
 }
 
 export interface OrderListResponse {
@@ -909,6 +910,7 @@ export interface ElectricityList {
         currency: string
         network: string
         trace_id:string
+        transfer_amount: string
     }
 
 }

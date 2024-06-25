@@ -44,8 +44,34 @@ export const getToFixedLength = (currency?: string) => {
         case 'DOGE':
             return 2
         case 'LTC':
-            return 4
+            return 8
         default:
             return 2
+    }
+}
+
+// 根据数字格式化算力
+export function parseHashrateByNumber(value = 0, precision = 2, unit = '') {
+    const HASHRATE_UNIT_LIST_FULL = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+    if (unit === 'T') {
+        value = value * Math.pow(10, 12)
+    }
+    if (value >= Math.pow(10, 27)) {
+        return {
+            hashrate: value,
+            unit: ''
+        }
+    }
+
+    let pos = -1
+
+    while (value >= 1000) {
+        value /= 1000
+        pos++
+    }
+
+    return {
+        hashrate: value.toFixed(precision),
+        unit: HASHRATE_UNIT_LIST_FULL[pos] || ''
     }
 }

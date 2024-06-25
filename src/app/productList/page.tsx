@@ -9,7 +9,7 @@ import big from 'big.js';
 import Link from "next/link";
 import SoldOut from '../../../public/soldOut.png'
 import Image from "next/image";
-import {cn} from "@/lib/utils";
+import {cn, getToFixedLength} from "@/lib/utils";
 import {MyContext} from "@/service/context";
 
 // @ts-ignore
@@ -36,11 +36,11 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日电费</div>
-                    <div className="card-single-bottom-value">${new big(data.daily_electricity || 0).toFixed(8)}/{data.unit}/D</div>
+                    <div className="card-single-bottom-value">${new big(data.daily_electricity || 0).toFixed(4)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">每日收益</div>
-                    <div className="card-single-bottom-value">${new big(data.daily_income || 0).toFixed(8)}/{data.unit}/D</div>
+                    <div className="card-single-bottom-value">${new big(data.daily_income || 0).toFixed(4)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">最小购买数量</div>
@@ -48,7 +48,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">预期收益</div>
-                    <div className="card-single-bottom-value">${new big((data.income|| 0)).toFixed(3)}</div>
+                    <div className="card-single-bottom-value">${new big((data.income|| 0)).toFixed(4)}</div>
                 </div>
 
             </div>

@@ -14,6 +14,7 @@ import {fullRevenue, FullRevenueResponse, getProductList, Good, GoodListItem, Go
 import {MyContext} from "@/service/context";
 import big from "big.js";
 import {undefined} from "zod";
+import {parseHashrateByNumber} from "@/lib/utils";
 
 interface CurrencyListSelectorProps {
     goodItem: GoodListItem | null;
@@ -118,27 +119,26 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     </div>
 }
 
-const TitleBar = ({currencyPrice, currencyList}: {currencyPrice: {[key: string]:string|number}, currencyList: string[]}) => {
+const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPrice: {[key: string]:string|number},currencyDifficulty :  {[key: string]:string|number}, currencyList: string[]}) => {
     const {state, dispatch} = useContext(MyContext)
     const [currencyListInner, setCurrencyListInner] = useState<string[]>([])
     const [currencyPriceInner, setCurrencyPriceInner] = useState<{[key: string]:string|number}>({})
-    const [diffculity, setDiffculity] = useState<string>('')
+    const [diffculity, setDiffculity] = useState<{[key: string]:string|number}>({
+        'BTC': 0,
+        'LTC': 0,
+        'DOGE': 0
+    })
     const [networkHashrate, setNetworkHashrate] = useState<string>('0')
 
     useEffect(() => {
         if (!state) return
         const diff = state.chainList.find((chain) => chain.currency === 'BTC')?.difficulty || '0';
         const network_hashrate = state.chainList.find((chain) => chain.currency === 'BTC')?.network_hashrate || '0';
-        let arr = diff.split('').reverse();
-        for(let i = 3; i < arr.length; i += 4) {
-            arr.splice(i, 0, ',');
-        }
-        let formattedStr = arr.reverse().join('');
-        setDiffculity(formattedStr)
-        setNetworkHashrate(big(network_hashrate).div(big('1000000000000')).toFixed(0).toString())
+        setDiffculity(currencyDifficulty)
+        setNetworkHashrate(network_hashrate)
         setCurrencyListInner(currencyList)
         setCurrencyPriceInner(currencyPrice)
-    }, [currencyList, currencyPrice, state]);
+    }, [currencyList, currencyPrice,currencyDifficulty, state]);
     return (
         <div className={'intro-title'}>
             {
@@ -158,11 +158,11 @@ const TitleBar = ({currencyPrice, currencyList}: {currencyPrice: {[key: string]:
                         </div>
                         <div className={'intro-single'}>
                             <span className={'intro-label'}>挖矿难度：</span>
-                            <span className={'intro-value'}>{diffculity}</span>
+                            <span className={'intro-value'}>{diffculity['BTC'] && (parseHashrateByNumber(Number(diffculity['BTC'])).hashrate + parseHashrateByNumber(Number(diffculity['BTC'])).unit)}</span>
                         </div>
                         <div className={'intro-single'}>
                             <span className={'intro-label'}>全网算力：</span>
-                            <span className={'intro-value'}>{networkHashrate}TH/s</span>
+                            <span className={'intro-value'}>{parseHashrateByNumber(Number(networkHashrate)).hashrate + parseHashrateByNumber(Number(networkHashrate)).unit}H/s</span>
                         </div>
                     </> : null
             }
@@ -290,7 +290,7 @@ const Calculator = () => {
             <div className={'flex-wrap'}>
                 <div className={'intro'}>
                     <div className={'login-hello'}>收益挖矿计算器</div>
-                    <TitleBar currencyList={goodItem?.currency || []} currencyPrice={currencyPrice} />
+                    <TitleBar currencyDifficulty={currencyDifficulty} currencyList={goodItem?.currency || []} currencyPrice={currencyPrice} />
                     <div className={'cal-card-list'}>
                         <div className={'cal-card'}>
                             <div className={'cal-card-title2'}>

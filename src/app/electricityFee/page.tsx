@@ -11,7 +11,7 @@ import moment from "moment/moment";
 import BuyProduct from "@/components/BuyProduct";
 import Clipboard from "@/components/Clipboard";
 import {FinishPayment} from "@/components/FinishPayment";
-import {getStateTextColor, getAmountColor} from "@/lib/utils";
+import {getStateTextColor, getAmountColor, getToFixedLength} from "@/lib/utils";
 import DividerCus from "@/components/ui/dividerCus";
 import AppContext from "antd/es/app/context";
 import {MyContext} from "@/service/context";
@@ -97,26 +97,38 @@ const StateHover = ({record, onRecharge} : StateHoverProps) => {
 
     return <div>
         {
-            record.state === 1 && (
-                <Popover zIndex={999} content={() => notPaidContent(record.payment_expired_at, handleRecharge)}>
-                    <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>待支付</Button>
-                </Popover>
+            record.type === 1 && (
+                <>
+                    {
+                        record.state === 1 && (
+                            <Popover zIndex={999} content={() => notPaidContent(record.payment_expired_at, handleRecharge)}>
+                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>待支付</Button>
+                            </Popover>
+                        )
+                    }
+                    {
+                        record.state === 2 && (
+                            <Popover zIndex={999} content={() => chargedContent(record.payment_link, record.payment_link_source)}>
+                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>已充值</Button>
+                            </Popover>
+                        )
+                    }
+                    {
+                        record.state === 3 && (
+                            <Popover zIndex={999} content={() => paidFailedContent(handleRecharge)}>
+                                <Button type={"text"} danger style={{color: getStateTextColor(record.state, record.type)}}><span>充值超时</span></Button>
+                            </Popover>
+                        )
+                    }
+                </>
             )
         }
         {
-            record.state === 2 && (
-                <Popover zIndex={999} content={() => chargedContent(record.payment_link, record.payment_link_source)}>
-                    <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>已充值</Button>
-                </Popover>
+            record.type === 2 && (
+                <Button type={"text"} >已扣除</Button>
             )
         }
-        {
-            record.state === 3 && (
-                <Popover zIndex={999} content={() => paidFailedContent(handleRecharge)}>
-                    <Button type={"text"} danger style={{color: getStateTextColor(record.state, record.type)}}><span>充值超时</span></Button>
-                </Popover>
-            )
-        }
+
 
     </div>
 }
@@ -198,7 +210,7 @@ const ElectricityFee = () => {
             title: '时间(UTC)',
             dataIndex: 'created_at',
             render: (data) => {
-                return <div>{moment(data*1000).format('LLLL')}</div>
+                return <div>{moment(data*1000).format('YYYY/MM/DD HH:mm:ss')}</div>
             },
             width: 200
         },
@@ -220,7 +232,7 @@ const ElectricityFee = () => {
                 return (
                     <div>
                         <div style={{color: getAmountColor(record.state, record.type)}}>
-                            {record.type === 1 ? '+' : '-'}${Number(record.payment_request.amount).toFixed(4)}
+                            {record.type === 1 ? '+' : '-'}${Number(record.amount).toFixed(getToFixedLength())}
                         </div>
                     </div>
                 )
@@ -243,7 +255,7 @@ const ElectricityFee = () => {
                     fixPos={4}
                     duration={(record?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
                     currentCurrency={{currency: record?.payment_request.currency || '', network: [record?.payment_request.network || '']}}
-                    amount={record?.amount || '0'}
+                    amount={record?.payment_request.transfer_amount || '0'}
                     orderId={record?.order_id || ''}
                     qrcodeUrl={record?.payment_link_source || ''}
                     isCountDownFinish={false}
@@ -260,7 +272,7 @@ const ElectricityFee = () => {
                                     <Image width={28} src={DollarBlue} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>电费余额</span>
                                 </div>
-                                <div className={css.bigText}>$ {electricityInfo.balance || 0}</div>
+                                <div className={css.bigText}>$ {Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0}</div>
                             </div>
                             <div className={css.boxAction}>
                                 <Button type={"primary"} shape={"round"} block
@@ -283,7 +295,7 @@ const ElectricityFee = () => {
                                     <Image width={28} src={DollarBlue} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>昨日电费</span>
                                 </div>
-                                <div className={css.smallText}>$ {electricityInfo.yesterday_cost || 0}</div>
+                                <div className={css.smallText}>$ {Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0}</div>
                             </div>
                         </div>
                     </div>
@@ -299,7 +311,7 @@ const ElectricityFee = () => {
                                     <span className={css.boxMainTitleText}>电费余额</span>
                                 </div>
                                 <div className={css.bigText}
-                                     style={{fontSize: '24px', marginTop: '12px'}}>$ {electricityInfo.balance || 0}</div>
+                                     style={{fontSize: '24px', marginTop: '12px'}}>$ {Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0}</div>
                             </div>
                             <Divider style={{height: '60px', margin: '0 16px'}} type={"vertical"}></Divider>
                             <div>
@@ -310,7 +322,7 @@ const ElectricityFee = () => {
                                 </div>
                                 <div className={css.mobileLine} style={{marginTop: '26px'}}>
                                     <span>昨日电费</span>
-                                    <span className={css.mobileLineStrong}>$ {electricityInfo.yesterday_cost || 0}</span>
+                                    <span className={css.mobileLineStrong}>$ {Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0}</span>
                                 </div>
 
                             </div>

@@ -8,10 +8,11 @@ export interface NumberSelector {
     step: number
     min?: number
     max?: number
-    onChange: (res: number) => void
+    onChange: (res: number) => void,
+    styles? : Record<string, any>
 }
 
-export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, max = 9999999}: NumberSelector) => {
+export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, max = 9999999, styles = {}}: NumberSelector) => {
     const [currentValue, setCurrentValue] = useState(value)
 
     useEffect(() => {
@@ -32,7 +33,7 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
         setCurrentValue(res)
         onChange&&onChange(res);
     }
-    return (<div className={css.numberSelectorWrapper}>
+    return (<div className={css.numberSelectorWrapper} style={{...styles}}>
         <div className={css.handler} onClick={() => handleOpera(false)}>
             <MinusOutlined />
         </div>
