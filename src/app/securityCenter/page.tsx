@@ -13,6 +13,7 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getLoginHistory, getUserInfo, LoginHistoryItem, startTotp} from "@/service/api";
 import {TwoFactorAuth, UnbindTowFactorAuth} from "@/components/TwoFactorAuth";
 import {PhoneBind} from "@/components/PhoneBind";
+import moment from "moment";
 
 
 
@@ -29,7 +30,7 @@ const columns = [
         key: 'created_at',
         width: 200,
         render: (v: number) => {
-            return <div>{new Date(v * 1000).toLocaleDateString()} {new Date(v * 1000).toLocaleTimeString() }</div>
+            return <div>{moment(v * 1000).format('MM/DD/YYYY hh:mm:ss')}</div>
         }
     },
     {
@@ -129,7 +130,7 @@ const SecurityCenter: React.FC = () => {
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'}>注册日期</div>
                             <div
-                                className={'card-column-box-row-content'}>{new Date(state.userInfo.created_at * 1000).toLocaleDateString()}</div>
+                                className={'card-column-box-row-content'}>{moment(state.userInfo.created_at * 1000).format('MM/DD/YYYY')}</div>
                         </div>
                         <DividerCus/>
                         <div className={'card-column-box-row'}>
@@ -201,7 +202,8 @@ const SecurityCenter: React.FC = () => {
                     </div>
                     <Table
                         rowKey={'created_at'}
-                        columns={state.isMobile ? columns.slice(0, columns.length - 1) : columns}
+                        scroll={{x: 850}}
+                        columns={columns}
                         dataSource={list}
                         pagination={false}
                     ></Table>

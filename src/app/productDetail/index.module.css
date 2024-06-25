@@ -3,17 +3,35 @@
     min-height: calc(100vh - 235px);
     min-width: 1200px;
 }
+.mobileProductDetailBg{
+    background-color: white;
+    padding: 0 16px;
+}
 .productDetailWrapper{
     display: flex;
     gap: 40px;
     padding-top: 20px;
     padding-bottom: 100px;
 }
+.mobileProductDetailWrapper{
+    display: flex;
+    gap: 28px;
+    padding-top: 20px;
+    padding-bottom: 100px;
+    flex-direction: column;
+}
 .productName{
     font-weight: 600;
     font-size: 28px;
     color: #333333;
     line-height: 40px;
+    margin-bottom: 10px;
+}
+.mobileProductName{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 28px;
     margin-bottom: 10px;
 }
 .date{
@@ -25,10 +43,22 @@
     font-style: normal;
     margin-bottom: 24px;
 }
+.mobileDate{
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 20px;
+    text-align: left;
+    font-style: normal;
+    margin-bottom: 24px;
+}
 
 .contentWrapper{
     width: 1200px;
     margin: 0 auto;
+}
+.mobileContentWrapper{
+    width: 100%;
 }
 .block{
     background: #F9F9FB;
@@ -53,6 +83,9 @@
 }
 .left{
     width: 520px;
+}
+.mobileLeft{
+    width: 100%;
 }
 .productTitle{
     text-align: center;
@@ -109,9 +142,24 @@
     padding-bottom: 12px;
     width: 100%;
 }
+.mobileCard{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
 .row{
     display: flex;
     margin-bottom: 20px;
+    @media screen and (max-width: 600px){
+        flex-direction: column;
+    }
+}
+.row2{
+    display: flex;
+    margin-bottom: 20px;
+    @media screen and (max-width: 600px){
+        justify-content: flex-end;
+    }
 }
 .label{
     width: 125px;
@@ -120,6 +168,12 @@
     color: #333333;
     line-height: 26px;
     text-align: left;
+    @media screen and (max-width: 600px){
+        font-weight: 500;
+        font-size: 14px;
+        padding-bottom: 8px;
+        width: 70px;
+    }
 }
 .info{
     font-weight: bold;
@@ -128,6 +182,13 @@
     line-height: 26px;
 
     text-align: left;
+    @media screen and (max-width: 600px){
+        font-size: 14px;
+    }
+}
+.label2{
+    width: 100px;
+    text-align: right;
 }
 .button{
     width: 112px !important;
@@ -138,9 +199,20 @@
     font-weight: bold;
     font-size: 28px;
     color: #FF7E3C;
+    @media screen and (max-width: 600px){
+        font-size: 20px
+    }
+}
+.checkbox{
+    @media screen and (max-width: 600px){
+        font-size: 10px
+    }
 }
 .checkbox a{
     color: rgba(60, 83, 255, 1);
+    @media screen and (max-width: 600px){
+        font-size: 10px
+    }
 }
 .selected{
     background: rgba(60,83,255,0.05) !important;

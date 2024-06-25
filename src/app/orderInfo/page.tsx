@@ -77,7 +77,7 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
 }
 
 const columns: TableProps<PaymentItem>['columns'] = [
-    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('YYYY/MM/DD HH:mm:ss'), width: 200},
+    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY HH:mm:ss'), width: 200},
     {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => parseHashrateByNumber(v, 0).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  parseHashrateByNumber(v, 2).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
@@ -191,7 +191,7 @@ const DemoArea = ({dataList, isMobile, unit}: {
     }, [dataList]);
     const config = {
         xField: (d: any) => {
-            return moment(d.created_at * 1000).format('YYYY/MM/DD');
+            return moment(d.created_at * 1000).format('MM/DD/YYYY');
         },
         yField: (d: any) => {
             return Number(d.hashrate)

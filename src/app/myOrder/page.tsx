@@ -65,7 +65,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         title: '订单时间',
         dataIndex: 'created_at',
         render: (data) => {
-            return <div>{moment(data * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+            return <div>{moment(data * 1000).format('MM/DD/YYYY HH:mm:ss')}</div>
         },
         width: 200
     },
@@ -246,7 +246,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             <div className={css.item} style={{width: '600px'}}>
                 <span className={css.label}>挖矿日期:</span>
                 <span
-                    className={css.value}>{new Date(data.start_at * 1000 || 0).toLocaleString()} - {new Date(data.end_at * 1000 || 0).toLocaleString()}</span>
+                    className={css.value}>{moment(data.start_at * 1000 || 0).format('MM/DD/YYYY')} - {moment(data.end_at * 1000 || 0).format('MM/DD/YYYY')}</span>
             </div>
             <div className={css.delOrderBtn}>
                 {
@@ -362,7 +362,7 @@ const MyOrder = () => {
                 }}
             />
         </Modal>
-        <Modal open={deleteObj!==null} footer={null} width={420}>
+        <Modal open={deleteObj!==null} onCancel={() => setDeleteObj(null)} footer={null} width={420}>
             <EasyConfirmContent
                 key={deleteObj?.order_id}
                 title={'删除订单'}

@@ -210,7 +210,7 @@ const ElectricityFee = () => {
             title: '时间(UTC)',
             dataIndex: 'created_at',
             render: (data) => {
-                return <div>{moment(data*1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+                return <div>{moment(data*1000).format('MM/DD/YYYY HH:mm:ss')}</div>
             },
             width: 200
         },

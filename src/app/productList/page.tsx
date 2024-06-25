@@ -11,6 +11,7 @@ import SoldOut from '../../../public/soldOut.png'
 import Image from "next/image";
 import {cn, getToFixedLength} from "@/lib/utils";
 import {MyContext} from "@/service/context";
+import moment from "moment";
 
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
@@ -28,7 +29,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">挖矿日期</div>
-                    <div className="card-single-bottom-value">{new Date((data?.start_at || 0) * 1000 || 0).toLocaleDateString()} - {new Date((data?.end_at || 0) * 1000 || 0).toLocaleDateString()}</div>
+                    <div className="card-single-bottom-value">{moment((data?.start_at || 0) * 1000 || 0).format('MM/DD/YYYY')} - {moment((data?.end_at || 0) * 1000 || 0).format('MM/DD/YYYY')}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">功耗</div>

@@ -14,9 +14,10 @@ type currencyList = currency[]
 interface PriceSliderProps {
     currencyList: currencyList
     onTargetPriceChange: (v: number, currency: currency) => void
+    isMobile?: boolean
 }
 
-export const PriceSlider = ({currencyList, onTargetPriceChange}:PriceSliderProps) => {
+export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false}:PriceSliderProps) => {
     const [targetBTCPrice, setBTCTargetPrice] = useState(0)
     const [targetDogePrice, setDogeTargetPrice] = useState(0)
     const [targetLtcPrice, setLtcTargetPrice] = useState(0)

@@ -1,7 +1,7 @@
 'use client'
 import css from './index.module.css'
 import {Button, Checkbox, Divider, Input, Modal, Slider} from "antd";
-import {cn} from "@/lib/utils";
+import {cn, getToFixedLength} from "@/lib/utils";
 import React, {useCallback, useEffect, useRef, useState,useContext} from "react";
 import {getProductDetail, GoodDetail, buyProduct, fullRevenue, FullRevenueRequest} from "@/service/api";
 import {getLocalDate} from '@/lib/clientUtils'
@@ -25,7 +25,7 @@ const data = [
     { type: 'total_income', value: 0 },
 ];
 
-const DemoColumn = ({data}: {data: any[]}) => {
+const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
     const [dataList, setDataList] = useState(data || [])
     useEffect(() => {
         setDataList(data)
@@ -62,8 +62,8 @@ const DemoColumn = ({data}: {data: any[]}) => {
                 }
                 return '#393535';
             },
-            radiusTopLeft: 10,
-            radiusTopRight: 10,
+            radiusTopLeft: isMobile ? 6 : 10,
+            radiusTopRight: isMobile ? 6 : 10,
             maxWidth: 28,
         },
         label: {
@@ -164,7 +164,7 @@ const ProductDetail = () => {
 
     useEffect(()=> {
         deb.run()
-    }, [targetPrice, goodId, buyCount, getPrice,deb])
+    }, [targetPrice, targetDogePrice, targetLtcPrice, buyCount, buyDays, goodId])
 
     const medianAndMax = (min: number, max: number, step: number) => {
         let values = [];
@@ -233,10 +233,10 @@ const ProductDetail = () => {
 
 
     return (
-        <div className={css.productDetailBg}>
-            <div className={css.contentWrapper}>
-                <div className={css.productDetailWrapper}>
-                    <div className={css.left}>
+        <div className={cn(state.isMobile ? css.mobileProductDetailBg : css.productDetailBg)}>
+            <div className={cn(state.isMobile ? css.mobileContentWrapper : css.contentWrapper)}>
+                <div className={cn(state.isMobile ? css.mobileProductDetailWrapper:css.productDetailWrapper)}>
+                    <div className={cn(state.isMobile ? css.mobileLeft : css.left)}>
                         <div className={css.block}>
                             <div className={css.productTitle}>S19J Pro</div>
                             <div className={css.productInfo}>
@@ -248,33 +248,34 @@ const ProductDetail = () => {
                             </div>
                             <div style={{height: '220px',lineHeight: '220px', textAlign: 'center'}}>产品{goodId}对应的图片展示在这里</div>
                         </div>
-                        <div style={{display: 'flex', gap: '20px',paddingTop: '20px'}}>
+                        <div style={{display: 'flex', gap: '20px',paddingTop: '20px', flexDirection: state.isMobile ? 'column' : 'row'}}>
                             <div className={cn(css.chart, css.block)}>
-                                <div className={css.roi}>
+                                <div className={css.roi} style={{paddingBottom: '20px'}}>
                                     <span>投资回报率: </span>
                                     <span style={{color: '#3C53FF', fontWeight: 'bold'}}>{revenueData.roi}</span>
                                 </div>
                                 {/*@ts-ignore*/}
                                 <div style={{height: '170px', width: '100%'}}>
-                                    <DemoColumn data={dataList}></DemoColumn>
+                                    <DemoColumn isMobile={state.isMobile} data={dataList}></DemoColumn>
                                 </div>
                             </div>
-                            <div className={cn(css.block)}>
-                                <PriceSlider currencyList={goodDetail?.currency || []} onTargetPriceChange={onTargetPriceChange} />
+                            <div className={cn(css.block)} style={{paddingLeft: state.isMobile ? '40px':'', paddingRight: state.isMobile ? '40px':''}}>
+                                <PriceSlider isMobile={state.isMobile} currencyList={goodDetail?.currency || []} onTargetPriceChange={onTargetPriceChange} />
                             </div>
                         </div>
                     </div>
                     <div style={{flex: 1}}>
-                        <div className={css.productName}>{goodDetail?.name}</div>
-                        <div className={css.date}
+                        <div className={cn(state.isMobile? css.mobileProductName : css.productName)}>{goodDetail?.name}</div>
+                        <div className={cn(state.isMobile? css.mobileDate : css.date)}
                              suppressHydrationWarning>{getLocalDate(goodDetail?.start_at)} - {getLocalDate(goodDetail?.end_at)}</div>
-                        <div className={css.card}>
+                        <div className={cn(state.isMobile ? css.mobileCard : css.card)}>
                             <div className={css.row}>
-                            <div className={css.label}>选择数量</div>
+                                <div className={css.label}>选择数量</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
-                                            width: state.isMobile ? '' : '356px'
+                                            width: state.isMobile ? '100%' : '356px',
+                                            maxWidth: '100%'
                                         }}
                                         unit={goodDetail?.unit || ''}
                                         min={Number(goodDetail?.min_qty) || 0}
@@ -285,24 +286,30 @@ const ProductDetail = () => {
                                     ></NumberSelector>
                                 </div>
                             </div>
-                            <div className={css.row}>
-                                <div className={css.label}></div>
-                                <div className={css.info}>
-                                    {
-                                        btnValueList.map(item => {
-                                            return (
-                                                <Button onClick={() => quickSetBuyCount(item)} key={item} className={cn(css.button)} type={item === buyCount ? 'primary' : 'default'} size={"small"}>{item}{goodDetail?.unit || ''}</Button>
-                                            )
-                                        })
-                                    }
+                            {
+                                !state.isMobile && <div className={css.row}>
+                                    <div className={css.label}></div>
+                                    <div className={css.info}>
+                                        {
+                                            btnValueList.map(item => {
+                                                return (
+                                                    <Button onClick={() => quickSetBuyCount(item)} key={item}
+                                                            className={cn(css.button)}
+                                                            type={item === buyCount ? 'primary' : 'default'}
+                                                            size={"small"}>{item}{goodDetail?.unit || ''}</Button>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            }
                             <div className={css.row}>
                                 <div className={css.label}>电费天数</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
-                                            width: state.isMobile ? '' : '356px'
+                                            width: state.isMobile ? '100%' : '356px',
+                                            maxWidth: '100%'
                                         }}
                                         min={1}
                                         max={9999999}
@@ -313,27 +320,29 @@ const ProductDetail = () => {
                                     />
                                 </div>
                             </div>
-                            <div className={css.row}>
-                                <div className={css.label}>合约费用</div>
-                                <div className={css.info}>${hashrateCost}</div>
+                            <div className={css.row2}>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合约费用</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(hashrateCost).toFixed(getToFixedLength())}</div>
                             </div>
-                            <div className={css.row}>
-                                <div className={css.label}>电费</div>
-                                <div className={css.info}>${electricityCost}</div>
+                            <div className={css.row2}>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>电费</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(electricityCost).toFixed(getToFixedLength())}</div>
                             </div>
-                            <Divider />
-                            <div className={css.row}>
-                                <div className={css.label}>合计费用</div>
-                                <div className={cn(css.info, css.summary)}>${totalCost}</div>
+                            {
+                                !state.isMobile && <Divider />
+                            }
+                            <div className={css.row2}>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合计费用</div>
+                                <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${Number(totalCost).toFixed(getToFixedLength())}</div>
                             </div>
                         </div>
-                        <div style={{marginTop: '40px'}}>
+                        <div style={{marginTop: state.isMobile ? '0' : '40px'}}>
                             <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={''}>《服务协议》</a>和<a href={''}>《隐私政策》</a><a href={''}>《免责声明》</a>。</Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button
                                 onClick={() => toggleModal(true)}
-                                disabled={!checkboxValue} size={"large"} shape={"round"} type={"primary"} style={{height: '52px', width: '265px'}}>立即购买</Button>
+                                disabled={!checkboxValue} size={"large"} shape={"round"} type={"primary"} style={{height: '52px', width: state.isMobile ? '100%' : '265px'}}>立即购买</Button>
                         </div>
                     </div>
                 </div>

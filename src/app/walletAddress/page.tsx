@@ -14,7 +14,7 @@ import Clipboard from "@/components/Clipboard";
 
 const styles = {
     container: {minHeight: 'calc(100vh - 232px)', paddingTop: '25px', paddingBottom: '25px'},
-    label: {fontSize: '16px', fontWeight: 600, color: '#333', width: '100px'},
+    label: {fontSize: '16px', fontWeight: 600, color: '#333', display: 'flex', justifyContent: 'left'},
     address: {fontSize: '16px', fontWeight: 600, color: '#333'},
     button: {height: '44px', width: '136px', fontSize: '14px'},
     mobileButton: { lineHeight: '14px', fontSize: '14px'},
@@ -184,7 +184,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                     <Image width={58} src={icon} alt={currency}/>
                 </div>
                 <div className={state.isMobile ? css.mobileContent : css.content}>
-                    <div style={styles.label}>{currency}</div>
+                    <div style={styles.label}><span style={{width: state.isMobile? '' : '100px'}}>{currency}</span> <span className={css.remark} style={{width: state.isMobile?'' : '100px'}}>{addressDict['remark']}</span></div>
                     <div style={styles.address}>
                         { addressDict['address'] && <Clipboard str={addressDict['address']} maxTextWidth={state.isMobile? '150px' : ''} />}
                     </div>
@@ -220,7 +220,10 @@ const WalletAddress = () => {
     }
 
     return state?.userInfo?.email ? (
-        <div style={styles.container}>
+        <div style={{
+            ...styles.container,
+            padding: state.isMobile ? '20px 16px' : '25px 0'
+        }}>
             <div className={'container-my'}>
                 <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
                     <Card>
