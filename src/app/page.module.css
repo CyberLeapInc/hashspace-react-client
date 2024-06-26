@@ -51,6 +51,9 @@
     flex: 1;
     padding: 40px 44px;
     box-sizing: border-box;
+    @media screen and (max-width: 768px){
+        padding:40px 24px;
+    }
 }
 .cardImage{
     height: 40px;

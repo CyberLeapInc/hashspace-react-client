@@ -112,7 +112,7 @@ export default function Home() {
                           <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={ProImage} alt="pro"></Image>
                           </div>
-                          <div className="card-title">专业团队</div>
+                          <div className="card-title" style={{fontSize: state.isMobile? '16px' : '20px'}}>专业团队</div>
                           <div
                               className="card-text">我们对矿场进行严格筛选，确保每一处都符合高标准，并始终为您提供值得信赖的优质矿机，矿场及电力资源。
                           </div>
@@ -121,7 +121,7 @@ export default function Home() {
                           <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={CountImage} alt="pro"></Image>
                           </div>
-                          <div className="card-title">算力自主</div>
+                          <div className="card-title" style={{fontSize: state.isMobile? '16px' : '20px'}}>算力自主</div>
                           <div
                               className="card-text">用户自己选择矿池，自己支付电费，矿池直接支付收益，自己选择收款类型，您的各项服务都由您做主。
                           </div>
@@ -130,7 +130,7 @@ export default function Home() {
                           <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
                               <Image src={SafeImage} alt="pro"></Image>
                           </div>
-                          <div className="card-title">安全合规</div>
+                          <div className="card-title" style={{fontSize: state.isMobile? '16px' : '20px'}}>安全合规</div>
                           <div
                               className="card-text">自营的挖矿数据中心位于美国、东南亚等多地，您的挖矿过程将拥有更好的灵活性、透明度以及竞争力。
                           </div>
