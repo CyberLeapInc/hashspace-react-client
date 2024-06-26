@@ -152,6 +152,9 @@ export const Header: React.FC = () => {
     if (state.isMobile) {
         return <header
             className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur"
+            style={{
+                borderBottom: "none"
+            }}
         >
             <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px'}}>
                 <div className="logospace">
