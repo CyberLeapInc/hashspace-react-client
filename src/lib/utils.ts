@@ -52,6 +52,13 @@ export const getToFixedLength = (currency?: string) => {
 
 // 根据数字格式化算力
 export function parseHashrateByNumber(value = 0, precision = 2, unit = '') {
+    if (value === undefined) return {
+        hashrate: 0,
+        unit: ''
+    }
+    if (typeof value === 'string') {
+        value = Number(value)
+    }
     const HASHRATE_UNIT_LIST_FULL = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
     if (unit === 'T') {
         value = value * Math.pow(10, 12)

@@ -57,18 +57,20 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
     return <div>
         {
             list?.map((item, index) => (
-                <>{item.status === 1 ?
-                    <Popover key={item.payment_link_source} zIndex={999} content={() => paidContent(item)}>
-                        <div key={index} className={css.incomeItem}>
+                <div key={item.payment_link_source + index}>
+                    {item.status === 1 ?
+                        <Popover key={item.payment_link_source} zIndex={999} content={() => paidContent(item)}>
+                            <div key={index} className={css.incomeItem}>
+                                <div
+                                    style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
+                            </div>
+                        </Popover>
+                        : <div key={index} className={css.incomeItem}>
                             <div
                                 style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
                         </div>
-                    </Popover>
-                    : <div key={index} className={css.incomeItem}>
-                        <div
-                            style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
-                    </div>
-                }</>
+                    }
+                </div>
 
 
             ))
@@ -77,7 +79,7 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
 }
 
 const columns: TableProps<PaymentItem>['columns'] = [
-    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY HH:mm:ss'), width: 200},
+    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY'), width: 200},
     {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => parseHashrateByNumber(v, 0).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  parseHashrateByNumber(v, 2).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
@@ -117,12 +119,10 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     const getMoney = (currency: string, count: number|string) => {
         if (!state.chainList) return '0';
         const priceNow = state.chainList.find((item) => item.currency === currency)?.last_usdt_price
-        console.log(priceNow)
         return big(count).times(big(priceNow || 0)).toFixed(getToFixedLength());
     }
     const getSummaryMoney = (key: keyof OrderDetailResponse): string => {
         let list: string[] = []
-        console.log(rawData)
         rawData.coin_income.forEach(item => {
             list.push(getMoney(item.currency, item[key]))
         })
@@ -228,14 +228,11 @@ const OrderInfo = () => {
             tempOrderId = searchParams.get('orderId') || ''
             setOrderId(tempOrderId)
         }
-        console.log('bbbbbbb')
         getOrderInfo(tempOrderId).then((res) => {
-            console.log(res)
             setLink(res.pool_observer_link)
             setOrderInfo(res)
         })
         getPaymentList(tempOrderId).then((res) => {
-            console.log(res)
             setPaymentList(res.list)
         })
     })
@@ -248,7 +245,7 @@ const OrderInfo = () => {
                         <div className={css.loginHello}>算力数据</div>
                         <div className={state.isMobile ? css.mobileCalCardList : css.calCardList}>
                             {cardData.map((card, index) => (
-                                <Card rawData={orderInfo} key={index} {...card} />
+                                <Card rawData={orderInfo} key={card.showKey} {...card} />
                             ))}
                         </div>
                     </div>

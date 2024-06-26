@@ -66,8 +66,6 @@ export const MyContextProvider= ({ children, value }: { children: ReactNode,valu
     useEffect(() => {
         if (value) {
             dispatch({ type: ActionType.setIsMobile, payload: value.isMobile });
-            console.log('000123j123o1j23j')
-            console.log(value)
         }
     }, [value]);
 
