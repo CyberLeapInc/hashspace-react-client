@@ -86,7 +86,7 @@
     text-align: left;
     border-radius: 23px;
     line-height: 40px;
-    box-sizing: content-box;
+    box-sizing: border-box;
     padding: 0 26px;
     padding-top: 30px;
     padding-bottom: 30px;
@@ -96,6 +96,17 @@
     font-weight: bold;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    @media (max-width: 768px) {
+        font-size: 16px;
+        line-height: 23px;
+        padding: 16px 16px;
+        font-weight: 500;
+        color: #333333;
+    }
+}
+.collapse-title:hover{
+    background: #f8f8f8;
 }
 .grayquestion{
     border-radius: 23px;
@@ -107,6 +118,11 @@
 .collapse-text{
     padding: 0 26px;
     padding-bottom: 26px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+        padding: 16px;
+        padding-top: 0;
+    }
 }
 .bbaaa:hover{
     background: #F9F9F9;
@@ -116,27 +132,33 @@
     border: 1px solid #DEDEDE;
     height: 22px;
     width: 20px;
+    min-width: 20px;
     line-height: 20px;
     text-align: center;
     display: inline-block;
     font-size: 12px;
     align-items: center;
     float: left;
-    margin-top: 10px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 .uparrowimg{
+    @media (max-width: 768px) {
+        height: 24px;
+        width: 24px;
+    }
     height: 38px;
     width: 38px;
-    margin-right: 50px;
     display: inline-block;
     background-size: cover;
     background-image: url("../../public/arrow-up-round-big.png");
 }
 .downarrowimg{
+    @media (max-width: 768px) {
+        height: 24px;
+        width: 24px;
+    }
     height: 38px;
     width: 38px;
-    margin-right: 50px;
     display: inline-block;
     background-size: cover;
     background-image: url("../../public/arrow-down-round-big.png");

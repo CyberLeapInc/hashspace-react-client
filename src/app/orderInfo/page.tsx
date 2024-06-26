@@ -25,7 +25,6 @@ import big from "big.js";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
-import {state} from "sucrase/dist/types/parser/traverser/base";
 import Clipboard from "@/components/Clipboard";
 import moment from "moment";
 
@@ -71,8 +70,6 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
                         </div>
                     }
                 </div>
-
-
             ))
         }
     </div>

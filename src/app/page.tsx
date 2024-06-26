@@ -90,7 +90,7 @@ export default function Home() {
     return (
     <main>
       <div className=''>
-          <div className={css.banner}>
+          <div className={state.isMobile? css.mobileBanner : css.banner}>
               <div style={{
                   maxWidth: '1200px',
                   margin: '0 auto'
@@ -139,7 +139,7 @@ export default function Home() {
               </div>
           </div>
           <div style={{paddingBottom: '40px', backgroundColor: "white"}}>
-              <div className="container-my">
+              <div className="container-my" style={{padding: state.isMobile ? '0 8px' : ''}}>
                   <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题</div>
                   {
                       questionList && questionList.map((item) => (
@@ -151,11 +151,11 @@ export default function Home() {
                               }
                           }} style={{transition: 'all 0.3s'}} className={questionOpen === item.index ? 'grayquestionopen' : 'grayquestion'}>
                               <CollapsibleTrigger className="collapse-title">
-                                  <span style={{maxWidth: '80%'}}>
+                                  <span style={{maxWidth: '80%', display: 'flex', alignItems: 'center'}}>
                                       <div className="collapse-span">{item.index}</div>
-                                      {item.title}
+                                      <div >{item.title}</div>
                                   </span>
-                                  <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"}/>
+                                  <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"} style={{margin: state.isMobile?'0' : ''}}/>
                               </CollapsibleTrigger>
                               <CollapsibleContent className="collapse-text">
                                   {item.text}
