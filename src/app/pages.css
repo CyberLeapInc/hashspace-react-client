@@ -112,11 +112,13 @@
     background: #f8f8f8;
 }
 .grayquestion{
+    margin-bottom: 10px;
     border-radius: 23px;
 }
 .grayquestionopen{
     border-radius: 23px;
-    background-color: #f8f8f8
+    margin-bottom: 10px;
+    background-color: #f8f8f8;
 }
 .collapse-text{
     padding: 0 26px;

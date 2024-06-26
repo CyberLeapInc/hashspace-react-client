@@ -139,7 +139,7 @@ export default function Home() {
               </div>
           </div>
           <div style={{paddingBottom: '40px', backgroundColor: "white"}}>
-              <div className="container-my" style={{padding: state.isMobile ? '0 8px' : ''}}>
+              <div className="container-my" style={{padding: state.isMobile ? '0 12px' : ''}}>
                   <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题</div>
                   {
                       questionList && questionList.map((item) => (
