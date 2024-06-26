@@ -41,13 +41,13 @@ export const Providers = ({children}: { children: ReactNode }) => {
             <ConfigProvider
                 theme={themeConfig}
             >
+                <HeaderCus/>
                 <Layout
                     style={{
                         maxWidth: '100vw',
                         overflow: 'hidden'
                     }}
                 >
-                    <HeaderCus/>
                     <Content>
                         {children}
                     </Content>
@@ -70,7 +70,6 @@ export const Providers = ({children}: { children: ReactNode }) => {
                             © 2024 Hashspce. All rights reserved
                         </div>
                     }
-
                 </Layout>
             </ConfigProvider>
         </MyContextProvider>
