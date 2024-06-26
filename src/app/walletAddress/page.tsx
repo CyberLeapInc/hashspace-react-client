@@ -96,7 +96,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                         ogAddress && (
                             <div>
                                 <div className={css.modalSubTitle}>原地址</div>
-                                <div><Input className={css.myInput} disabled={true} value={ogAddress}/></div>
+                                <div><Input style={{color:'#999', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7'}} className={css.myInput} disabled={true} value={ogAddress}/></div>
                             </div>
                         )
                     }
@@ -106,9 +106,10 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                     <div><Input className={css.myInput} onChange={(v) => setRemark(v.target.value)}/></div>
                     <div className={css.tip}>
                         <div style={{margin: '20px 0 8px'}}>温馨提示</div>
-                        <div>1.云算力运行时，最小支付金额：0.005BTC。</div>
-                        <div>2.云算力运行结束后，尾款最小支付金额：0.05BTC。</div>
-                        <div>3.修改地址后，支付冻结48h。</div>
+                        <div>1. 云算力运行时，最小支付金额：0.005BTC。</div>
+                        <div>2. 云算力运行结束后，尾款最小支付金额：0.05BTC。</div>
+                        <div>3. 修改地址后，支付冻结48h。</div>
+                        <div>4. 一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。</div>
                     </div>
                     <Button shape={"round"} block size={"large"} type={"primary"}
                             onClick={() => startChange()}>下一步</Button>
