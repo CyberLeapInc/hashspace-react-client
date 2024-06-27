@@ -94,3 +94,6 @@
     line-height: 24px;
     text-align: center;
 }
+.noScrollBar::-webkit-scrollbar {
+    display: none;
+}

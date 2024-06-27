@@ -38,7 +38,7 @@ export const SelectNetwork: React.FC<{
                 })}
             </div>
             <div className={css.info}>选择网络</div>
-            <div style={{display: "flex", gap: '10px'}}>
+            <div className={css.noScrollBar} style={{display: "flex", gap: '10px',overflowX: 'scroll'}}>
                 {
                     currentCurrency.network.map(item => {
                         return (
