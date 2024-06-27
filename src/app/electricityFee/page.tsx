@@ -32,13 +32,18 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
         <div>电费金额</div>
         <div style={{marginBottom: '40px'}}>
             <NumberSelector
+                styles={{
+                    width: '100%',
+                    maxWidth: '100%',
+                    minWidth: '100%',
+                }}
                 value={cost}
                 onChange={(v) => handleChange(v)}
                 unit={"$"}
                 step={step}
             />
         </div>
-        <Button style={{height:'52px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>立即充值</Button>
+        <Button disabled={cost === 0} style={{height:'52px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>立即充值</Button>
     </div>
 }
 
