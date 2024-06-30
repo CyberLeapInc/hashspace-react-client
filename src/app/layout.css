@@ -1,6 +1,5 @@
 .footer-cus{
     background-color: #F5F7FF;
-    font-family: MicrosoftYaHei;
     font-size: 14px;
     color: #333333;
     line-height: 21px;
@@ -23,8 +22,6 @@
     line-height: 35px;
     box-sizing: content-box;
     justify-content: space-between;
-
-    font-family: PingFangSC, PingFang SC;
     font-weight: 400;
     font-size: 14px;
     color: #999999;
@@ -39,6 +36,7 @@
     font-style: normal;
     display: flex;
     font-weight: bold;
+    margin-right: 60px;
     img{
         margin-right: 10px;
     }
@@ -72,7 +70,6 @@
 
 }
 .login-hello{
-    font-family: PingFangSC, PingFang SC;
     font-weight: 600;
     font-size: 20px;
     @media screen and (max-width: 768px){
@@ -83,8 +80,8 @@
     line-height: 30px;
     text-align: left;
     font-style: normal;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 .flex-wrap{
     display: flex;
@@ -185,8 +182,9 @@
         color: #333333;
         line-height: 22px;
         font-weight: 500;
-        justify-content: space-between;
+        justify-content: flex-start;
         .card-column-box-row-label{
+            min-width: 80px;
             @media screen and (max-width: 768px){
                 font-size: 14px;
             }
@@ -269,4 +267,10 @@
     line-height: 24px;
     text-align: left;
     font-style: normal;
+}
+.cus-middle-button{
+    width: 135px;
+    height: 44px;
+    line-height: 14px;
+    font-size: 14px;
 }

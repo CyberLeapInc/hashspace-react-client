@@ -6,6 +6,7 @@
     border-radius: 20px;
     margin: 0 auto;
     padding: 32px;
+    padding-top: 60px;
 }
 .kyc-image{
     height: 80px;
@@ -17,6 +18,6 @@
     font-size: 14px;
     color: #333333;
     line-height: 30px;
-    padding: 40px 0;
+    padding: 44px 0 20px;
     text-align: center;
 }

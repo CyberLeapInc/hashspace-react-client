@@ -82,3 +82,35 @@ export function parseHashrateByNumber(value = 0, precision = 2, unit = '') {
         unit: HASHRATE_UNIT_LIST_FULL[pos] || ''
     }
 }
+
+export function formatThousands(num: string | number, isDecimal = true) {
+    // Ensure the input is a number.
+    num = Number(num);
+    if (isNaN(num)) {
+        throw new Error('Input must be a number or a string that can be converted to a number.');
+    }
+
+    // Split the number into its integer and decimal parts.
+    let [integer, decimal] = num.toString().split('.');
+
+    // Convert the integer part to an array of characters.
+    const chars = integer.split('');
+
+    // Reverse the array and insert a comma after every third digit.
+    for (let i = chars.length - 3; i > 0; i -= 3) {
+        chars.splice(i, 0, ',');
+    }
+
+    // Reverse the array again and join it back into a string.
+    integer = chars.join('');
+    if (decimal?.length === 1) {
+        decimal = decimal + '0'
+    }
+
+    // If there was a decimal part, add it back to the end of the string.
+    if (decimal !== undefined) {
+        return `${integer}${isDecimal? '.' : ''}${isDecimal ? decimal : ''}`;
+    } else {
+        return `${integer}${isDecimal ? '.00' : ''}`;
+    }
+}

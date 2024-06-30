@@ -25,7 +25,9 @@ export const SelectNetwork: React.FC<{
             <div className={css.title}>订单支付</div>
             <div className={css.tip}>待付金额</div>
             <div className={css.money}>${total_cost}</div>
-            <div className={css.info}>选择币种</div>
+            <div className={css.info} style={{
+                marginTop: '38px'
+            }}>选择币种</div>
             <div>
                 {paymentCurrency.map(item => {
                     return (
@@ -38,7 +40,7 @@ export const SelectNetwork: React.FC<{
                 })}
             </div>
             <div className={css.info}>选择网络</div>
-            <div className={css.noScrollBar} style={{display: "flex", gap: '10px',overflowX: 'scroll'}}>
+            <div className={''} style={{display: "flex", gap: '10px', flexWrap: 'wrap'}}>
                 {
                     currentCurrency.network.map(item => {
                         return (
@@ -54,6 +56,7 @@ export const SelectNetwork: React.FC<{
             </div>
             <div>
                 <Button disabled={loading} loading={loading} className={css.payButton} type={"primary"} block
+                        size={"large"}
                         shape={"round"} onClick={goPay}>立即支付</Button>
             </div>
         </div>

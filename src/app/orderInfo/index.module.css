@@ -15,7 +15,6 @@
     padding: 16px;
 }
 .loginHello{
-    font-family: PingFangSC, PingFang SC;
     font-weight: 600;
     font-size: 20px;
     @media screen and (max-width: 768px){
@@ -35,12 +34,49 @@
 }
 .divider{
     width: 1px;
+    transform: scaleX(0.1);
     height: inherit;
     background: #FFFFFF;
     border: 1px solid rgba(233,233,233,0.76);
-    margin: 50px 30px 0;
+    margin: 70px 25px 0px 24px;
 }
-
+.legend{
+    font-weight: 400;
+    font-size: 11px;
+    color: #8390A3;
+    line-height: 16px;
+}
+.try{
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1px solid #72A7FF;
+    position: relative;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.try::before{
+    content: '';
+    display: block;
+    width: 5px;
+    height: 1px;
+    border: 1px solid #72A7FF;
+    position: absolute;
+    top: 2px;
+    left: -5px;
+}
+.try::after{
+    content: '';
+    display: block;
+    width: 5px;
+    height: 1px;
+    border: 1px solid #72A7FF;
+    position: absolute;
+    top: 2px;
+    right: -5px;
+}
 .intro{
     flex: 1;
 }

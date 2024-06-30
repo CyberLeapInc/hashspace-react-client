@@ -1,18 +1,24 @@
 .rowDetail{
     display: grid;
-    grid-gap: 16px;
+    grid-gap: 0px;
     grid-template-columns: 33% 33% 33%;
     grid-template-rows: 45px 45px 45px 45px;
     position: relative;
     line-height: 45px;
     vertical-align: middle;
+    max-width: 100%;
     width: 100%;
+    overflow: hidden;
+    background-color: #F7F7F8;
+    padding: 8px 64px;
 }
 .mobileRowDetail{
+    background-color: #F7F7F8;
     display: flex;
     flex-direction: column;
     position: relative;
     width: 100%;
+    max-width: 100%;
     padding-top: 20px;
 }
 .smallCost{
@@ -22,12 +28,13 @@
 }
 .delOrderBtn{
     position: absolute;
-    top: -20px;
-    right: 0px;
+    bottom:5px;
+    right: 30px;
     width: 100px;
     height: 50px;
     font-size: 24px;
     line-height: 50px;
+    color: #999999 !important;
 }
 .rowBold{
     font-weight: 500;
@@ -35,6 +42,9 @@
 }
 .flexbox{
     display: flex;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
 }
 .item{
     display: flex;
@@ -62,9 +72,16 @@
 .timeout{
     font-weight: 600;
     color: #EA2A2A;
+
 }
 .textAlignCenter{
     text-align: center;
+    height: 30px !important;
+    font-weight: 400 !important;
+    font-size: 12px;
+    color: #EA2A2A;
+    line-height: 24px !important;
+    margin-top: -4px;
 }
 .countdownWrapper{
     display: flex;

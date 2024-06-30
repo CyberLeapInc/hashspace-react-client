@@ -45,7 +45,7 @@ export const Providers = ({children}: { children: ReactNode }) => {
                 <Layout
                     style={{
                         maxWidth: '100vw',
-                        overflow: 'hidden'
+                        overflow: 'scroll'
                     }}
                 >
                     <Content>

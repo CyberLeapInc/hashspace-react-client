@@ -12,7 +12,7 @@ import {cn} from "@/lib/utils";
 export const Footer = () => {
     const {state} = useContext(MyContext);
     return <>
-        <div className={css.footerCus}>
+        <div className={css.footerCus} id={'footer'}>
             <div className={cn(css.footerContainer, state.isMobile && css.footerContainerMobile)}>
                 <div className="logospace">
                     <Image className="label_2" src={Logo} alt={'logo'}/>
@@ -44,7 +44,7 @@ export const Footer = () => {
                     />
                 </div>
             </div>
-            <div className="footer-info">© 2024 Hashspce. All</div>
+            <div className="footer-info">© 2024 Hashspce. All rights reserved</div>
         </div>
     </>
 }

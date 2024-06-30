@@ -138,7 +138,7 @@
     background: #FFFFFF;
     border-radius: 20px;
     border: 1px solid rgba(233,233,233,0.76);
-    padding: 32px;
+    padding: 42px;
     padding-bottom: 12px;
     width: 100%;
 }
@@ -149,7 +149,7 @@
 }
 .row{
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     @media screen and (max-width: 600px){
         flex-direction: column;
     }

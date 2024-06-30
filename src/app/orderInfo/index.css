@@ -9,17 +9,6 @@ max-width: 1200px;
 .cal-card-big-header{
 
 }
-.login-hello{
-    font-family: PingFangSC, PingFang SC;
-    font-weight: 600;
-    font-size: 20px;
-    color: #333333;
-    line-height: 30px;
-    text-align: left;
-    font-style: normal;
-    margin-top: 12px;
-    margin-bottom: 12px;
-}
 .flex-wrap{
     display: flex;
     flex-direction: row;

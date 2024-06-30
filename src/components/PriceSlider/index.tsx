@@ -8,6 +8,9 @@ import LTC from "../../../public/ltc.svg";
 import {getChainList, Chain} from "@/service/api";
 import {useMount} from "ahooks";
 
+import {formatThousands, getToFixedLength} from "../../lib/utils";
+import Big from "big.js";
+
 type currency = 'BTC' | 'DOGE' | 'LTC'
 type currencyList = currency[]
 
@@ -82,9 +85,10 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
     }
 
     const getPrice = (currency: currency) => {
-        if (currency === 'DOGE') return targetDogePrice
-        if (currency === 'LTC') return targetLtcPrice
-        if (currency === 'BTC') return targetBTCPrice
+        if (currency === 'DOGE') return Number(Big(targetDogePrice).toFixed(getToFixedLength()))
+        if (currency === 'LTC') return Number(Big(targetLtcPrice).toFixed(getToFixedLength()))
+        if (currency === 'BTC') return Number(Big(targetBTCPrice).toFixed(getToFixedLength()))
+        return 0
     }
 
     const getImage = (currency: currency) => {
@@ -114,9 +118,14 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                 <div className={css.coinImg}><Image src={getImage(currency)} alt={currency}/></div>
                 <Slider min={getMinPrice(currency)} max={getMaxPrice(currency)}
                         value={getPrice(currency)} onChange={(v) => handlePriceChange(v, currency)}
-                        step={getStep(currency)} disabled={false}/>
+                        step={getStep(currency)} disabled={false}
+                        tooltip={{
+                            formatter: null,
+                            open: false
+                        }}
+                />
                 <div className={css.coinText}>预期{currency}价格 <span
-                    style={{color: '#3c53ff', fontWeight: 'bold'}}>${getPrice(currency)}</span></div>
+                    style={{color: '#3c53ff', fontWeight: 'bold'}}>${  formatThousands(getPrice(currency))}</span></div>
             </div>
         )
     } else {
@@ -129,6 +138,10 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                             <div className={css.inlineSlider}>
                                 <Image className={css.inlineCoinImg} src={getImage(currency)} alt={currency}/>
                                 <Slider style={{flex: 1}}
+                                        tooltip={{
+                                            formatter: null,
+                                            open: false
+                                        }}
                                         min={getMinPrice(currency)} max={getMaxPrice(currency)}
                                         value={getPrice(currency)} step={getStep(currency)}
                                         onChange={(v) => handlePriceChange(v, currency)}
@@ -139,7 +152,7 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                                     style={{
                                         color: '#3c53ff',
                                         fontWeight: 'bold'
-                                    }}>${getPrice(currency)}</span></div>
+                                    }}>${ formatThousands(getPrice(currency)) }</span></div>
                             </div>
                         </div>)
                 })}

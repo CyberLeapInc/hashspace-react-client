@@ -1,7 +1,9 @@
 'use client'
 import React, {useContext, useRef, useState} from "react";
 import css from './index.module.css'
-import DollarBlue from '../../../public/dollarBlue.png';
+import DollarBlue from '../../../public/dollarBlue.png'
+import CanMineIcon from '../../../public/can-mine-icon.png'
+import YesterdayEleFeeIcon from '../../../public/yesterday-ele-fee-icon.png'
 import Image from "next/image";
 import {Button, Table, TableProps, Modal, Statistic, Popover, Divider} from "antd";
 import {getElectricityInfo, ElectricityResponse, ElectricityList, chargeElectricity} from "@/service/api";
@@ -11,9 +13,7 @@ import moment from "moment/moment";
 import BuyProduct from "@/components/BuyProduct";
 import Clipboard from "@/components/Clipboard";
 import {FinishPayment} from "@/components/FinishPayment";
-import {getStateTextColor, getAmountColor, getToFixedLength} from "@/lib/utils";
-import DividerCus from "@/components/ui/dividerCus";
-import AppContext from "antd/es/app/context";
+import {getStateTextColor, getAmountColor, getToFixedLength, formatThousands} from "@/lib/utils";
 import {MyContext} from "@/service/context";
 
 
@@ -67,7 +67,7 @@ const StateHover = ({record, onRecharge} : StateHoverProps) => {
                 未充值
             </div>
             <div>
-                <Button shape={"round"} block type={"primary"} onClick={onRecharge}>重新充值</Button>
+                <Button shape={"round"} block type={"primary"} onClick={onRecharge}>立即支付</Button>
             </div>
             <div className={css.countdown}><Countdown valueStyle={{
                 fontWeight: '400',
@@ -93,9 +93,9 @@ const StateHover = ({record, onRecharge} : StateHoverProps) => {
             <div className={css.smallTitle}>
                 已充值
             </div>
-            <div style={{display: "flex", lineHeight: '40px'}}>
-                <span>TXID:</span>
-                <span><Clipboard linkUrl={paymentLink} str={payment_link_source}></Clipboard></span>
+            <div style={{display: "flex", lineHeight: '40px', alignItems: 'center'}}>
+                <span style={{marginTop: '2px'}}>TXID:</span>
+                <span><Clipboard noBg={true} linkUrl={paymentLink} str={payment_link_source}></Clipboard></span>
             </div>
         </div>
     }
@@ -212,7 +212,7 @@ const ElectricityFee = () => {
 
     const columns: TableProps<ElectricityList>['columns'] = [
         {
-            title: '时间(UTC)',
+            title: '时间',
             dataIndex: 'created_at',
             render: (data) => {
                 return <div>{moment(data*1000).format('MM/DD/YYYY HH:mm:ss')}</div>
@@ -237,7 +237,7 @@ const ElectricityFee = () => {
                 return (
                     <div>
                         <div style={{color: getAmountColor(record.state, record.type)}}>
-                            {record.type === 1 ? '+' : '-'}${Number(record.amount).toFixed(getToFixedLength())}
+                            {record.type === 1 ? '+' : '-'}${formatThousands(Number(record.amount).toFixed(getToFixedLength()) || 0)}
                         </div>
                     </div>
                 )
@@ -277,7 +277,7 @@ const ElectricityFee = () => {
                                     <Image width={28} src={DollarBlue} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>电费余额</span>
                                 </div>
-                                <div className={css.bigText}>$ {Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0}</div>
+                                <div className={css.bigText}>$ {formatThousands(Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0)}</div>
                             </div>
                             <div className={css.boxAction}>
                                 <Button type={"primary"} shape={"round"} block
@@ -286,21 +286,21 @@ const ElectricityFee = () => {
                             </div>
                         </div>
                         <div className={css.box} style={{flex: 1}}>
-                            <div className={css.boxMain} style={{padding: '15px 10px'}}>
+                            <div className={css.boxMain}>
                                 <div className={css.boxMainTitle}>
-                                    <Image width={28} src={DollarBlue} alt={'dollar'}/>
+                                    <Image width={28} src={CanMineIcon} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>预计可挖</span>
                                 </div>
-                                <div className={css.smallText}>{electricityInfo.estimate_remain_day || 0}天</div>
+                                <div className={css.smallText}>{formatThousands(electricityInfo.estimate_remain_day || 0, false)}日</div>
                             </div>
                         </div>
                         <div className={css.box} style={{flex: 1}}>
-                            <div className={css.boxMain} style={{padding: '15px 10px'}}>
+                            <div className={css.boxMain}>
                                 <div className={css.boxMainTitle}>
-                                    <Image width={28} src={DollarBlue} alt={'dollar'}/>
+                                    <Image width={28} src={YesterdayEleFeeIcon} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>昨日电费</span>
                                 </div>
-                                <div className={css.smallText}>$ {Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0}</div>
+                                <div className={css.smallText}>$ {formatThousands(Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0)}</div>
                             </div>
                         </div>
                     </div>
@@ -339,7 +339,7 @@ const ElectricityFee = () => {
                 )
             }
             <div className={'cal-card-big'} style={{marginTop: '20px'}}>
-                <div className={'login-hello'}>我的订单</div>
+                <div className={'login-hello'}>历史明细</div>
                 <Table
                     scroll={{x: 850}}
                     columns={columns}

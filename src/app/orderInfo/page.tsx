@@ -24,7 +24,7 @@ import {MyContext} from "@/service/context";
 import big from "big.js";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
-import {getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
+import {formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import Clipboard from "@/components/Clipboard";
 import moment from "moment";
 
@@ -42,7 +42,8 @@ const IncomeItem = ({list}:IncomeItemProps) => {
             list?.map((item, index) => (
                 <div key={index} className={css.incomeItem}>
                     <CurrencyIcon currency={item.currency} />
-                    <div>{Number(item.amount).toFixed(getToFixedLength(item.currency))}</div>
+                    <div style={{marginLeft: '4px', marginRight: '4px'}}>{formatThousands(Number(item.amount).toFixed(getToFixedLength(item.currency)))}</div>
+                    <div> {item.currency}</div>
                 </div>
             ))
         }
@@ -77,8 +78,8 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
 
 const columns: TableProps<PaymentItem>['columns'] = [
     {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY'), width: 200},
-    {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => parseHashrateByNumber(v, 0).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
-    { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  parseHashrateByNumber(v, 2).hashrate + parseHashrateByNumber(v, 0).unit + 'H/s' },
+    {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => formatThousands(parseHashrateByNumber(v, 2).hashrate) + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
+    { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  formatThousands(parseHashrateByNumber(v, 2).hashrate)  + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
     { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
     { title: '收益', dataIndex: 'income', render: (v) => <IncomeItem list={v}/> },
     { title: '状态', dataIndex: 'status', render: (v, record) => <IncomeStatus list={record.income || []} /> },
@@ -129,7 +130,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
         return <div>
             {
                 rawData.coin_income?.map((item) => {
-                    return <div key={item.currency}>{big(item[key]).toFixed(getToFixedLength(item.currency))} <span className={css.unit}>{item.currency}</span> </div>
+                    return <div key={item.currency}>{formatThousands(big(item[key]).toFixed(getToFixedLength(item.currency)))} <span className={css.unit}>{item.currency}</span> </div>
                 })
             }
             <div className={css.money}>
@@ -163,7 +164,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                     {
                         !/income/.test(showKey) && <>
 
-                            {!getUnit(showKey) && "$"}{Number(getShowKey(showKey)).toFixed(getToFixedLength())}
+                            {!getUnit(showKey) && "$"}{formatThousands(Number(getShowKey(showKey)).toFixed(getToFixedLength()))}
                             <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{getUnit(showKey)}</span>
                         </>
                     }
@@ -204,12 +205,12 @@ const DemoArea = ({dataList, isMobile, unit}: {
         },
         marginBottom: 0,
         marginTop: 20,
-        paddingBottom: 25,
+        paddingBottom: 55,
         paddingLeft: 20,
-        height: isMobile ? 202 : 330,
+        height: isMobile ? 202 : 285,
     };
     // @ts-ignore
-    return <Area width={isMobile ? 332 : 410} {...config} data={realData}></Area>;
+    return <Area width={isMobile ? 332 : 420} {...config} data={realData}></Area>;
 };
 
 const OrderInfo = () => {
@@ -239,7 +240,7 @@ const OrderInfo = () => {
             <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                 <div className={css.flexWrap}>
                     <div className={css.intro}>
-                        <div className={css.loginHello}>算力数据</div>
+                        <div className={'login-hello'}>算力数据</div>
                         <div className={state.isMobile ? css.mobileCalCardList : css.calCardList}>
                             {cardData.map((card, index) => (
                                 <Card rawData={orderInfo} key={card.showKey} {...card} />
@@ -251,9 +252,13 @@ const OrderInfo = () => {
                             <>
                                 <div className={css.divider}></div>
                                 <div className={css.form}>
-                                    <div className={css.loginHello}
-                                         style={{display: 'flex', justifyContent: 'space-between'}}>算力数据
+                                    <div className={'login-hello'}
+                                         style={{display: 'flex', justifyContent: 'space-between'}}>算力曲线
                                         <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                                    </div>
+                                    <div style={{marginTop: '50px', marginBottom: '10px'}} className={css.legend}>
+                                        <span className={css.try}></span>
+                                        <span>TH/s</span>
                                     </div>
                                     <DemoArea unit={orderInfo?.item.good.unit || ''} isMobile={false} dataList={orderInfo?.history || []}/>
                                 </div>
@@ -276,12 +281,11 @@ const OrderInfo = () => {
                 )
             }
             <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
-                <div className={css.loginHello}>收益明细</div>
+                <div className={'login-hello'}>收益明细</div>
                 <Table
                     scroll={{ x: 850 }}
                     columns={columns}
                     dataSource={paymentList}
-                    bordered
                 />
             </div>
         </div>

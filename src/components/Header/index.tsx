@@ -86,6 +86,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                                             height: '55px',
                                             lineHeight: '55px',
                                             alignItems: 'center',
+                                            borderRadius: '0'
                                         }} block type="text" size={"large"}>
                                         <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
                                             margin:'2px 8px 0 0'
@@ -156,7 +157,7 @@ export const Header: React.FC = () => {
                 borderBottom: "none"
             }}
         >
-            <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px'}}>
+            <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px',color: '#666'}}>
                 <div className="logospace">
                     <Image className="label_2" src={Logo} alt={'logo'}/>
                     Hash Space
@@ -213,10 +214,13 @@ export const Header: React.FC = () => {
                                 <Link href="/productList" legacyBehavior passHref>
                                     云算力
                                 </Link>
+                                <Link href="/#question" legacyBehavior passHref>
+                                    <span className={css.menuBtn}>常见问题</span>
+                                </Link>
                                 <Link href="/calculator" legacyBehavior passHref>
                                     计算器
                                 </Link>
-                                <Link href="/login" legacyBehavior passHref>
+                                <Link href="/#footer" legacyBehavior passHref>
                                     关于
                                 </Link>
                             </div>
@@ -243,26 +247,26 @@ export const Header: React.FC = () => {
             <header
                 className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
             >
-                <div className="container-my flex h-14 max-w-screen-2xl items-center" style={{'gap': '24px'}}>
+                <div className="container-my flex h-16 max-w-screen-2xl items-center" style={{'gap': '0',color: '#666'}}>
                     <div className="logospace">
                         <Image className="label_2" src={Logo} alt={'logo'}/>
                         Hash Space
                     </div>
-                    <Link href="/" legacyBehavior passHref>
-                        首页
+                    <Link className={css.menuBtn} href="/" legacyBehavior passHref>
+                        <span className={css.menuBtn}>首页</span>
                     </Link>
-                    <Link href="/productList" legacyBehavior passHref>
-                        云算力
+                    <Link className={css.menuBtn} href="/productList" legacyBehavior passHref>
+                        <span className={css.menuBtn}>云算力</span>
                     </Link>
-                    {/*<Link href="/login" legacyBehavior passHref>*/}
-                    {/*    常见问题*/}
-                    {/*</Link>*/}
-                    <Link href="/calculator" legacyBehavior passHref>
-                        计算器
+                    <Link href="/#question" legacyBehavior passHref>
+                        <span className={css.menuBtn}>常见问题</span>
                     </Link>
-                    {/*<Link href="/login" legacyBehavior passHref>*/}
-                    {/*    关于*/}
-                    {/*</Link>*/}
+                    <Link className={css.menuBtn} href="/calculator" legacyBehavior passHref>
+                        <span className={css.menuBtn}>计算器</span>
+                    </Link>
+                    <Link href="/#footer" legacyBehavior passHref>
+                        <span className={css.menuBtn}>关于</span>
+                    </Link>
                     {
                         !(state?.userInfo?.email) &&
                         <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>

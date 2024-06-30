@@ -19,24 +19,60 @@
     width: 286px;
     height: 528px;
     background: #FFFFFF;
-    box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.11);
     border-radius: 20px;
     position: relative;
+}
+.card-single:hover{
+    transition: all 0.3s;
+    box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.2);
 }
 .mobile-card-single{
     width: calc(100% - 108px);
     margin: 0px 54px 20px;
     box-sizing: content-box;
 }
+.btc-bg{
+    background-image: url("../../../public/BTC_BG.png");
+    background-size: 107px 116px;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) bottom;
+}
+.ltc-bg{
+    background-image: url("../../../public/BTC_BG.png");
+    background-size: 107px 116px;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) bottom;
+}
 .card-single-top{
     height: 156px;
-    background: #3C53FF;
+    background-color: #3C53FF;
     border-radius: 20px 20px 0px 0px;
     color: white;
     padding: 24px 20px;
 }
+.bbbbb{
+    display: inline-block;
+    white-space: nowrap; /* 防止文本换行 */
+    overflow: hidden; /* 隐藏超出的内容 */
+    text-overflow: ellipsis; /* 显示省略号 */
+}
+.card-single-top-icon-list{
+    display: flex;
+    background-color: white;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #333333;
+    height: 16px;
+    box-sizing: content-box;
+    font-size: 12px;
+}
 .card-single-top-a{
-
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-weight: 600;
     font-size: 20px;
     color: #FFFFFF;
@@ -91,13 +127,13 @@
 .round-primary-button{
     border-radius: 26px;
     height: 52px;
-    background-color: white;
-    color: #3C53FF;
+    background-color: #3C53FF;
     border: 1px solid #3C53FF;
+    color: #FFFFFF;
 }
 .round-primary-button:hover{
-    background-color: #3C53FF;
-    color: white;
+    background-color:rgba(60, 83, 255, 0.8) !important;
+    color: white !important;
 }
 .button-286{
     width: 186px;

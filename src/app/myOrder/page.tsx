@@ -5,7 +5,7 @@ import type {TableProps} from 'antd';
 import Link from "next/link";
 import ArrowUpOutlineBlack from '../../../public/arrow-up-outline-black.png';
 import {getOrderList, OrderListItem, PageInfo, deleteOrder, OrderGood} from "@/service/api";
-import {DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined,DeleteFilled} from "@ant-design/icons";
 import css from './index.module.css'
 import Image from "next/image";
 import big from "big.js";
@@ -15,11 +15,11 @@ import {OrderItem, DataType, Good} from './interfaces'
 import BTC from '../../../public/btc.svg'
 import DOGE from '../../../public/doge.svg'
 import LTC from '../../../public/ltc.svg'
-import {cn} from "@/lib/utils";
+import {cn, formatThousands, getToFixedLength} from "@/lib/utils";
 import {FinishPayment} from "@/components/FinishPayment";
 import {EasyConfirmContent} from "@/components/EasyConfirmContent";
-import {state} from "sucrase/dist/types/parser/traverser/base";
 import {MyContext} from "@/service/context";
+import IconList from "@/components/IconList";
 
 const getCurrencyIcon = (currency: string) => {
     switch (currency) {
@@ -79,11 +79,10 @@ const columns: TableProps<OrderItem>['columns'] = [
         dataIndex: 'good',
         render: (text, record, index) => {
             return <div className={css.flexbox}>
-                {
-                    record.good?.currency.map((item, index) => {
-                        return <span key={index} style={{marginRight: '4px'}}>{getCurrencyIcon(item)}</span>
-                    })
-                }
+                <IconList
+                    list={record.good?.currency || []}
+                    size={20}
+                    />
                 {record.good?.name}</div>
         },
         width: 200
@@ -92,7 +91,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         title: '算力',
         dataIndex: 'hashrate',
         render: (text, record, index) => {
-            return <div>{record.hashrate}{record?.good?.unit || ''}</div>
+            return <div>{formatThousands(record.hashrate || 0, false)}{record?.good?.unit || ''}</div>
         },
         width: 100
     },
@@ -101,7 +100,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         dataIndex: 'hashrate_cost',
         render: (text, record, index) => {
             return <div style={{color: getFeeColor(record.state || 0)}}
-                        className={css.rowBold}>${big(record.hashrate_cost || '').toFixed(4)}</div>
+                        className={css.rowBold}>${formatThousands(big(record.hashrate_cost || '').toFixed(getToFixedLength()))}</div>
         },
         width: 100
     },
@@ -111,8 +110,18 @@ const columns: TableProps<OrderItem>['columns'] = [
         render: (text, record) => {
             // 状态，1-待支付；2-支付成功挖矿中；3-支付超时；4-挖矿结束
             const res = ['待支付', '支付成功', '支付超时', '挖矿结束']
+            let innerText = '未知'
+            if (record.state === 1 || record.state === 3) {
+                innerText = '待支付'
+            }
+            if (record.state === 2) {
+                innerText = '已支付'
+            }
+            if (record.state === 4) {
+                innerText = '挖矿结束'
+            }
             return (<span className={css.rowBold}
-                          style={{color: getStatusColor(record.state || 0)}}>{res[(record.state || 1) - 1]}</span>)
+                          style={{color: getStatusColor(record.state || 0)}}>{innerText}</span>)
         },
         width: 100
     },
@@ -151,19 +160,22 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
             )
         case 3:
             return (
-                <div>
+                <div style={{
+                    display: "flex",
+                    flexDirection:'column'
+                }}>
                     <Link href={`/productDetail?good_id=${goodId}`}>
                         <Button type={"primary"} shape={"round"}>重新购买</Button>
                     </Link>
-                    <div className={css.textAlignCenter}>
+                    <span className={css.textAlignCenter}>
                         <span className={css.timeout}>支付超时</span>
-                    </div>
+                    </span>
                 </div>
             )
         case 4:
             return (
                 <div>
-                    <div style={{color: ''}}>挖矿结束</div>
+                    <div style={{color: ''}}>已支付</div>
                 </div>
             )
         default:
@@ -177,19 +189,14 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
         <div className={isMobile? css.mobileRowDetail: css.rowDetail}>
             <div className={css.item}>
                 <span className={css.label}>币种:</span>
-                <span className={css.value}>
-                   {data.good?.currency.map((item: string, index: number) => {
-                       return <div key={index} style={{
-                           marginRight: '4px',
-                           display: 'flex',
-                           width: '100%'
-                       }}>{getCurrencyIcon(item)}{item}</div>
-                   })}
+                <span className={css.value} style={{display: 'flex', alignItems: 'center'}}>
+                    <IconList list={data.good?.currency || []} size={20}/>
+                    {data.good?.name}
                 </span>
             </div>
             <div className={css.item}>
                 <span className={css.label}>合约费用:</span>
-                <span className={cn(css.smallCost, css.value)}>${big(data.hashrate_cost).toFixed(4)}</span>
+                <span className={cn(css.smallCost, css.value)}>${formatThousands(big(data.hashrate_cost).toFixed(getToFixedLength()))}</span>
             </div>
             {
                 !isMobile && <div className={css.item}>
@@ -210,12 +217,12 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             }
             <div className={css.item}>
                 <span className={css.label}>算力:</span>
-                <span className={css.value}>{data.hashrate}{data.good.unit}</span>
+                <span className={css.value}>{formatThousands(data.hashrate, false)}{data.good.unit}</span>
             </div>
             <div className={css.item}>
                 <span className={css.label}>电费:</span>
                 <span className={cn(css.value, css.smallCost)}>
-                    ${big(data.electricity_cost).toFixed(4)}
+                    ${formatThousands(big(data.electricity_cost).toFixed(getToFixedLength()))}
                 </span>
             </div>
             <div className={css.item}>
@@ -240,7 +247,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             </div>
             <div className={css.item}>
                 <span className={css.label}>合计费用:</span>
-                <span className={cn(css.totalFeeText, css.value)}>${big(data.cost).toFixed(4)}</span>
+                <span className={cn(css.totalFeeText, css.value)}>${formatThousands(big(data.cost).toFixed(getToFixedLength()))}</span>
             </div>
             <div></div>
             <div className={css.item} style={{width: '600px'}}>
@@ -250,7 +257,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             </div>
             <div className={css.delOrderBtn}>
                 {
-                    data.state === 3 && <Button type={"text"} icon={<DeleteOutlined/>} onClick={() => onDelete(data)}>删除订单</Button>
+                    data.state === 3 && <Button style={{color: '#666666'}} type={"text"} icon={<DeleteFilled/>} onClick={() => onDelete(data)}>删除订单</Button>
                 }
             </div>
             {

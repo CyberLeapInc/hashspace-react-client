@@ -86,3 +86,74 @@
 .bg-gray{
   background-color: #F6F7F8;
 }
+.ant-slider-handle {
+  height: 16px !important;
+  width: 14px !important;
+  margin-top: -3px !important;
+
+}
+.ant-slider-handle::before{
+  display: none;
+  /*height: 16px !important;*/
+  /*  width: 14px !important;*/
+}
+.ant-slider-handle::after{
+  border-radius: 3px !important;
+  margin: 0 !important;
+  height: 16px !important;
+  width: 14px !important;
+  left: 0 !important;
+  top: 0 !important;
+  box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.14) !important;
+  background-image: url("../../public/handler_background.png");
+  background-size: cover;
+}
+.ant-table-cell::before{
+  content: none !important;
+}
+.ant-table-thead{
+  height: 70px !important;
+  background-color: white !important;
+  .ant-table-cell{
+    color: rgba(51,51,51,0.6) !important;
+    background-color: white !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+  }
+}
+.ant-table-container{
+  border: 1px solid rgba(233,233,233,0.76) !important;
+  border-radius: 12px !important;
+  overflow-y: hidden !important;
+}
+.ant-table-cell-fix-left-last::after{
+  content: none !important;
+}
+.ant-table-expanded-row-fixed{
+  padding: 0 !important;
+}
+.ant-checkbox+span {
+  padding-inline-end: 0px !important;
+}
+.ant-modal-content{
+  padding: 32px !important;
+  border-radius: 20px !important;
+}
+.ant-modal-title{
+  line-height: 37px !important;
+  font-weight: 600 !important;
+  font-size: 20px !important;
+  color: #333333;
+}
+.ant-card-body{
+  padding: 32px 40px !important;
+}
+.ant-popover-inner{
+  box-shadow:  0px 0px 16px 0px rgba(7,48,48,0.11) !important;
+}
+.ant-modal-mask{
+  backdrop-filter: blur(5px) !important;
+}
+.ant-modal-footer{
+  margin-top: 0 !important;
+}

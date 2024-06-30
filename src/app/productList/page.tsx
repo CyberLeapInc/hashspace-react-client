@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import './index.css'
 import {Button} from "antd";
@@ -12,13 +12,23 @@ import Image from "next/image";
 import {cn, getToFixedLength} from "@/lib/utils";
 import {MyContext} from "@/service/context";
 import moment from "moment";
+import IconList from "@/components/IconList";
 
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
+    useEffect(() => {
+        console.log(data)
+    }, [data]);
     return (
         <div className={cn('card-single', isMobile? 'mobile-card-single' : '')}>
-            <div className="card-single-top">
-                <div className={'card-single-top-a'}>{data.name}</div>
+            <div className={cn('card-single-top', data.mining_currency === 'BTC' ? 'btc-bg' : 'ltc-bg')}>
+                <div className={'card-single-top-a'}>
+                    <div className={'bbbbb'}>{data.name}</div>
+                    <div className={'card-single-top-icon-list'}>
+                        <IconList list={data.currency} size={16}/>
+                        {data.currency.join('&')}
+                    </div>
+                </div>
                 <div className={'card-single-top-b'}>$ {(data.price||'').slice(0, 4)}/{data.unit}</div>
                 <div className={'card-single-top-c'}>{data.description}</div>
             </div>
@@ -105,7 +115,7 @@ export default function ProductList() {
                     }}>
                         <TabsList isMobile={state.isMobile} className={cn('tabs-list', state.isMobile ? 'mobile-tabs-list' : '')}>
                             <TabsTrigger isMobile={state.isMobile} value="btc">BTC 云算力</TabsTrigger>
-                            <TabsTrigger isMobile={state.isMobile} value="ltc">LTC/DOGE 云算力</TabsTrigger>
+                            <TabsTrigger isMobile={state.isMobile} value="ltc">DOGE&LTC 云算力</TabsTrigger>
                         </TabsList>
                     </div>
                     <TabsContent value="btc" className={cn('card-tabs-content',state.isMobile ? 'mobile-card-tabs-content' : '')}>

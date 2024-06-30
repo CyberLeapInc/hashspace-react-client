@@ -22,13 +22,26 @@ export const themeConfig: ThemeConfig = {
             handleActiveColor: 'black',
         },
         Button: {
-            contentFontSizeLG: 14,
+            contentFontSizeLG: 16,
             contentFontSizeSM: 14,
             contentFontSize: 14,
             defaultActiveBorderColor: '#3C53FF',
             defaultActiveColor: '#3C53FF',
-            borderColorDisabled: '#EBEEFF'
+            borderColorDisabled: '#EBEEFF',
+            borderRadius: 8,
+            borderRadiusLG: 12,
+            controlHeightLG: 52,
         },
+        Input:{
+            colorBorder: '#A1A3AB',
+            controlHeightLG: 52,
+            fontSizeLG: 14,
+        },
+        Popover:{
+            boxShadowTertiary: '0px 4px 12px rgba(0, 1, 0, 0.1)',
+            boxShadowSecondary: '0px 4px 12px rgba(0, 1, 0, 0.1)',
+            boxShadow: '0px 4px 12px rgba(0, 1, 0, 0.1)',
+        }
     },
 }
 

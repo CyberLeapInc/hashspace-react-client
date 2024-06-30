@@ -17,6 +17,18 @@
     color: #333333;
     padding:0 28px;
 }
+.menuBtn{
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 16px;
+    color: #666666;
+}
+.menuBtn:hover{
+    color: #3C53FF;
+}
 .logOutButton{
     border: 1px solid #333333;
     height: 32px;

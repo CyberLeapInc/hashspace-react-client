@@ -25,7 +25,7 @@ const Tips = ({text = '', type=''}) => {
 
 const columns = [
     {
-        title: '时间(UTC)',
+        title: '时间',
         dataIndex: 'created_at',
         key: 'created_at',
         width: 200,
@@ -160,9 +160,9 @@ const SecurityCenter: React.FC = () => {
                                 }
                                 <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400,}}>保护你的账户安全</div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={handleBindGoogle}>
+                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: '80px'}} onClick={handleBindGoogle}>
                                 {
-                                    state.userInfo.has_totp ? <Button shape={"round"} type={"text"}>解绑</Button> : <Button shape={"round"} type={"primary"} >绑定</Button>
+                                    state.userInfo.has_totp ? <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"text"}>解绑</Button> : <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"primary"} >绑定</Button>
                                 }
 
                             </div>
@@ -184,12 +184,12 @@ const SecurityCenter: React.FC = () => {
                                 }
                                 <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400}}>保护你的账户安全</div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '7px'}} onClick={() => {
+                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: '80px'}} onClick={() => {
                                 setCounter(++counter)
                                 setIsShowBindPhone(true)
                             }}>
                                 {
-                                    state.userInfo.phone_number ? <Button shape={"round"} type={"text"} >换绑</Button> : <Button shape={"round"} type={"primary"} >绑定</Button>
+                                    state.userInfo.phone_number ? <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"text"} >换绑</Button> : <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"primary"} >绑定</Button>
                                 }
 
                             </div>

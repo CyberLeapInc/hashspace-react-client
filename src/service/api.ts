@@ -1,4 +1,5 @@
 import axios from "axios";
+import {message} from "antd";
 
 const ApiPrefix = 'https://api.test.hashspace.dev/'
 const ApiPrefixProd = 'https://api.hashspace.com/';
@@ -31,6 +32,12 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
             }
         })
     }
+    if (data.code === 13) {
+        return Promise.reject({
+          message: data.message || '服务器错误',
+          details: {}
+        })
+    }
     return Promise.reject({
         message: 'unknown',
         details: ''
@@ -48,8 +55,17 @@ const whiteList = [
 ]
 
 axiosInstance.interceptors.response.use((res) => {
+    console.log(res)
+    if (res.data.code === 13) {
+        message.error('服务器错误')
+
+        return Promise.reject(res.data)
+    }
     return res.data
 }, (e) => {
+    console.log('!~~~~')
+    console.log(e)
+    console.log('!~~~~')
     const {response} = e;
     switch (response.status) {
         case status.NOT_LOGIN:
@@ -60,14 +76,14 @@ axiosInstance.interceptors.response.use((res) => {
         case status.BUSINESS_ERROR:
             return handleBusinessError(response.data)
         case status.SERVER_ERROR:
-            // todo
-            break;
+            message.error('服务器错误')
+            return Promise.reject(response.data)
         case status.FORBIDDEN:
-            // todo
-            break;
+            message.error('无权限')
+            return Promise.reject(response.data)
         default:
             console.error(e);
-            return Promise.reject(e)
+            return Promise.reject(response.data)
     }
 
 })

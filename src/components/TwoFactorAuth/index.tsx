@@ -76,7 +76,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
         })
     }
 
-    return <div style={{fontSize: state.isMobile? '12px' : '14px', width: state.isMobile? '100%' : '776px', display: 'flex', gap: state.isMobile? '0' : '30px', flexDirection: state.isMobile? 'column' : 'row'}}>
+    return <div style={{fontSize: state.isMobile? '12px' : '14px', width: state.isMobile? '100%' : '100%', display: 'flex', gap: state.isMobile? '0' : '30px', flexDirection: state.isMobile? 'column' : 'row'}}>
         {contextHolder}
         <div style={{flex: 1}}>
             <div className={'step-row'}>
@@ -89,11 +89,14 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                 <div className={'step-intro'}>
                     <div>扫描下方二维码。</div>
                     <div>
-                        <QRCode style={{margin: '10px 0'}} value={qrcodeUrl} />
+                        <QRCode style={{margin: '10px 0 10px'}} size={161} value={qrcodeUrl} />
                     </div>
-                    <div>或者输入密钥</div>
-                    <div style={{fontWeight: "bold", fontSize: '12px'}}><Clipboard style={{
-                        fontSize: '11px',
+                    <div style={{
+                        marginBottom: '-5px'
+                    }}>或者输入密钥</div>
+                    <div style={{fontWeight: "bold", fontSize: '14px', marginLeft: '-16px'}}><Clipboard noBg={true} style={{
+                        fontSize: '14px',
+                        marginLeft: '0px'
                     }} str={secret} /></div>
                 </div>
 
@@ -109,7 +112,8 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                 </div>
             </div>
             <div  style={{
-                marginLeft: state.isMobile?'0' :'40px'
+                marginLeft: state.isMobile?'0' :'40px',
+                marginTop: '10px'
             }}>
                 {
                     sessionId && <CodeSender
@@ -126,13 +130,18 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                         }}
                         onSend={() => getEmailCode(sessionId)}
                         disabled={false}
+                        label={'邮箱验证码'}
                     />
                 }
                 {
                     codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
                 }
                 <div>
-                    <div className={'login-title-text'}>Google验证码</div>
+                    <div className={'login-title-text'} style={{
+                        marginTop: '24px',
+                        lineHeight: '24px',
+                        marginBottom: '8px'
+                    }}>Google验证码</div>
                 </div>
                 <Input
                     style={{

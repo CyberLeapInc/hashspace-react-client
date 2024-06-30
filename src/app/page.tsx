@@ -7,7 +7,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import Image from "next/image";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import ProImage from '../../public/pro-round.png';
 import CountImage from '../../public/count-round.png';
 import SafeImage from '../../public/safe-round.png'
@@ -104,9 +104,6 @@ export default function Home() {
           </div>
           <div className={css.middle}>
               <div className="container-my">
-                  {
-                      !state.isMobile && <div className="title2">为什么选择我们</div>
-                  }
                   <div className={cn(css.cardlist, state.isMobile? css.mobileCardList: '')}>
                       <div className={css.card}>
                           <div className={cn(css.cardImage, state.isMobile? css.centerCardImage : '')}>
@@ -138,9 +135,9 @@ export default function Home() {
                   </div>
               </div>
           </div>
-          <div style={{paddingBottom: '40px', backgroundColor: "white"}}>
+          <div style={{paddingBottom: '40px', backgroundColor: "white"}}  id={'question'}>
               <div className="container-my" style={{padding: state.isMobile ? '0 12px' : ''}}>
-                  <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题</div>
+                  <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题 Q&A</div>
                   {
                       questionList && questionList.map((item) => (
                           <Collapsible open={questionOpen === item.index} key={item.index} onClick={() => {
@@ -152,7 +149,6 @@ export default function Home() {
                           }} style={{transition: 'all 0.3s'}} className={questionOpen === item.index ? 'grayquestionopen' : 'grayquestion'}>
                               <CollapsibleTrigger className="collapse-title">
                                   <span style={{maxWidth: '80%', display: 'flex', alignItems: 'center'}}>
-                                      <div className="collapse-span">{item.index}</div>
                                       <div >{item.title}</div>
                                   </span>
                                   <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"} style={{margin: state.isMobile?'0' : ''}}/>

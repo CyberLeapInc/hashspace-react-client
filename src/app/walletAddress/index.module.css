@@ -37,9 +37,15 @@
     display: flex;
     align-items: center;
 }
-.remark{
+.remarkMobile{
     font-weight: 400;
     font-size: 12px;
     color: #666666;
     margin-left: 10px;
+}
+.remark{
+    margin-left: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333333;
 }

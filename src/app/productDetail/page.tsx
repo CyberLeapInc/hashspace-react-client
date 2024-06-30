@@ -35,6 +35,13 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
         yField: 'value',
         marginBottom: 12,
         paddingBottom: 20,
+        tooltip: false,
+        interactions: [
+            {
+                type: "active-region",
+                enable: false,
+            },
+        ],
         axis: {
             y: {
                 label: false,
@@ -62,10 +69,11 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
                 }
                 return '#393535';
             },
-            radiusTopLeft: isMobile ? 6 : 10,
-            radiusTopRight: isMobile ? 6 : 10,
+            radiusTopLeft: isMobile ? 6 : 6,
+            radiusTopRight: isMobile ? 6 : 6,
             maxWidth: 28,
         },
+        hoverable: false,
         label: {
             text: ({type, value} : {type: string, value: string}) => {
                 return `$${big(value).toFixed(2)}`
@@ -246,7 +254,7 @@ const ProductDetail = () => {
                                 <Divider orientationMargin={40} style={{height: '25px',marginLeft: '40px', marginRight: '40px'}} type={'vertical'}/>
                                 <span>2068W</span>
                             </div>
-                            <div style={{height: '220px',lineHeight: '220px', textAlign: 'center'}}>产品{goodId}对应的图片展示在这里</div>
+                            <div style={{height: '290px',lineHeight: '220px', textAlign: 'center'}}>产品{goodId}对应的图片展示在这里</div>
                         </div>
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px', flexDirection: state.isMobile ? 'column' : 'row'}}>
                             <div className={cn(css.chart, css.block)}>
@@ -286,23 +294,23 @@ const ProductDetail = () => {
                                     ></NumberSelector>
                                 </div>
                             </div>
-                            {
-                                !state.isMobile && <div className={css.row}>
-                                    <div className={css.label}></div>
-                                    <div className={css.info}>
-                                        {
-                                            btnValueList.map(item => {
-                                                return (
-                                                    <Button onClick={() => quickSetBuyCount(item)} key={item}
-                                                            className={cn(css.button)}
-                                                            type={item === buyCount ? 'primary' : 'default'}
-                                                            size={"small"}>{item}{goodDetail?.unit || ''}</Button>
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            }
+                            {/*{*/}
+                            {/*    !state.isMobile && <div className={css.row}>*/}
+                            {/*        <div className={css.label}></div>*/}
+                            {/*        <div className={css.info}>*/}
+                            {/*            {*/}
+                            {/*                btnValueList.map(item => {*/}
+                            {/*                    return (*/}
+                            {/*                        <Button onClick={() => quickSetBuyCount(item)} key={item}*/}
+                            {/*                                className={cn(css.button)}*/}
+                            {/*                                type={item === buyCount ? 'primary' : 'default'}*/}
+                            {/*                                size={"small"}>{item}{goodDetail?.unit || ''}</Button>*/}
+                            {/*                    )*/}
+                            {/*                })*/}
+                            {/*            }*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*}*/}
                             <div className={css.row}>
                                 <div className={css.label}>电费天数</div>
                                 <div className={css.info}>
@@ -324,19 +332,27 @@ const ProductDetail = () => {
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合约费用</div>
                                 <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(hashrateCost).toFixed(getToFixedLength())}</div>
                             </div>
-                            <div className={css.row2}>
+                            <div className={css.row2} style={{
+                                paddingBottom: state.isMobile ? '' :'8px'
+                            }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>电费</div>
                                 <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(electricityCost).toFixed(getToFixedLength())}</div>
                             </div>
                             {
                                 !state.isMobile && <Divider />
                             }
-                            <div className={css.row2}>
+                            <div className={css.row2} style={{
+                                paddingBottom: state.isMobile ? '' :'10px',
+                                paddingTop: state.isMobile ? '' :'10px'
+                            }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合计费用</div>
                                 <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${Number(totalCost).toFixed(getToFixedLength())}</div>
                             </div>
                         </div>
-                        <div style={{marginTop: state.isMobile ? '0' : '40px'}}>
+                        <div style={{
+                            marginTop: state.isMobile ? '0' : '42px',
+                            marginBottom: state.isMobile ? '0' : '22px'
+                        }}>
                             <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={''}>《服务协议》</a>和<a href={''}>《隐私政策》</a><a href={''}>《免责声明》</a>。</Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>

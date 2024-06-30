@@ -14,6 +14,26 @@
     justify-content: center;
     padding-left: 8px;
     padding-right: 8px;
+    align-items: center;
+    user-select: none;
+}
+.noBgWrapper{
+    height: 32px;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 5px 0;
+    display: flex;
+    justify-content: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    align-items: center;
+    user-select: none;
 }
 .text{
     display: inline-block;
@@ -24,6 +44,15 @@
 .wrapper:hover{
     background: #F0F0F0;
 }
+.noBgWrapper:hover{
+    background: #F0F0F0;
+}
 .copyOutLine{
     color: #3C53FF;
+}
+.copyIcon{
+    height: 16px;
+    width: 14px;
+    margin-left: 6px;
+    cursor: pointer;
 }

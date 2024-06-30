@@ -86,17 +86,20 @@ const CryptoPage: React.FC = () => {
                     type: 'error',
                     content: '用户被锁定',
                 });
-            }
-            if (e.details.type === 'InvalidEmail') {
+            } else if (e.details.type === 'InvalidEmail') {
                 messageApi.open({
                     type: 'error',
                     content: '邮箱异常，请重新输入',
                 });
-            }
-            if (e.details.type === 'InvalidCaptcha') {
+            } else if (e.details.type === 'InvalidCaptcha') {
                 messageApi.open({
                     type: 'error',
                     content: '人机检测失败，请刷新页面重试',
+                });
+            } else {
+                messageApi.open({
+                    type: 'error',
+                    content: e.message || '未知错误',
                 });
             }
         })
@@ -119,15 +122,13 @@ const CryptoPage: React.FC = () => {
                     type: 'error',
                     content: '回话session过期，请刷新页面重试',
                 });
-            }
-            if (e.details.type === 'InvalidCode') {
+            } else if (e.details.type === 'InvalidCode') {
                 setCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
                     content: '邮箱验证码有误',
                 });
-            }
-            if (e.details.type === 'InvalidTOTP') {
+            } else if (e.details.type === 'InvalidTOTP') {
                 setTotpCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
@@ -157,9 +158,6 @@ const CryptoPage: React.FC = () => {
                                 <div className={cn(css.loginHello, state.isMobile? css.moblieLoginHello : '')}>欢迎加入 Hash Space</div>
                                 <div className={css.loginSmallText}>邮箱</div>
                                 <Input
-                                    style={{
-                                        height: '50px',
-                                    }}
                                     size={'large'}
                                     type={'email'}
                                     value={email}
@@ -183,7 +181,6 @@ const CryptoPage: React.FC = () => {
                                 <Button
                                     style={{
                                         marginTop: '40px',
-                                        height: '50px'
                                     }}
                                     className={
                                         state.isMobile? css.fixedButton : ''
@@ -198,10 +195,13 @@ const CryptoPage: React.FC = () => {
                     {
                         step === 1 && (
                             <div>
-                                <div className={css.loginHello}>验证</div>
+                                <div className={css.loginHello} style={{
+                                    marginBottom: '16px'
+                                }}>验证</div>
                                 <Space direction={"vertical"} size={"large"} style={{width: '100%'}}>
                                     <div>
                                         <CodeSender
+                                            label={'邮箱'}
                                             immidity={true}
                                             onError={() => {
                                                 setStatus('no')
@@ -226,12 +226,9 @@ const CryptoPage: React.FC = () => {
                                     </div>
                                     {totpEnabled && (
                                         <div>
-                                            <div className={css.loginTitleText}>Google Authenticator验证码</div>
+                                            <div className={css.loginTitleText}>Google验证码</div>
                                             <Input
                                                 status={totpCodeErrorStatus ? 'error' : ''}
-                                                style={{
-                                                    height: '50px'
-                                                }}
                                                 maxLength={6}
                                                 type={'text'}
                                                 value={totpCode}
@@ -240,7 +237,8 @@ const CryptoPage: React.FC = () => {
                                                     setTotpCode(e.target.value)
                                                     setTotpCodeErrorStatus(false)
                                                 }}
-                                                placeholder={'请输入验证码'}
+                                                allowClear
+                                                placeholder={'请输入Google Authenticator验证码'}
                                             ></Input>
                                             {
                                                 totpCodeErrorStatus &&
@@ -255,7 +253,9 @@ const CryptoPage: React.FC = () => {
                                         state.isMobile? css.fixedZone : ''
                                     } direction={"vertical"} size={'small'} style={{width: '100%'}}>
                                         <Checkbox onChange={onChange}
-                                                  className={css.loginValidate}>创建账户即表示我同意币安的《服务条款》和《隐私政策》</Checkbox>
+                                                  className={css.loginValidate}>
+                                            <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href="">《服务条款》</a>和 <a href="">《隐私政策》</a></span>
+                                        </Checkbox>
                                         <Button type="primary" block size={'large'} shape={'round'}
                                                 disabled={!agree || !(code.length === 6) || (totpEnabled && totpCode.length !== 6) || codeErrorStatus || totpCodeErrorStatus}
                                                 style={{

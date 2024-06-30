@@ -7,13 +7,25 @@ import React from "react";
 export const CurrencyIcon = ({currency, size = 20}: {currency: string, size?: number}) => {
     switch (currency) {
         case 'BTC':
-            return <Image style={{marginRight: '5px'}} src={BTC} alt={'btc'} width={size}/>
+            return <Image  src={BTC} alt={'btc'} width={size} style={{
+                minWidth: `${size}px`,
+                maxWidth: `${size}px`,
+            }}/>
         case 'DOGE':
-            return <Image style={{marginRight: '5px'}} src={DOGE} alt={'doge'} width={size}/>
+            return <Image  src={DOGE} alt={'doge'} width={size} style={{
+                minWidth: `${size}px`,
+                maxWidth: `${size}px`,
+            }}/>
         case 'LTC':
-            return <Image style={{marginRight: '5px'}} src={LTC} alt={'ltc'} width={size}/>
+            return <Image  src={LTC} alt={'ltc'} width={size} style={{
+                minWidth: `${size}px`,
+                maxWidth: `${size}px`,
+            }}/>
         default:
-            return <Image style={{marginRight: '5px'}} src={BTC} alt={'btc'} width={size}/>
+            return <Image  src={BTC} alt={'btc'} width={size} style={{
+                minWidth: `${size}px`,
+                maxWidth: `${size}px`,
+            }}/>
     }
 }
 

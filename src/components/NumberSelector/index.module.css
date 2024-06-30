@@ -20,6 +20,7 @@
     background: rgba(60,83,255, 0.1);
     border-radius: 10px;
     cursor: pointer;
+    user-select: none;
 }
 .handler:hover{
     background-color: rgba(60, 83, 255, 0.18) ;

@@ -84,9 +84,13 @@ export const PhoneBind = ({
     return (<div>
         {
             state.userInfo.phone_country_code && (
-                <>
-                    <div className={'login-title-text'}>原手机号</div>
-                    <div className={'phoneGroup phoneGroup-disable'}>
+                <div style={{
+                    marginTop: '16px',
+                }}>
+                    <div className={'login-title-text'}>手机号</div>
+                    <div className={'phoneGroup phoneGroup-disable'} style={{
+                        marginBottom: '14px'
+                    }}>
                         <span>+</span>
                         <Input disabled style={{width: '34px', color: '#999'}} bordered={false} size={"large"} maxLength={2} value={state.userInfo.phone_country_code}/>
                         <Input disabled size={"large"}  bordered={false} style={{width: '80%',color: '#999'}} value={state.userInfo.phone_number} />
@@ -112,35 +116,40 @@ export const PhoneBind = ({
                     {
                         currentCodeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
                     }
-                </>
+                </div>
 
             )
         }
-        <div className={'login-title-text'}>{
-            state.userInfo.has_phone? '新手机号' : '手机号'
-        }</div>
+        <div style={{
+            marginTop: '17px',
+            marginBottom: '17px'
+        }}>
+            <div className={'login-title-text'}>{
+                state.userInfo.has_phone ? '新手机号' : '手机号'
+            }</div>
 
-        <div className={'phoneGroup'}>
-            <span>+</span>
-            <Input size={"large"} maxLength={2} style={{width: '34px'}} bordered={false} value={phoneCountry}
-                   placeholder={'区号'}
-                   onChange={(e) => {
-                setPhoneCountry(e.target.value)
-            }}/>
-            <Input size={"large"} style={{width: '80%'}}  bordered={false} value={phoneNumber}
-                   placeholder={'请输入手机号'}
-                   onChange={(e) => {
-                setPhoneNumber(e.target.value)
-            }}/>
+            <div className={'phoneGroup'}>
+                <span>+</span>
+                <Input size={"large"} maxLength={2} style={{width: '34px'}} bordered={false} value={phoneCountry}
+                       placeholder={'区号'}
+                       onChange={(e) => {
+                           setPhoneCountry(e.target.value)
+                       }}/>
+                <Input size={"large"} style={{width: '80%'}} bordered={false} value={phoneNumber}
+                       placeholder={'请输入手机号'}
+                       onChange={(e) => {
+                           setPhoneNumber(e.target.value)
+                       }}/>
+            </div>
         </div>
         <CodeSender
             onError={() => {
                 setStatus('no')
-                setCaptchaRefreshKey(prevState => prevState+1)
+                setCaptchaRefreshKey(prevState => prevState + 1)
             }}
             errorStatus={codeErrorStatus}
             label={
-                state.userInfo.has_phone? '新手机号验证码' : '验证码'
+                state.userInfo.has_phone ? '新手机号验证码' : '验证码'
             }
             value={code}
             onChange={(e) => {
