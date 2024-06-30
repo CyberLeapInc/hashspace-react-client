@@ -5,10 +5,6 @@ import {getPubInfo,PaymentCurrency, buyProduct, getPaymentResult} from "@/servic
 import {Button, message} from "antd";
 import {cn} from "@/lib/utils";
 import React from "react";
-import {QRCodeSVG} from "qrcode.react";
-import Clipboard from "@/components/Clipboard";
-import big from "big.js";
-import moment from 'moment'
 import css from './index.module.css';
 export const SelectNetwork: React.FC<{
     paymentCurrency: PaymentCurrency[];
@@ -34,7 +30,13 @@ export const SelectNetwork: React.FC<{
                         <Button block
                                 className={cn(css.bigButton, currentCurrency.currency === item.currency ? css.selectedCurrency : '')}
                                 key={item.currency} onClick={() => setCurrency(item)}>
-                            {item.currency}
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}>
+                                <span>{item.currency}</span>
+                                <span>todo</span>
+                            </div>
                         </Button>
                     )
                 })}
@@ -42,13 +44,13 @@ export const SelectNetwork: React.FC<{
             <div className={css.info}>选择网络</div>
             <div className={''} style={{display: "flex", gap: '10px', flexWrap: 'wrap'}}>
                 {
-                    currentCurrency.network.map(item => {
+                    currentCurrency?.networks?.map(item => {
                         return (
                             <Button
-                                className={cn(css.smallButton, currentNetWork === item ? css.selectedCurrency : '')}
-                                onClick={() => setNetwork(item)}
-                                key={item}>
-                                {item}
+                                className={cn(css.smallButton, currentNetWork === item.name ? css.selectedCurrency : '')}
+                                onClick={() => setNetwork(item.name)}
+                                key={item.name}>
+                                {item.full_name}
                             </Button>
                         )
                     })

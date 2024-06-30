@@ -115,7 +115,12 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
         return (
             <div>
                 <div className={css.tip}>左右滑动调整价格</div>
-                <div className={css.coinImg}><Image src={getImage(currency)} alt={currency}/></div>
+                <div className={css.coinImg} style={{
+                    marginTop: '29px',
+                    marginBottom: '19px'
+                }}>
+                    <Image src={getImage(currency)} alt={currency}/>
+                </div>
                 <Slider min={getMinPrice(currency)} max={getMaxPrice(currency)}
                         value={getPrice(currency)} onChange={(v) => handlePriceChange(v, currency)}
                         step={getStep(currency)} disabled={false}
@@ -124,7 +129,9 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                             open: false
                         }}
                 />
-                <div className={css.coinText}>预期{currency}价格 <span
+                <div className={css.coinText} style={{
+                    marginTop: '32px'
+                }}>预期{currency}价格 <span
                     style={{color: '#3c53ff', fontWeight: 'bold'}}>${  formatThousands(getPrice(currency))}</span></div>
             </div>
         )
@@ -132,9 +139,9 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
         return (
             <div>
                 <div className={css.tip}>左右滑动调整价格</div>
-                {currencyList.map(currency => {
+                {currencyList.map((currency,index) => {
                     return (
-                        <div style={{padding: '14px 0'}} key={currency}>
+                        <div style={{padding: index === 0 ? '16px 0 0' : '28px 0 0'}} key={currency}>
                             <div className={css.inlineSlider}>
                                 <Image className={css.inlineCoinImg} src={getImage(currency)} alt={currency}/>
                                 <Slider style={{flex: 1}}

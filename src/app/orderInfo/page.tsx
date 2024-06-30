@@ -140,7 +140,7 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
     }
     const getUnit = (key: keyof OrderDetailResponse): string => {
         if (/hashrate/.test(key)) {
-            return rawData?.item?.good?.unit+'H/s' || ''
+            return 'H/s'
         }
         if (/income/.test(key)) {
             return rawData.currency
@@ -164,8 +164,8 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                     {
                         !/income/.test(showKey) && <>
 
-                            {!getUnit(showKey) && "$"}{formatThousands(Number(getShowKey(showKey)).toFixed(getToFixedLength()))}
-                            <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{getUnit(showKey)}</span>
+                            {!getUnit(showKey) && "$"}{formatThousands(Number(parseHashrateByNumber(Number(getShowKey(showKey))).hashrate).toFixed(getToFixedLength()))}
+                            <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{parseHashrateByNumber(Number(getShowKey(showKey))).unit}{getUnit(showKey)}</span>
                         </>
                     }
 

@@ -36,6 +36,7 @@ export const themeConfig: ThemeConfig = {
             colorBorder: '#A1A3AB',
             controlHeightLG: 52,
             fontSizeLG: 14,
+            colorTextPlaceholder: '#999999',
         },
         Popover:{
             boxShadowTertiary: '0px 4px 12px rgba(0, 1, 0, 0.1)',

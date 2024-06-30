@@ -1,12 +1,18 @@
 'use client'
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import css from './index.module.css'
 import DollarBlue from '../../../public/dollarBlue.png'
 import CanMineIcon from '../../../public/can-mine-icon.png'
 import YesterdayEleFeeIcon from '../../../public/yesterday-ele-fee-icon.png'
 import Image from "next/image";
 import {Button, Table, TableProps, Modal, Statistic, Popover, Divider} from "antd";
-import {getElectricityInfo, ElectricityResponse, ElectricityList, chargeElectricity} from "@/service/api";
+import {
+    getElectricityInfo,
+    ElectricityResponse,
+    ElectricityList,
+    chargeElectricity,
+    getElectricityCanUseLeftDays
+} from "@/service/api";
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import NumberSelector from "@/components/NumberSelector";
 import moment from "moment/moment";
@@ -25,25 +31,37 @@ interface ChargeFeeProps {
 
 const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
     const [cost, setCost] = useState(min)
+    const [electricityCanUseLeftDays, setElectricityCanUseLeftDays] = useState('0')
     const handleChange = (v: number) => {
         setCost(v)
     }
+    useEffect(() => {
+        getElectricityCanUseLeftDays(cost.toString()).then(res => {
+            console.log(res)
+            setElectricityCanUseLeftDays(res.day)
+        })
+    }, [cost])
     return <div>
-        <div>电费金额</div>
-        <div style={{marginBottom: '40px'}}>
+        <div className={css.modalSubTitle}>电费金额</div>
+        <div>
             <NumberSelector
                 styles={{
-                    width: '100%',
-                    maxWidth: '100%',
-                    minWidth: '100%',
+                    fontSize: '22px',
+                    fontWeight: '600',
                 }}
+                min={min}
                 value={cost}
                 onChange={(v) => handleChange(v)}
                 unit={"$"}
                 step={step}
             />
         </div>
-        <Button disabled={cost === 0} style={{height:'52px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>立即充值</Button>
+        {
+            !(Number(electricityCanUseLeftDays) < 0 ) && (
+                <div className={css.canUseCount}>预计可使用{electricityCanUseLeftDays}天</div>
+            )
+        }
+        <Button disabled={cost < min} style={{height:'52px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>确认</Button>
     </div>
 }
 
@@ -250,7 +268,7 @@ const ElectricityFee = () => {
         <div className={css.container}>
             <Modal width={420} title={'电费充值'} open={isModalOpen} style={{maxHeight: '600px'}}
                    onCancel={() => closeModal()} footer={''}>
-            <ChargeFee onConfirm={onConfirmCost} min={min} step={step}/>
+                <ChargeFee onConfirm={onConfirmCost} min={min} step={step}/>
             </Modal>
             <Modal width={420} title={'电费充值'} open={isBuyProductModalOpen} onCancel={() => closeBuyProductModal()} footer={''}>
                 <BuyProduct key={buyProductKey} onBuy={onBuy} total_cost={cost} finishPay={closeBuyProductModal} />
@@ -259,7 +277,11 @@ const ElectricityFee = () => {
                 <FinishPayment
                     fixPos={4}
                     duration={(record?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
-                    currentCurrency={{currency: record?.payment_request.currency || '', network: [record?.payment_request.network || '']}}
+                    currentCurrency={{
+                        currency: record?.payment_request.currency || '',
+                        network: [record?.payment_request.network || ''],
+                        networks: [{name: record?.payment_request.network || '', full_name: record?.payment_request.network || ''}]
+                }}
                     amount={record?.payment_request.transfer_amount || '0'}
                     orderId={record?.order_id || ''}
                     qrcodeUrl={record?.payment_link_source || ''}

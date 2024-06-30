@@ -21,8 +21,6 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
     message: string;
     details: Array<any> | string;
 }> => {
-    console.log('business error')
-    console.log(data)
     if (data.code === 3 || data.code === 9) {
         return Promise.reject({
             message: data.message,
@@ -510,6 +508,10 @@ export interface PaymentCurrency {
      * 支持的网络，如：ERC20, TRC20
      */
     network: string[];
+    networks: Array<{
+        name: string;
+        full_name: string;
+    }>;
     [property: string]: any;
 }
 export const getPubInfo = (): Promise<PubInoRes> => {
@@ -1378,5 +1380,13 @@ export const getPaymentList = (id:string): Promise<PaymentListResponse> => {
             page: 1,
             page_size: 30
         }
+    })
+}
+
+export const getElectricityCanUseLeftDays = (amount: string): Promise<{
+    day: string
+}> => {
+    return axiosInstance.post('/api/auth/electricity/charge/day', {
+        amount
     })
 }

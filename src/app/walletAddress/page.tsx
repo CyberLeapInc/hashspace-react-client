@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Button, Card, Flex, Input, message, Modal, Space} from "antd";
 import DividerCus from "@/components/ui/dividerCus";
 import {ActionType, MyContext} from "@/service/context";
@@ -11,6 +11,7 @@ import {bindAddressFinish, bindAddressStart, bindPhoneFinish, getTotpCode, getUs
 import css from './index.module.css'
 import {CodeSender} from "@/components/ui/codeSender";
 import Clipboard from "@/components/Clipboard";
+import KycSuccess from "../../../public/kyc-success.png";
 
 const styles = {
     container: {minHeight: 'calc(100vh - 232px)', paddingTop: '25px', paddingBottom: '25px'},
@@ -41,8 +42,10 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
     const [totp, setTotp] = useState('')
     const {state} = useContext(MyContext);
     const [isSendCode, setIsSendCode] = useState(false)
+    const [errorStatus, setErrorStatus] = useState(false)
+    const [googleErrorStatus, setGoogleErrorStatus] = useState(false)
     const startChange = () => {
-        if (!address || !remark) {
+        if (!address) {
             return;
         }
         bindAddressStart(currency, remark, address).then(res => {
@@ -79,19 +82,31 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
             query.totp = totp
         }
         bindAddressFinish(query).then(res => {
+            onFinish(true)
             console.log(res)
         }).catch(e => {
-            message.error(e.message || '绑定失败')
-        }).finally(() => {
-            onFinish('finish')
+            if (e?.details['@type'] && /InvalidCode/.test(e?.details['@type'])) {
+                setErrorStatus(true)
+            }
+            if (e?.details['@type'] && /InvalidTOTP/.test(e?.details['@type'])) {
+                setGoogleErrorStatus(true)
+            }
+            onFinish(false)
         })
     }
 
+    const getMinPayment = (currency: string) => {
+        const res = state.userInfo.address.find((item) => item.currency === currency);
+        if (!res) return '';
+        return res.f2pool_payment_threshold
+    }
+
+    // @ts-ignore
     return (<div>
         {
             step === 0 && (
                 <div>
-                    <div className={css.modalTitle}>{ogAddress ? '设置' : '更改'}{currency}收款地址</div>
+                    <div className={css.modalTitle}>{ogAddress ? '更改':'设置'}{currency}收款地址</div>
                     {
                         ogAddress && (
                             <div>
@@ -100,18 +115,17 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                             </div>
                         )
                     }
-                    <div className={css.modalSubTitle}>{ogAddress ? '新' : ''}{currency}主网地址</div>
-                    <div><Input className={css.myInput} onChange={(v) => setAddress(v.target.value)}/></div>
+                    <div className={css.modalSubTitle}>{ogAddress ? '新' : ''}主网地址</div>
+                    <div><Input placeholder={`请输入新的${currency}主网地址`} className={css.myInput} onChange={(v) => setAddress(v.target.value)}/></div>
                     <div className={css.modalSubTitle}>备注</div>
-                    <div><Input className={css.myInput} onChange={(v) => setRemark(v.target.value)}/></div>
+                    <div><Input placeholder={'请输入该地址的备注'} className={css.myInput} onChange={(v) => setRemark(v.target.value)}/></div>
                     <div className={css.tip}>
                         <div style={{margin: '20px 0 8px'}}>温馨提示</div>
-                        <div>1. 云算力运行时，最小支付金额：0.005BTC。</div>
-                        <div>2. 云算力运行结束后，尾款最小支付金额：0.05BTC。</div>
-                        <div>3. 修改地址后，支付冻结48h。</div>
-                        <div>4. 一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。</div>
+                        <div>1. 云算力运行时，最小支付金额：{getMinPayment(currency)}{currency}。</div>
+                        <div>2. 修改地址后，支付冻结48h。</div>
+                        <div>3. 一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。</div>
                     </div>
-                    <Button shape={"round"} block size={"large"} type={"primary"}
+                    <Button disabled={!address} shape={"round"} block size={"large"} type={"primary"}
                             onClick={() => startChange()}>下一步</Button>
 
                 </div>
@@ -120,25 +134,72 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         {
             step === 1 && (
                 <div>
-                    <div className={css.modalTitle}>输入验证码</div>
+                    <div className={css.modalTitle}>输入邮箱验证码</div>
                     <div className={css.bigTip}>请输入您在邮箱 {state.userInfo.email} 收到的6位验证码，验证码30分钟有效</div>
                     <div className={css.modalSubTitle}>
-                        <CodeSender label={'邮箱验证码'} immidity={true} disabled={false} value={code} onSend={getCode} onChange={(v) => setCode(v)} onError={(e) => console.log(e)}/>
+                        <CodeSender label={'邮箱验证码'} immidity={true} disabled={false} value={code} onSend={getCode}
+                                    onChange={(v) => {
+                                        setCode(v)
+                                        setErrorStatus(false)
+                                    }} onError={() => setErrorStatus(true)}/>
+                        {
+                            errorStatus && <div className={css.errorMessage}>邮箱验证码错误，请重新输入</div>
+                        }
+
                     </div>
                     {
                         state.userInfo.has_totp && (
                             <div>
                                 <div className={css.modalSubTitle}>Google Authenticator验证码</div>
-                                <div><Input onChange={(v) => setTotp(v.target.value)} className={css.myInput}/></div>
+                                <div><Input maxLength={6} onChange={(v) => {
+                                    setTotp(v.target.value)
+                                    setGoogleErrorStatus(false)
+                                }} className={css.myInput}/></div>
+                                {
+                                    googleErrorStatus && <div className={css.errorMessage}>Google Authenticator验证码错误，请重新输入</div>
+                                }
                             </div>
                         )
                     }
-                    <Button style={{marginTop: '40px'}} shape={"round"} block size={"large"} type={"primary"}
+                    <Button style={{marginTop: '32px'}} shape={"round"} block size={"large"} type={"primary"}
                             onClick={() => finish()}>确认</Button>
                 </div>
             )
         }
     </div>)
+}
+
+const SuccessContent = ({location,currency, onCountDownFinish} : {
+    location: string,
+    currency: string,
+    onCountDownFinish: () => void
+}) => {
+    const [countdown, setCountdown] = useState(5); // 倒计时5秒
+
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+            return () => clearTimeout(timer); // 清除定时器
+        } else {
+            onCountDownFinish && onCountDownFinish(); // 倒计时结束时调用
+        }
+    }, [countdown, onCountDownFinish]);
+    return (
+        <div>
+            <div className={css.modalTitle} style={{textAlign:'center'}}>地址设置成功</div>
+            <Image className={css.successImage} src={KycSuccess} alt={'kyc success'}></Image>
+
+            <div className={css.modalSubTitle} style={{textAlign:"center", fontWeight: 600}}>
+                {currency}地址为
+            </div>
+            <div className={css.successLocationBar}>
+                {location}
+            </div>
+            <Button size={"large"} shape={'round'} type={"primary"} block>返回{
+                countdown > 0 ? ` (${countdown}S)` : ''
+            }</Button>
+        </div>
+    )
 }
 
 const AddressCard = ({currency, icon, getAddress}: {
@@ -148,6 +209,7 @@ const AddressCard = ({currency, icon, getAddress}: {
 }) => {
     const addressDict = getAddress(currency);
     const [isShowBindModal, setIsShowBindModal] = useState(false)
+    const [isShowBindSuccessModal, setIsShowBindSuccessModal] = useState(false)
     const [modalKey, setModalKey] = useState(0)
     const {state,dispatch} = useContext(MyContext);
 
@@ -156,23 +218,35 @@ const AddressCard = ({currency, icon, getAddress}: {
         setModalKey((prevState) => prevState + 1)
         setIsShowBindModal(v)
     }
-    const handleBind = (v: any) => {
-        getUserInfo().then(res => {
-            dispatch({
-                type: ActionType.setUserInfo,
-                payload: res
-            })
+    const handleBind = (v: boolean) => {
+        if (v) {
             toggleBindModal(false);
-        }).catch((e: any) => {
-            message.error(e.message || '获取用户信息失败')
-        })
+            setIsShowBindSuccessModal(true)
+            getUserInfo().then(res => {
+                dispatch({
+                    type: ActionType.setUserInfo,
+                    payload: res
+                })
+            }).catch((e: any) => {
+                message.error(e.message || '获取用户信息失败')
+            })
+        } else {
+            message.error('绑定失败')
+        }
+
+    }
+    const handleCountDownFinish = () => {
+        setIsShowBindSuccessModal(false)
     }
 
 
     return (
         <div>
-            <Modal open={isShowBindModal} width={420} footer={''} onCancel={() => toggleBindModal(false)}>
+            <Modal open={isShowBindModal} width={420} footer={null} onCancel={() => toggleBindModal(false)}>
                 <SetAddress ogAddress={addressDict['address']} key={modalKey} currency={currency} onFinish={handleBind}/>
+            </Modal>
+            <Modal open={isShowBindSuccessModal} width={420} footer={null} onCancel={() => setIsShowBindSuccessModal(false)}>
+                <SuccessContent currency={currency} location={addressDict['address']} onCountDownFinish={handleCountDownFinish}/>
             </Modal>
             <div className={'card-column-box-row'} style={{
                 display: 'flex',

@@ -37,9 +37,14 @@ export const BuyProduct = (data: BuyProductProp) => {
     const [paymentCurrency, setPaymentCurrency] = useState<PaymentCurrency[]>([])
     const [currentCurrency, setCurrentCurrency] = useState<PaymentCurrency>({
         currency: '',
-        network: []
+        network: [],
+        networks: []
     })
     const [currentNetWork, setCurrentNetwork] = useState('')
+    const [currentNetWorks, setCurrentNetworks] = useState({
+        name: '',
+        full_name: ''
+    })
     const [qrcodeUrl, setQrcodeUrl] = useState('');
     const [amount, setAmount] = useState('0')
     const [orderId, setOrderId] = useState('')
@@ -53,16 +58,19 @@ export const BuyProduct = (data: BuyProductProp) => {
             setPaymentCurrency(res.payment_currency)
             if (res.payment_currency.length > 0) {
                 setCurrentCurrency(res.payment_currency[0]);
-                setCurrentNetwork(res.payment_currency[0].network[0])
+                setCurrentNetwork(res.payment_currency[0].networks[0].name)
+                setCurrentNetworks(res.payment_currency[0].networks[0])
             }
         })
-    }, [setCurrentCurrency, setPaymentCurrency, setCurrentNetwork])
+    }, [setCurrentCurrency, setPaymentCurrency, setCurrentNetwork, setCurrentNetworks])
     const setCurrency = (data: PaymentCurrency) => {
+        console.log(data)
         setCurrentCurrency(data)
-        setCurrentNetwork(data.network[0])
+        setCurrentNetwork(data.networks[0].name)
     }
     const setNetwork = (network: string) => {
         setCurrentNetwork(network)
+        setCurrentNetworks(currentCurrency.networks.find(item => item.name === network) as { name: string; full_name: string })
     }
 
     const setTimeStatus = () => {
@@ -158,7 +166,8 @@ export const BuyProduct = (data: BuyProductProp) => {
                     duration={duration}
                     currentCurrency={{
                         currency: currentCurrency.currency,
-                        network: [currentNetWork]
+                        network: [currentNetWork],
+                        networks: [currentNetWorks]
                     }}
                     amount={amount}
                     orderId={orderId}

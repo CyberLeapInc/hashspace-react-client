@@ -26,7 +26,7 @@ export const FinishPayment: React.FC<{
         <div>
             <div className={css.title}>支付详情</div>
             <div className={css.tip}>待转账金额</div>
-            <div className={css.money}>{big(amount).toFixed(fixPos).toString()} {currentCurrency.currency}</div>
+            <div className={css.money}>{big(amount).toFixed(fixPos).toString()} <span className={css.unit}>{currentCurrency.currency}</span></div>
             <Counter key={duration} timeLeft={duration} onCountFinish={setTimeStatus}/>
             <div className={css.row}>
                 <div>订单ID</div>
@@ -37,11 +37,12 @@ export const FinishPayment: React.FC<{
                 <QRCodeSVG size={100} value={qrcodeUrl}/>
             </div>
             <div className={css.network}>
-                转账网络: {currentCurrency.network}
+                {/*{JSON.stringify(currentCurrency)}*/}
+                转账网络: {currentCurrency.networks[0].full_name}
             </div>
             <Clipboard str={qrcodeUrl}></Clipboard>
             <Button disabled={isCountDownFinish} onClick={finishPay} size={"large"} block shape={"round"}
-                    type={"primary"} style={{height: '52px', marginTop: '40px'}}>已完成转账</Button>
+                    type={"primary"} style={{height: '52px', marginTop: '33px'}}>已完成转账</Button>
         </div>
     )
 }

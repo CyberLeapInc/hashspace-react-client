@@ -357,7 +357,11 @@ const MyOrder = () => {
                 duration={(currentObj?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}
                 currentCurrency={{
                     currency: currentObj?.payment_request.currency || '',
-                    network:[ currentObj?.payment_request.network || '']
+                    network:[ currentObj?.payment_request.network || ''],
+                    networks: [{
+                        name: currentObj?.payment_request.network || '',
+                        full_name: currentObj?.payment_request.network || ''
+                    }]
                 }}
                 orderId={currentObj?.order_id || ''}
                 qrcodeUrl={currentObj?.payment_link_source || ''}

@@ -38,7 +38,7 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
             <MinusOutlined />
         </div>
         <div>
-            {currentValue}{unit}
+            {unit === '$' ? unit : ''}{currentValue}{unit !== '$' ? unit : ''}
         </div>
         <div className={css.handler} onClick={() => handleOpera(true)}>
             <PlusOutlined />

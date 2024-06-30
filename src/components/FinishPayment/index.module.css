@@ -43,9 +43,13 @@ flex: 1;
     font-size: 40px;
     color: #333333;
     line-height: 40px;
-    text-align: left;
     text-align: center;
-    margin-bottom: 12px;
+}
+.unit{
+    font-weight: bold;
+    font-size: 16px;
+    color: #333333;
+    line-height: 40px;
 }
 .payButton{
     height: 52px;
@@ -69,7 +73,7 @@ flex: 1;
     font-weight: 500;
     font-size: 14px;
     color: #333333;
-    line-height: 54px;
+    line-height: 64px;
 }
 .warning{
     font-weight: 400;
@@ -85,7 +89,7 @@ flex: 1;
     border-radius: 10px;
     border: 1px solid rgba(233,233,233,0.76);
     width: 120px;
-    margin: 30px auto;
+    margin: 24px auto 24px;
 }
 .network{
     font-weight: 400;

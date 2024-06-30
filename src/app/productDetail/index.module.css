@@ -65,8 +65,9 @@
     border-radius: 20px;
     width: 100%;
     flex: 1;
-    padding: 20px;
+    padding: 24px;
     min-height: 252px;
+    padding-bottom: 19px;
 }
 .range{
     display: flex;
@@ -150,6 +151,7 @@
 .row{
     display: flex;
     margin-bottom: 40px;
+    align-items: center;
     @media screen and (max-width: 600px){
         flex-direction: column;
     }
@@ -157,6 +159,7 @@
 .row2{
     display: flex;
     margin-bottom: 20px;
+    align-items: center;
     @media screen and (max-width: 600px){
         justify-content: flex-end;
     }
@@ -225,4 +228,9 @@
     color: #999999;
     line-height: 20px;
     text-align: center;
+}
+.canvasText{
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
 }

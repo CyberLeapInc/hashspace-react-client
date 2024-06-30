@@ -1,7 +1,7 @@
 'use client'
 import css from './index.module.css'
 import {Button, Checkbox, Divider, Input, Modal, Slider} from "antd";
-import {cn, getToFixedLength} from "@/lib/utils";
+import {cn, getToFixedLength, roundUp} from "@/lib/utils";
 import React, {useCallback, useEffect, useRef, useState,useContext} from "react";
 import {getProductDetail, GoodDetail, buyProduct, fullRevenue, FullRevenueRequest} from "@/service/api";
 import {getLocalDate} from '@/lib/clientUtils'
@@ -82,8 +82,9 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
 
         },
         legend: false,
+        height: 166
     };
-    return <Column {...config} data={dataList}/>;
+    return <Column {...config} width={204} data={dataList}/>;
 };
 
 const DEFAULT_BUY_DAYS = 10;
@@ -216,7 +217,7 @@ const ProductDetail = () => {
     }, [buyCount, goodDetail]);
 
     useEffect(() => {
-        setElectricityCost(big(goodDetail?.daily_electricity || '0').mul(big(buyDays).mul(buyCount)).toString())
+        setElectricityCost(roundUp(big(goodDetail?.daily_electricity || '0').mul(big(buyDays).mul(buyCount)).toNumber(), 2).toString())
     }, [buyDays, goodDetail, buyCount]);
 
     useEffect(() => {
@@ -319,7 +320,7 @@ const ProductDetail = () => {
                                             width: state.isMobile ? '100%' : '356px',
                                             maxWidth: '100%'
                                         }}
-                                        min={1}
+                                        min={10}
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
@@ -330,13 +331,13 @@ const ProductDetail = () => {
                             </div>
                             <div className={css.row2}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合约费用</div>
-                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(hashrateCost).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(hashrateCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                             <div className={css.row2} style={{
                                 paddingBottom: state.isMobile ? '' :'8px'
                             }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>电费</div>
-                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${Number(electricityCost).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(electricityCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                             {
                                 !state.isMobile && <Divider />
@@ -346,7 +347,7 @@ const ProductDetail = () => {
                                 paddingTop: state.isMobile ? '' :'10px'
                             }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合计费用</div>
-                                <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${Number(totalCost).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${roundUp(Number(totalCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                         </div>
                         <div style={{

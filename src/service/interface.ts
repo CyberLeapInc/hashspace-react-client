@@ -52,7 +52,7 @@ export interface Address {
      * 备注。如 我的交易所地址
      */
     remark: string;
-    [property: string]: any;
+    f2pool_payment_threshold: string;
 }
 
 /**
