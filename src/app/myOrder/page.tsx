@@ -360,7 +360,7 @@ const MyOrder = () => {
                     network:[ currentObj?.payment_request.network || ''],
                     networks: [{
                         name: currentObj?.payment_request.network || '',
-                        full_name: currentObj?.payment_request.network || ''
+                        full_name: currentObj?.payment_request.network_full_name || ''
                     }]
                 }}
                 orderId={currentObj?.order_id || ''}

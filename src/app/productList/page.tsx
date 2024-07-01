@@ -64,7 +64,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
 
             </div>
             {
-                Number(data.max_qty || 0) <= Number(data.min_qty || 0) && <Image src={SoldOut} alt={'soldOut'} style={{
+                data.is_soldout && <Image src={SoldOut} alt={'soldOut'} style={{
                     height: '80px',
                     width: '80px',
                     position: 'absolute',
@@ -75,7 +75,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
 
             <Link href={`productDetail?good_id=${data.good_id}`}>
                 <Button
-                    disabled={Number(data.max_qty || 0) <= Number(data.min_qty || 0)}
+                    disabled={data.is_soldout}
                     className={
                         'round-primary-button button-286'
                     }>立即下单</Button>

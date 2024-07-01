@@ -762,6 +762,8 @@ export interface PaymentRequest {
      * 网络
      */
     network: string;
+    network_full_name: string;
+
     /**
      * 总费用
      */
@@ -927,6 +929,7 @@ export interface ElectricityList {
         amount:string
         currency: string
         network: string
+        network_full_name: string
         trace_id:string
         transfer_amount: string
     }

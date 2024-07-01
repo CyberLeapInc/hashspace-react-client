@@ -61,7 +61,7 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
                 <div className={css.canUseCount}>预计可使用{electricityCanUseLeftDays}天</div>
             )
         }
-        <Button disabled={cost < min} style={{height:'52px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>确认</Button>
+        <Button disabled={cost < min} style={{height:'52px', marginTop: '40px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>确认</Button>
     </div>
 }
 
@@ -280,7 +280,7 @@ const ElectricityFee = () => {
                     currentCurrency={{
                         currency: record?.payment_request.currency || '',
                         network: [record?.payment_request.network || ''],
-                        networks: [{name: record?.payment_request.network || '', full_name: record?.payment_request.network || ''}]
+                        networks: [{name: record?.payment_request.network || '', full_name: record?.payment_request.network_full_name || ''}]
                 }}
                     amount={record?.payment_request.transfer_amount || '0'}
                     orderId={record?.order_id || ''}
