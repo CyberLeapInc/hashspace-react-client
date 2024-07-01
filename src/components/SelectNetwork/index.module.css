@@ -50,6 +50,11 @@
 .payButton{
     margin-top: 40px;
 }
+.currencyRate{
+    font-weight: 400;
+    font-size: 12px;
+    color: #999999;
+}
 .counter{
     height: 28px;
     line-height: 28px;

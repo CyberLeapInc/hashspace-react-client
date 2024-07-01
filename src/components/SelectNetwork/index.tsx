@@ -1,11 +1,12 @@
 'use client'
-import react, {useEffect, useState} from 'react'
+import react, {useContext, useEffect, useState} from 'react'
 import { uuid } from 'uuidv4';
-import {getPubInfo,PaymentCurrency, buyProduct, getPaymentResult} from "@/service/api";
+import {getPubInfo, PaymentCurrency, buyProduct, getPaymentResult, money} from "@/service/api";
 import {Button, message} from "antd";
 import {cn} from "@/lib/utils";
 import React from "react";
 import css from './index.module.css';
+import {MyContext} from "@/service/context";
 export const SelectNetwork: React.FC<{
     paymentCurrency: PaymentCurrency[];
     currentCurrency: PaymentCurrency;
@@ -16,6 +17,7 @@ export const SelectNetwork: React.FC<{
     goPay: () => void;
     total_cost: string | number
 }> = ({paymentCurrency, total_cost, currentCurrency, currentNetWork, loading, setCurrency, setNetwork, goPay}) => {
+    const {state} = useContext(MyContext);
     return (
         <div>
             <div className={css.title}>订单支付</div>
@@ -32,10 +34,11 @@ export const SelectNetwork: React.FC<{
                                 key={item.currency} onClick={() => setCurrency(item)}>
                             <div style={{
                                 display: 'flex',
+                                alignItems: 'center',
                                 justifyContent: 'space-between',
                             }}>
                                 <span>{item.currency}</span>
-                                <span>todo</span>
+                                <span className={css.currencyRate}>1{item.currency} ≈ {Number(state.pubInfo.currency_rates[item.currency as money]?.USD || '0').toFixed(4)}USD</span>
                             </div>
                         </Button>
                     )

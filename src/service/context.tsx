@@ -1,18 +1,21 @@
 'use client'
-import React, {createContext, useReducer, useEffect, useContext, ReactNode} from 'react';
+import React, {createContext, ReactNode, useEffect, useReducer} from 'react';
 import {UserInfo} from "@/service/interface";
-import {Chain, getChainList, getUserInfo} from "@/service/api";
+import {Chain, getChainList, getPubInfo, getUserInfo, PubInoRes} from "@/service/api";
 import {useMount} from "ahooks";
+
 export interface State {
     userInfo: UserInfo;
     isMobile: boolean,
     chainList: Chain[];
+    pubInfo: PubInoRes;
 }
 
 export enum ActionType {
     setUserInfo = 'SET_USER_INFO',
     setChainList = 'SET_CHAIN_LIST',
     setIsMobile = 'SET_IS_MOBILE',
+    setPubInfo = 'SET_PUB_INFO',
 }
 
 interface Action {
@@ -37,7 +40,21 @@ export const initialState: State = {
         address: []
     },
     isMobile: false,
-    chainList: []
+    chainList: [],
+    pubInfo: {
+        payment_currency: [],
+        currency_rates: {
+            USDC: {
+                USD: '0'
+            },
+            USDT: {
+                USD: '0'
+            },
+            LTCT: {
+                USD: '0'
+            },
+        }
+    }
 };
 
 
@@ -54,6 +71,8 @@ const reducer = (state: State, action: Action): State => {
             return { ...state, chainList: action.payload };
         case ActionType.setIsMobile:
             return { ...state, isMobile: action.payload };
+        case ActionType.setPubInfo:
+            return { ...state, pubInfo: action.payload };
         default:
             return state;
     }
@@ -71,12 +90,14 @@ export const MyContextProvider= ({ children, value }: { children: ReactNode,valu
 
     useMount(() => {
         getUserInfo().then((res) => {
-            const userInfo = res;
-            dispatch({ type: ActionType.setUserInfo, payload: userInfo });
+            dispatch({ type: ActionType.setUserInfo, payload: res });
         })
         getChainList().then((res) => {
             const chainList = res.list;
             dispatch({ type: ActionType.setChainList, payload: chainList });
+        })
+        getPubInfo().then((res) => {
+            dispatch({ type: ActionType.setPubInfo, payload: res });
         })
     });
 

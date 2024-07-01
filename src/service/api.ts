@@ -496,8 +496,22 @@ export interface PubInoRes {
      * 收款地址
      */
     payment_currency: PaymentCurrency[];
-    [property: string]: any;
+    currency_rates: CurrencyRates;
 }
+/**
+ * 汇率
+ */
+export type money = 'LTCT' | 'USDT' | 'USDC';
+export type CurrencyRates = {
+    [property in money]: MoneyObject;
+};
+export interface MoneyObject {
+    /**
+     * USD汇率
+     */
+    USD: string;
+}
+
 
 export interface PaymentCurrency {
     /**
