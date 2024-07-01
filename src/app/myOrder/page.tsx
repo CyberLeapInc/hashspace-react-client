@@ -15,7 +15,7 @@ import {OrderItem, DataType, Good} from './interfaces'
 import BTC from '../../../public/btc.svg'
 import DOGE from '../../../public/doge.svg'
 import LTC from '../../../public/ltc.svg'
-import {cn, formatThousands, getToFixedLength} from "@/lib/utils";
+import {cn, formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import {FinishPayment} from "@/components/FinishPayment";
 import {EasyConfirmContent} from "@/components/EasyConfirmContent";
 import {MyContext} from "@/service/context";
@@ -91,7 +91,9 @@ const columns: TableProps<OrderItem>['columns'] = [
         title: '算力',
         dataIndex: 'hashrate',
         render: (text, record, index) => {
-            return <div>{formatThousands(record.hashrate || 0, false)}{record?.good?.unit || ''}</div>
+            return <div>{
+                formatThousands(parseHashrateByNumber(Number(record.hashrate), 2, record.good?.unit || '').hashrate, false)
+            } {parseHashrateByNumber(Number(record.hashrate), 2, record.good?.unit || '').unit || ''}H</div>
         },
         width: 100
     },
@@ -164,7 +166,7 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
                     display: "flex",
                     flexDirection:'column'
                 }}>
-                    <Link href={`/productDetail?good_id=${goodId}`}>
+                    <Link href={record.good?.is_soldout ? '/productList' : `/productDetail?good_id=${goodId}`}>
                         <Button type={"primary"} shape={"round"}>重新购买</Button>
                     </Link>
                     <span className={css.textAlignCenter}>
@@ -217,7 +219,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             }
             <div className={css.item}>
                 <span className={css.label}>算力:</span>
-                <span className={css.value}>{formatThousands(data.hashrate, false)}{data.good.unit}</span>
+                <span className={css.value}>{formatThousands(parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).hashrate, false)} {parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).unit}H</span>
             </div>
             <div className={css.item}>
                 <span className={css.label}>电费:</span>
@@ -280,12 +282,12 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             {
                 ( data.state === 2 || data.state === 4) && <div style={{
                     position: 'absolute',
-                    top: '-8px',
-                    right: '0'
+                    top: '12px',
+                    right: '0px',
                 }}>
-                    <Button type={"link"}>
+                    <Button style={{color: '#3C53FF'}} type={"link"}>
                         <Link href={`/orderInfo?orderId=${data.order_id}`}>
-                            订单详情 {'>'}
+                            更多详情 {'>'}
                         </Link>
                     </Button>
                 </div>

@@ -725,6 +725,7 @@ export interface OrderListItem {
  * 云算力合约产品详情
  */
 export interface OrderListGood {
+    is_soldout: boolean;
     algorithm: string;
     currency: string[];
     daily_electricity: string;

@@ -63,6 +63,9 @@ export function parseHashrateByNumber(value = 0, precision = 2, unit = '') {
     if (unit === 'T') {
         value = value * Math.pow(10, 12)
     }
+    if (unit === 'M') {
+        value = value * Math.pow(10, 6)
+    }
     if (value >= Math.pow(10, 27)) {
         return {
             hashrate: value,

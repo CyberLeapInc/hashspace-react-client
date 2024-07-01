@@ -53,7 +53,11 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
             setSessionId(res.session_id);
             setStep(1)
         }).catch(e => {
-            message.error(e.message)
+            if (e?.details['@type'] && /CantChangeAddressAfterTOTPUnbind/.test(e?.details['@type'])) {
+                message.error('解绑Google验证后，24h内禁止设置/修改地址')
+            } else {
+                message.error(e.message)
+            }
         })
     }
 
