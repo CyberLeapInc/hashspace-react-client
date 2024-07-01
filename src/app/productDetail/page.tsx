@@ -15,6 +15,7 @@ import {useDebounceFn} from "ahooks";
 import {MyContext} from "@/service/context";
 
 import dynamic from 'next/dynamic'
+import Link from "next/link";
 
 const Column = dynamic(() => import('@ant-design/plots').then(({ Column }) => Column), {
     ssr: false
@@ -108,6 +109,7 @@ const ProductDetail = () => {
     const [buyProductKey, setBuyProductKey] = useState(0)
     const [dataList, setDataList] = useState(data || [])
     const [revenueData, setRevenueData] = useState({roi: '0', total_income: '0'})
+    const [isShowSetDogeAddress, setIsShowSetDogeAddress] = useState(false)
     const {state, dispatch} = useContext(MyContext)
 
     const onTargetPriceChange = (v: number, currency = 'BTC') => {
@@ -239,6 +241,14 @@ const ProductDetail = () => {
         });
     }
 
+    const goBuyCheck = () => {
+        if (goodDetail?.mining_currency === 'LTC') {
+            state.userInfo.address.find(item => item.currency === 'LTC')?.address ? toggleModal(true) : setIsShowSetDogeAddress(true)
+        } else {
+            toggleModal(true)
+        }
+    }
+
 
 
     return (
@@ -350,22 +360,45 @@ const ProductDetail = () => {
                                 <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${roundUp(Number(totalCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                         </div>
+                        {
+                            goodDetail?.mining_currency === 'LTC' && <div className={css.dogeInfo}>*根据矿池要求，请您下单前先设置DOGE收款地址。</div>
+                        }
                         <div style={{
-                            marginTop: state.isMobile ? '0' : '42px',
+                            marginTop: state.isMobile ? '0' : goodDetail?.mining_currency === 'LTC' ? '10px' : '42px',
                             marginBottom: state.isMobile ? '0' : '22px'
                         }}>
                             <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={''}>《服务协议》</a>和<a href={''}>《隐私政策》</a><a href={''}>《免责声明》</a>。</Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button
-                                onClick={() => toggleModal(true)}
+                                onClick={goBuyCheck}
                                 disabled={!checkboxValue} size={"large"} shape={"round"} type={"primary"} style={{height: '52px', width: state.isMobile ? '100%' : '265px'}}>立即购买</Button>
                         </div>
                     </div>
                 </div>
             </div>
+            <Modal open={isShowSetDogeAddress} width={420} footer={null} onCancel={() => setIsShowSetDogeAddress(false)}>
+                <div>
+                    <div style={{
+                        fontWeight: 400,
+                        fontSize: '14px',
+                        textAlign: 'center',
+                        marginTop: '70px',
+                        color: '#333333'
+                    }}>
+                        根据矿池要求，请您下单前先设置DOGE收款地址
+                    </div>
+                    <Link href={'/walletAddress'}>
+                        <Button type={"primary"} shape={"round"} size={"large"} block style={{
+                            marginTop: '60px'
+                        }}>设置
+                        </Button>
+                    </Link>
+                </div>
+            </Modal>
             <Modal open={isShowBuyProduct} width={420} footer={''} onCancel={() => toggleModal(false)}>
-                <BuyProduct finishPay={() => toggleModal(false)} key={buyProductKey} total_cost={totalCost} onBuy={getBuyProductInfo}></BuyProduct>
+                <BuyProduct finishPay={() => toggleModal(false)} key={buyProductKey} total_cost={totalCost}
+                            onBuy={getBuyProductInfo}></BuyProduct>
             </Modal>
         </div>
     )
