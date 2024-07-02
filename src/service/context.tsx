@@ -37,7 +37,9 @@ export const initialState: State = {
             fail_reason: "",
             status: -1
         },
-        address: []
+        address: [],
+        warning_electricity_balance: false,
+        insufficient_electricity_balance: false
     },
     isMobile: false,
     chainList: [],

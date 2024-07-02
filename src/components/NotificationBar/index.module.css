@@ -1,0 +1,27 @@
+.wrapper{
+    width: 100%;
+    max-width: 1200px;
+    height: 52px;
+    line-height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFFFFF;
+    box-shadow: 5px 5px 20px 0px rgba(0,0,0,0.05);
+    border-radius: 16px;
+    font-weight: 400;
+    font-size: 12px;
+    color: #666666;
+    position: fixed;
+    top: 84px; /* 距离顶部50px */
+    left: 50%; /* 水平居中起点 */
+    transform: translateX(-50%); /* 水平居中 */
+    /* 当屏幕宽度小于1200px时 */
+    @media screen and (max-width: 1200px) {
+        .component {
+            width: 100%; /* 宽度和屏幕宽度一致 */
+            position: fixed; /* 固定在屏幕上 */
+        }
+    }
+    z-index: 51;
+}

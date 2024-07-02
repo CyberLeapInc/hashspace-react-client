@@ -36,6 +36,8 @@ export interface UserInfo {
      * 用户可读uid
      */
     uid: string;
+    warning_electricity_balance: boolean;
+    insufficient_electricity_balance: boolean;
     [property: string]: any;
 }
 

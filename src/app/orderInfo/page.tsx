@@ -258,7 +258,7 @@ const OrderInfo = () => {
                                     </div>
                                     <div style={{marginTop: '50px', marginBottom: '10px'}} className={css.legend}>
                                         <span className={css.try}></span>
-                                        <span>TH/s</span>
+                                        <span>{orderInfo?.item.good.unit}H/s</span>
                                     </div>
                                     <DemoArea unit={orderInfo?.item.good.unit || ''} isMobile={false} dataList={orderInfo?.history || []}/>
                                 </div>
