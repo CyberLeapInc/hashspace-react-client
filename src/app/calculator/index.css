@@ -22,7 +22,7 @@ max-width: 1200px;
 }
 .divider{
     width: 1px;
-    height: 420px;
+    height: 450px;
     background: #FFFFFF;
     border: 1px solid rgba(233,233,233,0.76);
     margin: 50px 30px 0;
@@ -38,7 +38,8 @@ max-width: 1200px;
     border-radius: 8px;
     display: flex;
     padding: 0 24px;
-    margin-bottom: 12px;
+    margin-top: 32px;
+    margin-bottom: 40px;
 
 }
 .intro-single{
@@ -59,14 +60,14 @@ max-width: 1200px;
     display: grid;
     grid-gap: 16px;
     grid-template-columns: 204px 204px 204px;
-    grid-template-rows: 168px 168px;
+    /*grid-template-rows: 168px 168px;*/
 }
 .cal-card{
     background: #FFFFFF;
     border-radius: 20px;
     border: 1px solid rgba(233,233,233,0.76);
     backdrop-filter: blur(0px);
-    padding: 28px 24px 0;
+    padding: 28px 24px 28px;
 }
 .form{
     flex: 1;
@@ -77,6 +78,8 @@ max-width: 1200px;
     color: #666666;
     line-height: 28px;
     margin-bottom: 12px;
+    display: flex;
+    align-items: center;
     img{
         height: 28px;
         width: 28px;
@@ -91,6 +94,10 @@ max-width: 1200px;
     line-height: 28px;
     display: flex;
     gap: 4px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex-wrap: wrap;
 }
 .cal-card-info2{
     font-weight: 400;
@@ -104,4 +111,10 @@ max-width: 1200px;
     font-size: 12px;
     color: #333333;
     line-height: 28px;
+}
+.ant-form-item{
+    margin-bottom: 20px !important;
+}
+.ant-form-item .ant-form-item-label >label::after{
+    content: none !important;
 }

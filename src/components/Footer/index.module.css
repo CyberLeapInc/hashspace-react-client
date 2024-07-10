@@ -20,6 +20,7 @@
     color: #999999;
     text-align: left;
     font-style: normal;
+    align-items: center;
 }
 .footerContainerMobile{
     display: flex;

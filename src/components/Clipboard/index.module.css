@@ -18,6 +18,12 @@
     user-select: none;
 }
 .noBgWrapper{
+    @media screen and (max-width: 768px) {
+        height: 16px;
+        line-height: 16px;
+        font-size: 10px;
+        padding-left: 0;
+    }
     height: 32px;
     border-radius: 8px;
     text-align: center;
@@ -51,6 +57,10 @@
     color: #3C53FF;
 }
 .copyIcon{
+    @media screen and (max-width: 768px) {
+        height: 12px;
+        width: 12px;
+    }
     height: 16px;
     width: 14px;
     margin-left: 6px;

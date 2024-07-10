@@ -1408,3 +1408,10 @@ export const getElectricityCanUseLeftDays = (amount: string): Promise<{
         amount
     })
 }
+
+export const verifyCurrentCode = (code: string, session_id: string): Promise<{}> => {
+    return axiosInstance.post('/api/auth/bind-phone/verify', {
+        code,
+        session_id
+    })
+}

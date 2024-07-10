@@ -1,0 +1,11 @@
+.selectOptionCus{
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
+    height: 52px;
+    line-height: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

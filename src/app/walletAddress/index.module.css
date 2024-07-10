@@ -31,7 +31,10 @@
     margin-top: 24px;
 }
 .mobileContent{
-    line-height: 24px;
+    line-height: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 .content{
     line-height: 58px;

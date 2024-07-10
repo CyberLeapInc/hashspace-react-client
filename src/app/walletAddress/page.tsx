@@ -263,7 +263,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                     <Image width={58} src={icon} alt={currency}/>
                 </div>
                 <div className={state.isMobile ? css.mobileContent : css.content}>
-                    <div style={styles.label}><span style={{width: state.isMobile? '' : '180px'}}>{currency}</span> <span className={state.isMobile? css.remarkMobile : css.remark} style={{width: state.isMobile?'' : '100px'}}>{addressDict['remark']}</span></div>
+                    <div style={styles.label}><span style={{width: state.isMobile? '' : '180px', fontSize: state.isMobile ? '14px' : '16px'}}>{currency}</span> <span className={state.isMobile? css.remarkMobile : css.remark} style={{width: state.isMobile?'' : '100px'}}>{addressDict['remark']}</span></div>
                     <div style={styles.address}>
                         { addressDict['address'] && <Clipboard noBg={true} str={addressDict['address']} maxTextWidth={state.isMobile? '150px' : ''} />}
                     </div>

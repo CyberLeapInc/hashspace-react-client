@@ -16,8 +16,7 @@ import {PhoneBind} from "@/components/PhoneBind";
 import moment from "moment";
 
 
-
-const Tips = ({text = '', type=''}) => {
+const Tips = ({text = '', type = ''}) => {
     return (
         <span className={cn('tips-cus', `tips-cus-${type}`)}>{text}</span>
     )
@@ -51,13 +50,12 @@ const columns = [
 ];
 
 
-
 const SecurityCenter: React.FC = () => {
     const {state, dispatch} = useContext(MyContext);
-    const [isModalOpen, setIsOpenModal] =  useState(false);
-    const [isShowUnbindTotpModal, setIsShowUnbindTotpModal] =  useState(false);
-    const [isShowBindPhone, setIsShowBindPhone] =  useState(false);
-    const [isShowUnbindPhone, setIsShowUnbindPhone] =  useState(false);
+    const [isModalOpen, setIsOpenModal] = useState(false);
+    const [isShowUnbindTotpModal, setIsShowUnbindTotpModal] = useState(false);
+    const [isShowBindPhone, setIsShowBindPhone] = useState(false);
+    const [isShowUnbindPhone, setIsShowUnbindPhone] = useState(false);
     let [list, setList] = useState<LoginHistoryItem[]>([])
     let [counter, setCounter] = useState(0)
     const closeModal = () => {
@@ -74,7 +72,7 @@ const SecurityCenter: React.FC = () => {
         })
     }
     const handleOnBindPhoneSuccess = () => {
-        setCounter(counter+1)
+        setCounter(counter + 1)
         setIsShowBindPhone(false)
         getUserInfo().then(res => {
             dispatch({
@@ -83,8 +81,8 @@ const SecurityCenter: React.FC = () => {
             })
         })
     }
-    const handleOnUnbindTotpSuccess =() => {
-        setCounter(counter+1)
+    const handleOnUnbindTotpSuccess = () => {
+        setCounter(counter + 1)
         setIsShowUnbindTotpModal(false)
         getUserInfo().then(res => {
             dispatch({
@@ -112,9 +110,15 @@ const SecurityCenter: React.FC = () => {
         getLoginHistory().then(res => {
             setList(res.list)
         })
-        return () => {}
+        return () => {
+        }
     })
-    return <div style={{minHeight: 'calc(100vh - 232px)', margin: state.isMobile? '0 16px' : '',paddingTop: '25px',paddingBottom: '25px'}}>
+    return <div style={{
+        minHeight: 'calc(100vh - 232px)',
+        margin: state.isMobile ? '0 16px' : '',
+        paddingTop: '25px',
+        paddingBottom: '25px'
+    }}>
         {state.userInfo.email && <div className={'container-my'}>
             <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
                 <Card bordered={false}>
@@ -146,7 +150,7 @@ const SecurityCenter: React.FC = () => {
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'} style={{
-                                marginRight: state.isMobile? '8px' : '16px'
+                                marginRight: state.isMobile ? '8px' : '16px'
                             }}>
                                 <Image width={state.isMobile ? 40 : 58} src={IconGoogle} alt={'google'}/>
                             </div>
@@ -156,13 +160,30 @@ const SecurityCenter: React.FC = () => {
                                           type={state.userInfo.has_totp ? 'success' : 'danger'}/>
                                 </Flex>
                                 {
-                                    !state.isMobile && <DividerCus margin={6} visible={false} />
+                                    !state.isMobile && <DividerCus margin={6} visible={false}/>
                                 }
-                                <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400,}}>保护你的账户安全</div>
+                                <div style={{
+                                    fontSize: state.isMobile ? '12px' : '14px',
+                                    color: '#666',
+                                    fontWeight: 400,
+                                }}>保护你的账户安全
+                                </div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: '80px'}} onClick={handleBindGoogle}>
+                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: state.isMobile ? '' : '80px'}}
+                                 onClick={handleBindGoogle}>
                                 {
-                                    state.userInfo.has_totp ? <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"text"}>解绑</Button> : <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"primary"} >绑定</Button>
+                                    state.userInfo.has_totp ?
+                                        <Button
+                                            className={cn('cus-middle-button', state.isMobile && 'bbb')}
+                                            shape={"round"}
+                                            type={"text"}
+                                        >解绑</Button> :
+                                        <Button
+                                            className={cn('cus-middle-button', state.isMobile && 'bbb')}
+                                            size={state.isMobile ? "small" : 'large'}
+                                            shape={"round"}
+                                            type={"primary"}
+                                        >绑定</Button>
                                 }
 
                             </div>
@@ -170,7 +191,7 @@ const SecurityCenter: React.FC = () => {
                         <DividerCus></DividerCus>
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'} style={{
-                                marginRight: state.isMobile? '8px' : '16px'
+                                marginRight: state.isMobile ? '8px' : '16px'
                             }}>
                                 <Image width={state.isMobile ? 40 : 58} src={IconPhone} alt={'google'}/>
                             </div>
@@ -180,16 +201,26 @@ const SecurityCenter: React.FC = () => {
                                           type={state.userInfo.phone_number ? 'success' : 'danger'}/>
                                 </Flex>
                                 {
-                                    !state.isMobile && <DividerCus margin={6} visible={false} />
+                                    !state.isMobile && <DividerCus margin={6} visible={false}/>
                                 }
-                                <div style={{fontSize: state.isMobile? '12px' : '14px', color: '#666', fontWeight: 400}}>保护你的账户安全</div>
+                                <div style={{
+                                    fontSize: state.isMobile ? '12px' : '14px',
+                                    color: '#666',
+                                    fontWeight: 400
+                                }}>保护你的账户安全
+                                </div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: '80px'}} onClick={() => {
+                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: state.isMobile ? '' : '80px'}}
+                                 onClick={() => {
                                 setCounter(++counter)
                                 setIsShowBindPhone(true)
                             }}>
                                 {
-                                    state.userInfo.phone_number ? <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"text"} >换绑</Button> : <Button className={'cus-middle-button'} size={"large"} shape={"round"} type={"primary"} >绑定</Button>
+                                    state.userInfo.phone_number ?
+                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
+                                                type={"text"}>换绑</Button> :
+                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
+                                                type={"primary"}>绑定</Button>
                                 }
 
                             </div>
@@ -211,16 +242,18 @@ const SecurityCenter: React.FC = () => {
 
             </Space>
         </div>}
-        <Modal title={'Google验证'} open={isModalOpen} style={{maxHeight: '600px'}} width={820} onCancel={() => closeModal()} footer={''}>
+        <Modal title={'Google验证'} open={isModalOpen} style={{maxHeight: '600px'}} width={820}
+               onCancel={() => closeModal()} footer={''}>
             {isModalOpen && <TwoFactorAuth key={counter} onSuccess={() => handleOnSuccess()}></TwoFactorAuth>}
         </Modal>
         <Modal title={'解绑Google验证'} open={isShowUnbindTotpModal} width={420} footer={''} onCancel={() => {
             setIsShowUnbindTotpModal(false)
-            setCounter(counter+1)
+            setCounter(counter + 1)
         }}>
-            <UnbindTowFactorAuth  key={counter} onSuccess={() =>handleOnUnbindTotpSuccess()}></UnbindTowFactorAuth>
+            <UnbindTowFactorAuth key={counter} onSuccess={() => handleOnUnbindTotpSuccess()}></UnbindTowFactorAuth>
         </Modal>
-        <Modal title={'绑定手机号'} open={isShowBindPhone} width={420} footer={''} onCancel={() => setIsShowBindPhone(false)}>
+        <Modal title={'绑定手机号'} open={isShowBindPhone} width={420} footer={''}
+               onCancel={() => setIsShowBindPhone(false)}>
             <PhoneBind onSuccess={() => handleOnBindPhoneSuccess()} key={counter}></PhoneBind>
         </Modal>
     </div>

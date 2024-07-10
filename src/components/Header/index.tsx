@@ -12,7 +12,7 @@ import Link from "next/link";
 import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {getUserInfo, logout} from "@/service/api";
-import Logo from "../../../public/logo.png";
+import Logo from "../../../public/logo-group.png";
 
 
 import css from './index.module.css'
@@ -159,8 +159,9 @@ export const Header: React.FC = () => {
         >
             <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px',color: '#666'}}>
                 <div className="logospace">
-                    <Image className="label_2" src={Logo} alt={'logo'}/>
-                    Hash Space
+                    <Image style={{
+                        width: '152px'
+                    }} width={152} src={Logo} alt={'logo'}/>
                 </div>
                 <div>
                     <div className={css.top}>
@@ -215,7 +216,7 @@ export const Header: React.FC = () => {
                                     云算力
                                 </Link>
                                 <Link href="/#question" legacyBehavior passHref>
-                                    <span className={css.menuBtn}>常见问题</span>
+                                    常见问题
                                 </Link>
                                 <Link href="/calculator" legacyBehavior passHref>
                                     计算器
@@ -249,8 +250,7 @@ export const Header: React.FC = () => {
             >
                 <div className="container-my flex h-16 max-w-screen-2xl items-center" style={{'gap': '0',color: '#666'}}>
                     <div className="logospace">
-                        <Image className="label_2" src={Logo} alt={'logo'}/>
-                        Hash Space
+                        <Image width={152} src={Logo} alt={'logo'}/>
                     </div>
                     <Link className={css.menuBtn} href="/" legacyBehavior passHref>
                         <span className={css.menuBtn}>首页</span>

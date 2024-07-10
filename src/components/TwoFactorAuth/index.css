@@ -5,6 +5,7 @@
 }
 .step-index{
     width: 30px;
+    min-width: 30px;
     height: 30px;
     color:#3C53FF;
     background-color: rgba(60, 83, 255, 0.1);

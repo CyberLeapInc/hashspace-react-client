@@ -4,7 +4,7 @@ import {CheckboxProps, message} from 'antd';
 import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
 import {ActionType, MyContext} from "@/service/context";
 import { useRouter } from 'next/navigation';
-import Logo from '../../../public/logo.png'
+import Logo from '../../../public/logo-group.png'
 import {cloudFlareSiteKey} from "@/lib/constant";
 import css from './index.module.css'
 
@@ -147,8 +147,7 @@ const CryptoPage: React.FC = () => {
                     {
                         !state.isMobile && (
                             <div className={css.logospace}>
-                                <Image className={css.logoImg} src={Logo} alt={'logo'}/>
-                                Hash Space
+                                <Image width={134} className={css.logoImg} src={Logo} alt={'logo'}/>
                             </div>
                         )
                     }
@@ -167,6 +166,10 @@ const CryptoPage: React.FC = () => {
                                 {
                                     status !== 'solved' && <Turnstile
                                         key={captchaRefreshKey}
+                                        style={{
+                                            marginTop: '10px',
+                                            width: '160px !important'
+                                        }}
                                         onError={() => setStatus('error')}
                                         onExpire={() => {
                                             setStatus('expired')

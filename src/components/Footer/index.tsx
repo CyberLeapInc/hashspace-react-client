@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo from "../../../public/logo.png";
+import Logo from "../../../public/logo-group.png";
 import TwitterPic from "../../../public/twitter@2x.png";
 import TgPic from "../../../public/tg@2x.png";
 import EmailPic from "../../../public/email@2x.png";
@@ -14,9 +14,8 @@ export const Footer = () => {
     return <>
         <div className={css.footerCus} id={'footer'}>
             <div className={cn(css.footerContainer, state.isMobile && css.footerContainerMobile)}>
-                <div className="logospace">
-                    <Image className="label_2" src={Logo} alt={'logo'}/>
-                    Hash Space
+                <div>
+                    <Image width={136} src={Logo} alt={'logo'}/>
                 </div>
                 <div className={css.agreementsList} style={{
                     paddingTop: state.isMobile ? '20px' : '0',

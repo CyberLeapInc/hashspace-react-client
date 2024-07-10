@@ -4,17 +4,18 @@ import calAllgain from '../../../public/cal-allgain.png'
 import calAllPay from '../../../public/cal-allpay.png'
 import calDailyGain from '../../../public/cal-dailygain.png'
 import calPayBackDay from '../../../public/cal-paybackday.png'
-import calPayBackMoney from '../../../public/cal-paybackmoney.png'
+import calPayBackMoney from '../../../public/cal-money.png'
 import calProfit from '../../../public/cal-profit.png'
 import Image from "next/image";
 import {Button, Form, Input, Select} from 'antd';
 
 import './index.css'
+import css from './index.module.css'
 import {fullRevenue, FullRevenueResponse, getProductList, Good, GoodListItem, GoodWrapper} from "@/service/api";
 import {MyContext} from "@/service/context";
 import big from "big.js";
-import {undefined} from "zod";
-import {parseHashrateByNumber} from "@/lib/utils";
+import {formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
+import IconList from "@/components/IconList";
 
 interface CurrencyListSelectorProps {
     goodItem: GoodListItem | null;
@@ -62,7 +63,7 @@ const CurrencyListSelector = ({
         {
             good?.currency.map((item)=> {
                 return <Form.Item label={`预期${item}币价`} key={item} >
-                    <Input type={'number'} value={getValue(item)} onChange={(e) => handleChange(item, e)}/>
+                    <Input addonAfter={<div>USDT</div>} type={'number'} value={getValue(item)} onChange={(e) => handleChange(item, e)}/>
                 </Form.Item>
             })
         }
@@ -76,7 +77,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     const [difficultyInner, setDifficultyInner] = useState<string>('')
     const rangeList = [-0.05, 0, 0.05]
     useEffect(() => {
-        state.chainList.find((chain) => {
+        state?.chainList?.find((chain) => {
             if (chain.currency === currency) {
                 console.log(chain.difficulty)
                 setDifficultyInner(chain.difficulty)
@@ -101,18 +102,26 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     }
     return <div>
         <Form.Item label="预期难度">
-            <Input type={'number'} value={difficultyInner} onChange={handleDifficulty}/>
+            <Input style={{
+                textAlign: 'center',
+                fontWeight: '400 !important',
+                fontSize: '14px',
+                color: '#333333 !important',
+            }}
+                   value={difficultyInner}
+                   onChange={handleDifficulty}
+            />
         </Form.Item>
         <div style={{
             display: 'flex',
             gap: '9px',
             marginLeft: '100px',
-            marginTop: '-15px',
-            marginBottom: '30px'
+            marginTop: '-10px',
+            marginBottom: '40px'
         }}>
             {
                 rangeList.map((item) => {
-                    return <Button onClick={() => handleQuickChangeDifficulty(item)} key={item} style={{flex: 1}} size={'small'}>{item * 100}%</Button>
+                    return <Button onClick={() => handleQuickChangeDifficulty(item)} key={item} style={{flex: 1, height:'32px', borderRadius: '8px', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7', color: '#333333', fontWeight: 500}} size={'small'}>{item * 100}%</Button>
                 })
             }
         </div>
@@ -142,10 +151,14 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
     return (
         <div className={'intro-title'}>
             {
-                currencyListInner.length > 1 ? currencyListInner.map((item) => {
-                    return <div className={'intro-single'} key={item}>
-                        <span className={'intro-label'}>{item}价格：</span>
-                        <span className={'intro-value'}>{currencyPriceInner[item]}</span>
+                currencyListInner.length > 1 ? currencyListInner.map((currency) => {
+                    return <div className={'intro-single'} style={{textAlign:'center'}} key={currency}>
+                        <span className={'intro-label'}>{currency}价格：</span>
+                        <span className={'intro-value'}>${
+                            Number(formatThousands(state?.chainList?.find((item) => {
+                                return item.currency === currency
+                            })?.last_usdt_price || '')).toFixed(getToFixedLength())
+                        }</span>
                     </div>
                 }) : null
             }
@@ -154,21 +167,41 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                     <>
                         <div className={'intro-single'}>
                             <span className={'intro-label'}>BTC价格：</span>
-                            <span className={'intro-value'}>${currencyPriceInner['BTC']}</span>
+                            <span className={'intro-value'}>${formatThousands(state?.chainList?.find((item) => {
+                                return item.currency === 'BTC'
+                            })?.last_usdt_price || '')}</span>
                         </div>
-                        <div className={'intro-single'}>
+                        <div className={'intro-single'} style={{textAlign: 'center'}}>
                             <span className={'intro-label'}>挖矿难度：</span>
-                            <span className={'intro-value'}>{diffculity['BTC'] && (parseHashrateByNumber(Number(diffculity['BTC'])).hashrate + parseHashrateByNumber(Number(diffculity['BTC'])).unit)}</span>
+                            <span className={'intro-value'}>{state?.chainList?.find((item) => {
+                                return item.currency === 'BTC'
+                            })?.difficulty && (parseHashrateByNumber(
+                                Number(state?.chainList?.find((item) => {
+                                    return item.currency === 'BTC'
+                                })?.difficulty)
+                            ).hashrate + parseHashrateByNumber(
+                                Number(state?.chainList?.find((item) => {
+                                    return item.currency === 'BTC'
+                                })?.difficulty)
+                            ).unit)}</span>
                         </div>
-                        <div className={'intro-single'}>
-                            <span className={'intro-label'}>全网算力：</span>
-                            <span className={'intro-value'}>{parseHashrateByNumber(Number(networkHashrate)).hashrate + parseHashrateByNumber(Number(networkHashrate)).unit}H/s</span>
+                        <div className={'intro-single'} style={{textAlign: 'right'}}>
+                            <span className={'intro-label'}>全网算力: </span>
+                            <span className={'intro-value'}>{parseHashrateByNumber(Number(networkHashrate)).hashrate + ' ' + parseHashrateByNumber(Number(networkHashrate)).unit}H/s</span>
                         </div>
                     </> : null
             }
 
         </div>
     )
+}
+
+const CurrencySelectorContent =  ({currency} : {currency: string}) => {
+    const [currencyList, setCurrencyList] = useState<string[]>([])
+    useEffect(() => {
+        setCurrencyList(currency === 'BTC' ? [currency] : ['DOGE', 'LTC'])
+    }, [currency]);
+    return <div className={css.selectOptionCus}> <IconList list={currencyList} />{currencyList.join('&')}</div>
 }
 
 const Calculator = () => {
@@ -180,7 +213,7 @@ const Calculator = () => {
     const [goodItem, setGoodItem] = useState<GoodListItem | null>(null)
     const [goodItemList, setGoodItemList] = useState<GoodListItem[]>([])
     const [goodId, setGoodId] = useState<string>('')
-    const [buyCount, setBuyCount] = useState<number>(1)
+    const [buyCount, setBuyCount] = useState<number>(100)
     const [currencyPrice, setCurrencyPrice] = useState<{ [key: string]: number | string }>({
         'BTC': 0,
         'LTC': 0,
@@ -210,9 +243,8 @@ const Calculator = () => {
         },
         total_cost: "",
         total_income: ""
-
     })
-    useEffect(() => {
+    const getFullRevenue = () => {
         fullRevenue({
             price: currencyPrice,
             difficulty: currentGood?.mining_currency === 'BTC' ? String(currencyDifficulty['BTC']) : '',
@@ -221,7 +253,7 @@ const Calculator = () => {
         }).then(res => {
             setFullRevenueData(res)
         })
-    }, [ currencyPrice, currencyDifficulty, goodId, buyCount]);
+    }
     useEffect(() => {
         getProductList().then(res => {
             const tempMineCurrencyList = res.goods.map((item) => {
@@ -249,6 +281,7 @@ const Calculator = () => {
                 setGoodItem(item.list && item.list[0] ? item.list[0] : null)
                 // @ts-ignore
                 setGoodId(item.list && item.list[0] ? item.list[0].good_id : '')
+                getFullRevenue()
             }
         })
     }
@@ -283,7 +316,7 @@ const Calculator = () => {
             const price = state.chainList.find((chain) => chain.currency === item)?.calculator_init_price || '0';
             res = big(data[item] || '0').times(price).add(res);
         })
-        return '≈$' + res.toFixed(2).toString();
+        return '≈$' + formatThousands(res.toFixed(getToFixedLength()));
     }
     return <div style={{height: 'calc(100vh - 232px)',paddingTop: '25px'}}>
         <div className={'cal-card-big'}>
@@ -300,7 +333,12 @@ const Calculator = () => {
                             {
                                 goodItem?.currency.map((item) => {
                                     return <div className={'cal-card-count2'} key={item}>
-                                        {big(fullRevenueData?.total_coin_income[item] || 0).toFixed(item === 'DOGE' ? 0: 8).toString()}
+                                        <span style={{
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
+                                            flexWrap: 'wrap',
+                                        }}>{}</span>
+                                        {formatThousands(big(fullRevenueData?.total_coin_income[item] || 0).toNumber().toFixed(getToFixedLength(item)))}
                                         <span  className={'small-text'}>{item}</span>
                                     </div>
                                 })
@@ -314,14 +352,14 @@ const Calculator = () => {
                                 <Image src={calAllPay} alt={'总支出'}></Image>
                                 总支出
                             </div>
-                            <div className={'cal-card-count2'}>${big(fullRevenueData?.total_cost || '0').toFixed(2)}</div>
+                            <div className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))}</div>
                         </div>
                         <div className={'cal-card'}>
                             <div className={'cal-card-title2'}>
                                 <Image src={calProfit} alt={'净利润'}></Image>
                                 净利润
                             </div>
-                            <div className={'cal-card-count2'}>${big(fullRevenueData?.net_income || '0').toFixed(2).toString()}</div>
+                            <div className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength()))}</div>
                         </div>
                         <div className={'cal-card'}>
                             <div className={'cal-card-title2'}>
@@ -331,7 +369,7 @@ const Calculator = () => {
                             {
                                 fullRevenueData.daily_coin_income ? Object.keys(fullRevenueData.daily_coin_income).map((item) => {
                                     return <div className={'cal-card-count2'} key={item}>
-                                        {big(fullRevenueData.daily_coin_income[item] || 0).toFixed(item === 'DOGE' ? 0: 8).toString()}
+                                        {formatThousands(big(fullRevenueData.daily_coin_income[item] || 0).toFixed(getToFixedLength(item)))}
                                         <span className={'small-text'}>{item}</span>
                                     </div>
                                 }) : null
@@ -343,7 +381,7 @@ const Calculator = () => {
                                 <Image src={calPayBackDay} alt={'回本天数'}></Image>
                                 回本天数
                             </div>
-                            <div className={'cal-card-count2'}>{fullRevenueData.payback_day || 0}天</div>
+                            <div className={'cal-card-count2'}>{formatThousands(fullRevenueData.payback_day || 0, false)}天</div>
                         </div>
                         {
                             goodItem?.mining_currency === 'BTC' ? (
@@ -353,7 +391,19 @@ const Calculator = () => {
                                         回本币价
                                     </div>
                                     <div
-                                        className={'cal-card-count2'}>${big(fullRevenueData?.payback_price || 0).toFixed(2).toString()}</div>
+                                        className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength()))}</div>
+                                </div>
+                            ):null
+                        }
+                        {
+                            goodItem?.mining_currency === 'LTC' ? (
+                                <div className={'cal-card'}>
+                                    <div className={'cal-card-title2'}>
+                                        <Image src={calPayBackMoney} alt={'回本币价'}></Image>
+                                        总电费
+                                    </div>
+                                    <div
+                                        className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))}</div>
                                 </div>
                             ):null
                         }
@@ -368,32 +418,36 @@ const Calculator = () => {
                         initialValues={{size: 'large'}}
                         onValuesChange={onFormLayoutChange}
                         size={'large'}
-                        style={{maxWidth: 1200, marginTop: '84px'}}
+                        style={{maxWidth: 1200, marginTop: '72px'}}
                     >
                         <Form.Item label="选择币种">
-                            <Select value={selectedMineCurrency} onSelect={handleCurrencyChange}>
+                            <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
                                 {mineCurrencyList.map((item) => {
-                                    return <Select.Option value={item} key={item}>{item}</Select.Option>
+                                    return <Select.Option value={item} key={item}>
+                                        <CurrencySelectorContent currency={item} />
+                                    </Select.Option>
                                 })}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="选择云算力">
-                            <Select value={goodId} onSelect={handleGoodItemChange}>
+                        <Form.Item label="选择套餐">
+                            <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
                                 {
                                     goodItemList.map((item) => {
-                                        return <Select.Option value={item.good_id} key={item.good_id}>{item.name}</Select.Option>
+                                        return <Select.Option value={item.good_id} key={item.good_id}>
+                                            <div className={css.selectOptionCus}>{item.name}</div>
+                                        </Select.Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                         <Form.Item label="算力数量">
-                            <Input type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>
+                            <Input addonAfter={<div>TH/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>
                         </Form.Item>
                         <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
                         {
                             goodItem?.mining_currency === 'BTC' ? <CurrencyDifficulty onChange={setCurrencyDifficulty} currency={goodItem.mining_currency || 'BTC'}/> : null
                         }
-                        <Button type="primary" shape="round" size={'large'} block>
+                        <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
                             开始计算
                         </Button>
                     </Form>

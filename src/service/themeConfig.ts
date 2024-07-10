@@ -33,7 +33,7 @@ export const themeConfig: ThemeConfig = {
             controlHeightLG: 52,
         },
         Input:{
-            colorBorder: '#A1A3AB',
+            colorBorder: '#E9E9E9',
             controlHeightLG: 52,
             fontSizeLG: 14,
             colorTextPlaceholder: '#999999',
@@ -42,6 +42,10 @@ export const themeConfig: ThemeConfig = {
             boxShadowTertiary: '0px 4px 12px rgba(0, 1, 0, 0.1)',
             boxShadowSecondary: '0px 4px 12px rgba(0, 1, 0, 0.1)',
             boxShadow: '0px 4px 12px rgba(0, 1, 0, 0.1)',
+        },
+        Select: {
+            controlHeightLG: 52,
+            lineHeightLG: 52,
         }
     },
 }

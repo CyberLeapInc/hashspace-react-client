@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import {CodeSender} from "@/components/ui/codeSender";
-import {bindPhoneFinish, bindPhoneStart, getPhoneCode} from "@/service/api";
+import {bindPhoneFinish, bindPhoneStart, getPhoneCode, verifyCurrentCode} from "@/service/api";
 import {Turnstile} from "@marsidev/react-turnstile";
 import {cloudFlareSiteKey} from "@/lib/constant";
 import {Space, Input, Button, message} from 'antd'
@@ -10,8 +10,8 @@ import {MyContext} from "@/service/context";
 import './index.css'
 
 export const PhoneBind = ({
-    onSuccess
-}: {
+                              onSuccess
+                          }: {
     onSuccess: () => void
 }) => {
     const [captchaRefreshKey, setCaptchaRefreshKey] = React.useState(0)
@@ -30,6 +30,7 @@ export const PhoneBind = ({
     const [phoneCountry, setPhoneCountry] = useState('1')
     const [sessionId, setSessionId] = useState('');
     const [isCurrentPhone, setIsCurrentPhone] = useState(false);
+    const [step, setStep] = useState(0);
     const getCode = (phoneNumber = '', phoneCountry = '', isCurrentCode = false) => {
         return getPhoneCode({
             session_id: sessionId,
@@ -45,6 +46,14 @@ export const PhoneBind = ({
             setSessionId(res.session_id)
         })
     })
+
+    const onVerifyCurrentCode = () => {
+        verifyCurrentCode(currentCode, sessionId).then(() => {
+            setStep(1)
+        }).catch(e => {
+            setCurrentCodeErrorStatus(true)
+        })
+    }
 
     const onConfirm = () => {
         setLoading(true);
@@ -83,7 +92,7 @@ export const PhoneBind = ({
 
     return (<div>
         {
-            state.userInfo.phone_country_code && (
+            (state.userInfo.phone_country_code && step === 0) && (
                 <div style={{
                     marginTop: '16px',
                 }}>
@@ -92,13 +101,15 @@ export const PhoneBind = ({
                         marginBottom: '14px'
                     }}>
                         <span>+</span>
-                        <Input disabled style={{width: '34px', color: '#999'}} bordered={false} size={"large"} maxLength={2} value={state.userInfo.phone_country_code}/>
-                        <Input disabled size={"large"}  bordered={false} style={{width: '80%',color: '#999'}} value={state.userInfo.phone_number} />
+                        <Input disabled style={{width: '34px', color: '#999'}} bordered={false} size={"large"} maxLength={2}
+                               value={state.userInfo.phone_country_code}/>
+                        <Input disabled size={"large"} bordered={false} style={{width: '80%', color: '#999'}}
+                               value={state.userInfo.phone_number}/>
                     </div>
                     <CodeSender
                         onError={() => {
                             setStatus('no')
-                            setCaptchaRefreshKey(prevState => prevState+1)
+                            setCaptchaRefreshKey(prevState => prevState + 1)
                         }}
                         errorStatus={currentCodeErrorStatus}
                         value={currentCode}
@@ -111,83 +122,99 @@ export const PhoneBind = ({
                             state.userInfo.phone_country_code,
                             true,
                         )}
-                        disabled={status !== 'solved'}
+                        disabled={false}
                     />
                     {
                         currentCodeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
                     }
+                    <Button
+                        type="primary" block size={'large'} shape={'round'}
+                        style={{
+                            height: '50px',
+                            marginTop: '40px'
+                        }}
+                        disabled={!(currentCode.length === 6 && !currentCodeErrorStatus)}
+                        onClick={onVerifyCurrentCode}
+                    >下一步</Button>
                 </div>
 
             )
         }
-        <div style={{
-            marginTop: '17px',
-            marginBottom: '17px'
-        }}>
-            <div className={'login-title-text'}>{
-                state.userInfo.has_phone ? '新手机号' : '手机号'
-            }</div>
+        {
+            ((state.userInfo.phone_country_code && step === 1) || (!state.userInfo.phone_country_code)) && (
+                <>
+                    <div style={{
+                        marginTop: '17px',
+                        marginBottom: '17px'
+                    }}>
+                        <div className={'login-title-text'}>{
+                            state.userInfo.has_phone ? '新手机号' : '手机号'
+                        }</div>
 
-            <div className={'phoneGroup'}>
-                <span>+</span>
-                <Input size={"large"} maxLength={2} style={{width: '34px'}} bordered={false} value={phoneCountry}
-                       placeholder={'区号'}
-                       onChange={(e) => {
-                           setPhoneCountry(e.target.value)
-                       }}/>
-                <Input size={"large"} style={{width: '80%'}} bordered={false} value={phoneNumber}
-                       placeholder={'请输入手机号'}
-                       onChange={(e) => {
-                           setPhoneNumber(e.target.value)
-                       }}/>
-            </div>
-        </div>
-        <CodeSender
-            onError={() => {
-                setStatus('no')
-                setCaptchaRefreshKey(prevState => prevState + 1)
-            }}
-            errorStatus={codeErrorStatus}
-            label={
-                state.userInfo.has_phone ? '新手机号验证码' : '验证码'
-            }
-            value={code}
-            onChange={(e) => {
-                setCode(e)
-                setCodeErrorStatus(false)
-            }}
-            onSend={() => getCode(
-                phoneNumber,
-                phoneCountry,
-            )}
-            disabled={status !== 'solved'}
-        />
-        {
-            codeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
+                        <div className={'phoneGroup'}>
+                            <span>+</span>
+                            <Input size={"large"} maxLength={2} style={{width: '34px'}} bordered={false}
+                                   value={phoneCountry}
+                                   placeholder={'区号'}
+                                   onChange={(e) => {
+                                       setPhoneCountry(e.target.value)
+                                   }}/>
+                            <Input size={"large"} style={{width: '80%'}} bordered={false} value={phoneNumber}
+                                   placeholder={'请输入手机号'}
+                                   onChange={(e) => {
+                                       setPhoneNumber(e.target.value)
+                                   }}/>
+                        </div>
+                    </div>
+                    <CodeSender
+                        onError={() => {
+                            setStatus('no')
+                            setCaptchaRefreshKey(prevState => prevState + 1)
+                        }}
+                        errorStatus={codeErrorStatus}
+                        label={
+                            state.userInfo.has_phone ? '新手机号验证码' : '验证码'
+                        }
+                        value={code}
+                        onChange={(e) => {
+                            setCode(e)
+                            setCodeErrorStatus(false)
+                        }}
+                        onSend={() => getCode(
+                            phoneNumber,
+                            phoneCountry,
+                        )}
+                        disabled={status !== 'solved'}
+                    />
+                    {
+                        codeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
+                    }
+                    {
+                        status !== 'solved' && <Turnstile
+                            onError={() => setStatus('error')}
+                            onExpire={() => {
+                                setStatus('expired')
+                            }}
+                            onSuccess={(token) => {
+                                setStatus('solved')
+                                setCloudFlareToken(token)
+                            }}
+                            siteKey={cloudFlareSiteKey}
+                            key={captchaRefreshKey}
+                        />
+                    }
+                    <Button
+                        type="primary" block size={'large'} shape={'round'}
+                        style={{
+                            height: '50px',
+                            marginTop: '40px'
+                        }}
+                        disabled={!(code.length === 6 && !codeErrorStatus && !loading) || (state.userInfo.has_phone && currentCode.length !== 6 && currentCodeErrorStatus)}
+                        onClick={onConfirm}
+                        loading={loading}
+                    >确认绑定</Button>
+                </>
+            )
         }
-        {
-            status !== 'solved' && <Turnstile
-                onError={() => setStatus('error')}
-                onExpire={() => {
-                    setStatus('expired')
-                }}
-                onSuccess={(token) => {
-                    setStatus('solved')
-                    setCloudFlareToken(token)
-                }}
-                siteKey={cloudFlareSiteKey}
-                key={captchaRefreshKey}
-            />
-        }
-        <Button
-            type="primary" block size={'large'} shape={'round'}
-            style={{
-                height: '50px',
-                marginTop: '40px'
-            }}
-            disabled={!(code.length === 6 && !codeErrorStatus && !loading) || (state.userInfo.has_phone && currentCode.length !== 6 && currentCodeErrorStatus)}
-            onClick={onConfirm}
-            loading={loading}
-        >确认绑定</Button>
     </div>)
 }
