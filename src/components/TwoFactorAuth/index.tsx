@@ -10,6 +10,7 @@ import {MyContext} from "@/service/context";
 import Clipboard from "@/components/Clipboard";
 import {QRCode} from "antd";
 import {CodeSender} from "@/components/ui/codeSender";
+import css from "@/app/login/index.module.css";
 
 export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
     const {state} = useContext(MyContext);
@@ -117,7 +118,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
             }}>
                 {
                     sessionId && <CodeSender
-                        immidity={true}
+                        immidity={false}
                         onError={() => {
                             setCodeErrorStatus(true)
                         }}
@@ -179,6 +180,10 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
 export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
     const {state} = useContext(MyContext);
     const [code, setCode] = useState('')
+    const [totpCode, setTotpCode] = useState('')
+
+    const [totpCodeErrorStatus, setTotpCodeErrorStatus] = useState(false);
+
     const [sessionId, setSessionId] = useState('')
     const [codeErrorStatus, setCodeErrorStatus] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
@@ -195,18 +200,20 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
         setLoading(true)
         unbindTotpFinish({
             code: code,
-            session_id: sessionId
+            session_id: sessionId,
+            totp: totpCode
         }).then(_ => {
-            console.log('success');
-            console.log(_)
             onSuccess()
         }).catch(e => {
-            console.log('eeeeeeee')
             messageApi.open({
                 type: 'error',
                 content: e.message,
             });
-            setCodeErrorStatus(true)
+            if (e.details.type === 'InvalidTOTP') {
+                setTotpCodeErrorStatus(true)
+            } else {
+                setCodeErrorStatus(true)
+            }
         }).finally(() => {
             setLoading(false)
         })
@@ -222,12 +229,10 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
     return (<div>
         <div className={'step-danger'}>解绑Google验证后，24h内禁止设置/修改地址</div>
         <div className={'step-info'}>验证码将发送至{state.userInfo.email}</div>
-        <div>
-            <div className={'login-title-text'}>邮箱验证码</div>
-        </div>
         {
             sessionId && <CodeSender
-                immidity={true}
+            label={'邮箱验证码'}
+                immidity={false}
                 onError={() => {
                     setCodeErrorStatus(true)
                 }}
@@ -245,12 +250,35 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
         {
             codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
         }
+        <div>
+            <div className={css.loginTitleText}>Google验证码</div>
+            <Input
+                status={totpCodeErrorStatus ? 'error' : ''}
+                maxLength={6}
+                type={'text'}
+                value={totpCode}
+                size={'large'}
+                onChange={(e) => {
+                    setTotpCode(e.target.value)
+                    setTotpCodeErrorStatus(false)
+                }}
+                allowClear
+                placeholder={'请输入Google验证码'}
+            ></Input>
+            {
+                totpCodeErrorStatus &&
+                <div className={css.errorMessage}>Google验证码错误</div>
+            }
+            <div
+                className={css.message}>请打开您的Google Authenticator，输入6位验证码
+            </div>
+        </div>
         <Button
             type="primary" block size={'large'} shape={'round'}
             style={{
                 marginTop: '40px'
             }}
-            disabled={!(code.length === 6 && !loading && !codeErrorStatus)}
+            disabled={!(code.length === 6 && !loading && !codeErrorStatus && !totpCodeErrorStatus && totpCode.length === 6)}
             loading={loading}
             onClick={onConfirm}
         >确认</Button>

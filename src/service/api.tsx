@@ -1,8 +1,49 @@
+'use client'
 import axios from "axios";
 import {message} from "antd";
+import React, {useContext} from 'react';
+import {LoadingComponent} from "@/service/loading";
+import {ActionType, MyContext} from "@/service/context";
+import {createRoot} from "react-dom/client";
+
+let isShow = false;
+let count = 0;
+
+const useShowLoading = ()=> {
+    if (document && typeof document !== undefined && typeof document !== 'undefined') {
+        'use client'
+        if (isShow) {
+            return
+        }
+        isShow = true;
+        count++
+        console.log(count)
+        let dom = document?.createElement('div');
+        dom.setAttribute('id', 'loading');
+        document?.body?.appendChild(dom);
+        createRoot(dom).render(<LoadingComponent/>);
+    }
+}
+
+// 隐藏loading
+const useHideLoading = () => {
+    if (document && typeof document !== undefined && typeof document !== 'undefined') {
+        'use client'
+        if (!isShow) return
+        isShow = false
+        count--
+        console.log(count)
+        if (document?.getElementById('loading')) {
+            // @ts-ignore
+            document?.body?.removeChild(document?.getElementById('loading'))
+        }
+    }
+}
 
 const ApiPrefix = 'https://api.test.hashspace.dev/'
 const ApiPrefixProd = 'https://api.hashspace.com/';
+
+
 
 const axiosInstance = axios.create({
     baseURL: ApiPrefix,
@@ -52,18 +93,23 @@ const whiteList = [
     '/login'
 ]
 
+axiosInstance.interceptors.request.use((config) => {
+    useShowLoading()
+    return config
+}, err => {
+    useHideLoading()
+    return Promise.reject(err)
+})
+
 axiosInstance.interceptors.response.use((res) => {
-    console.log(res)
+    useHideLoading()
     if (res.data.code === 13) {
         message.error('服务器错误')
-
         return Promise.reject(res.data)
     }
     return res.data
 }, (e) => {
-    console.log('!~~~~')
-    console.log(e)
-    console.log('!~~~~')
+    useHideLoading()
     const {response} = e;
     switch (response.status) {
         case status.NOT_LOGIN:
@@ -89,7 +135,7 @@ axiosInstance.interceptors.response.use((res) => {
 export const startLogin = function (email: string, captcha: string): Promise<{
     session_id: string;
     totp_enabled: boolean;
-
+    register: boolean
 }> {
     return axiosInstance.post('/auth/login/start', {
         email,
@@ -190,6 +236,7 @@ export const unbindTotpFinish = (data: {
                                       * 会话ID
                                       */
                                      session_id: string;
+    totp:string;
                                      [property: string]: any;
                                  }
 ) => {

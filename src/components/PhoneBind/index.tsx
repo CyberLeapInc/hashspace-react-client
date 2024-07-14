@@ -1,12 +1,12 @@
 import React, {useContext, useState} from "react";
+import {Input, Button, message} from 'antd'
 import {CodeSender} from "@/components/ui/codeSender";
-import {bindPhoneFinish, bindPhoneStart, getPhoneCode, verifyCurrentCode} from "@/service/api";
 import {Turnstile} from "@marsidev/react-turnstile";
 import {cloudFlareSiteKey} from "@/lib/constant";
-import {Space, Input, Button, message} from 'antd'
-import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {MyContext} from "@/service/context";
-
+import {PhoneInput} from 'react-international-phone';
+import {useOnMountUnsafe} from "@/lib/clientUtils";
+import {bindPhoneFinish, bindPhoneStart, getPhoneCode, verifyCurrentCode} from "@/service/api";
 import './index.css'
 
 export const PhoneBind = ({
@@ -21,6 +21,7 @@ export const PhoneBind = ({
     const [currentCode, setCurrentCode] = useState('')
     const [codeErrorStatus, setCodeErrorStatus] = useState(false);
     const [currentCodeErrorStatus, setCurrentCodeErrorStatus] = useState(false);
+    const [phoneErrorMessage, setPhoneErrorMessage] = useState('')
     const [loading, setLoading] = useState(false)
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -29,7 +30,6 @@ export const PhoneBind = ({
     const [phoneNumber, setPhoneNumber] = useState('');
     const [phoneCountry, setPhoneCountry] = useState('1')
     const [sessionId, setSessionId] = useState('');
-    const [isCurrentPhone, setIsCurrentPhone] = useState(false);
     const [step, setStep] = useState(0);
     const getCode = (phoneNumber = '', phoneCountry = '', isCurrentCode = false) => {
         return getPhoneCode({
@@ -47,16 +47,35 @@ export const PhoneBind = ({
         })
     })
 
+    const onPhoneError = (msg: string) => {
+        setCurrentCodeErrorStatus(true)
+        setCodeErrorStatus(true)
+        setPhoneErrorMessage(msg)
+    }
+    const onError = (e: any) => {
+        if (e.details.type === 'SessionExpired') {
+            onPhoneError('Session过期，请关闭后重试。')
+        } else if (e.details.type === 'InvalidCode') {
+            onPhoneError('手机号验证码错误')
+        } else if (e.details.type === 'NeedSendCode') {
+            onPhoneError('请先获取手机验证码')
+        }
+    }
+
     const onVerifyCurrentCode = () => {
+        setCurrentCodeErrorStatus(false)
+        setCodeErrorStatus(false)
         verifyCurrentCode(currentCode, sessionId).then(() => {
             setStep(1)
         }).catch(e => {
-            setCurrentCodeErrorStatus(true)
+            onError(e)
         })
     }
 
     const onConfirm = () => {
         setLoading(true);
+        setCurrentCodeErrorStatus(false)
+        setCodeErrorStatus(false)
         bindPhoneFinish({
             session_id: sessionId,
             code,
@@ -64,26 +83,7 @@ export const PhoneBind = ({
         }).then(() => {
             onSuccess()
         }).catch(e => {
-            if (e.details.type === 'SessionExpired') {
-                messageApi.open({
-                    type: 'error',
-                    content: 'Session过期，请关闭后重试。',
-                });
-            } else if (e.details.type === 'InvalidCode') {
-                console.log(e)
-                let errMessage = ''
-                if (e.details.is_current_phone) {
-                    setCurrentCodeErrorStatus(true)
-                    errMessage = '换绑手机号验证码错误'
-                } else {
-                    setCodeErrorStatus(true)
-                    errMessage = '手机号验证码错误'
-                }
-                messageApi.open({
-                    type: 'error',
-                    content: errMessage,
-                });
-            }
+            onError(e)
         }).finally(() => {
             setLoading(false)
         })
@@ -101,9 +101,11 @@ export const PhoneBind = ({
                         marginBottom: '14px'
                     }}>
                         <span>+</span>
-                        <Input disabled style={{width: '34px', color: '#999'}} bordered={false} size={"large"} maxLength={2}
+                        <Input type={'number'} disabled style={{width: '40px', color: '#999'}} bordered={false}
+                               size={"large"} maxLength={2}
                                value={state.userInfo.phone_country_code}/>
-                        <Input disabled size={"large"} bordered={false} style={{width: '80%', color: '#999'}}
+                        <Input type={'number'} disabled size={"large"} bordered={false}
+                               style={{width: '80%', color: '#999'}}
                                value={state.userInfo.phone_number}/>
                     </div>
                     <CodeSender
@@ -125,7 +127,7 @@ export const PhoneBind = ({
                         disabled={false}
                     />
                     {
-                        currentCodeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
+                        currentCodeErrorStatus && <div className={'errorMessage'}>{phoneErrorMessage}</div>
                     }
                     <Button
                         type="primary" block size={'large'} shape={'round'}
@@ -150,22 +152,18 @@ export const PhoneBind = ({
                         <div className={'login-title-text'}>{
                             state.userInfo.has_phone ? '新手机号' : '手机号'
                         }</div>
-
-                        <div className={'phoneGroup'}>
-                            <span>+</span>
-                            <Input size={"large"} maxLength={2} style={{width: '34px'}} bordered={false}
-                                   value={phoneCountry}
-                                   placeholder={'区号'}
-                                   onChange={(e) => {
-                                       setPhoneCountry(e.target.value)
-                                   }}/>
-                            <Input size={"large"} style={{width: '80%'}} bordered={false} value={phoneNumber}
-                                   placeholder={'请输入手机号'}
-                                   onChange={(e) => {
-                                       setPhoneNumber(e.target.value)
-                                   }}/>
-                        </div>
+                        <PhoneInput
+                            style={{
+                                display: 'flex'
+                            }}
+                            placeholder="Enter phone number"
+                            value={phoneNumber}
+                            onChange={(e, x) => {
+                                setPhoneCountry(x.country.dialCode)
+                                setPhoneNumber(e)
+                            }}/>
                     </div>
+
                     <CodeSender
                         onError={() => {
                             setStatus('no')
@@ -181,19 +179,22 @@ export const PhoneBind = ({
                             setCodeErrorStatus(false)
                         }}
                         onSend={() => getCode(
-                            phoneNumber,
+                            phoneNumber.replace(phoneCountry, "").replace('+', ''),
                             phoneCountry,
                         )}
-                        disabled={status !== 'solved'}
+                        disabled={status !== 'solved' || !phoneNumber.replace(phoneCountry, "").replace('+', '') || !phoneCountry}
                     />
                     {
-                        codeErrorStatus && <div className={'errorMessage'}>验证码错误</div>
+                        codeErrorStatus && <div className={'errorMessage'}>{phoneErrorMessage}</div>
                     }
                     {
                         status !== 'solved' && <Turnstile
                             onError={() => setStatus('error')}
                             onExpire={() => {
                                 setStatus('expired')
+                            }}
+                            style={{
+                                marginTop: '20px'
                             }}
                             onSuccess={(token) => {
                                 setStatus('solved')
@@ -207,7 +208,7 @@ export const PhoneBind = ({
                         type="primary" block size={'large'} shape={'round'}
                         style={{
                             height: '50px',
-                            marginTop: '40px'
+                            marginTop: status === 'solved' ? '40px' : '20px'
                         }}
                         disabled={!(code.length === 6 && !codeErrorStatus && !loading) || (state.userInfo.has_phone && currentCode.length !== 6 && currentCodeErrorStatus)}
                         onClick={onConfirm}

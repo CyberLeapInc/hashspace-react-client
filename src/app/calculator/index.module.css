@@ -9,3 +9,24 @@
     align-items: center;
     justify-content: center;
 }
+.rangeItem{
+    flex: 1;
+    height: 32px;
+    border-radius: 8px;
+    background-color: #F7F7F7;
+    border-color: #F7F7F7;
+    color: #333333;
+    font-weight: 500;
+}
+.rangeItemSelected{
+    background: rgba(60,83,255,0.05);
+    border-radius: 8px;
+    border: 1px solid #3C53FF;
+    color: #3C53FF;
+}
+.diffInput{
+    text-align: center;
+    font-weight: 400 !important;
+    font-size: 14px;
+    color: #333333 !important;
+}

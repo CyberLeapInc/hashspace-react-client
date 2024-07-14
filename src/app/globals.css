@@ -1,193 +1,446 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
-  @layer base {
+@layer base {
     :root {
-      --background: 0 0% 100%;
-      --foreground: 20 14.3% 4.1%;
+        --background: 0 0% 100%;
+        --foreground: 20 14.3% 4.1%;
 
-      --card: 0 0% 100%;
-      --card-foreground: 20 14.3% 4.1%;
+        --card: 0 0% 100%;
+        --card-foreground: 20 14.3% 4.1%;
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 20 14.3% 4.1%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 20 14.3% 4.1%;
 
-      --primary: 24 9.8% 10%;
-      --primary-foreground: 60 9.1% 97.8%;
+        --primary: 24 9.8% 10%;
+        --primary-foreground: 60 9.1% 97.8%;
 
-      --secondary: 60 4.8% 95.9%;
-      --secondary-foreground: 24 9.8% 10%;
+        --secondary: 60 4.8% 95.9%;
+        --secondary-foreground: 24 9.8% 10%;
 
-      --muted: 60 4.8% 95.9%;
-      --muted-foreground: 25 5.3% 44.7%;
+        --muted: 60 4.8% 95.9%;
+        --muted-foreground: 25 5.3% 44.7%;
 
-      --accent: 60 4.8% 95.9%;
-      --accent-foreground: 24 9.8% 10%;
+        --accent: 60 4.8% 95.9%;
+        --accent-foreground: 24 9.8% 10%;
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 60 9.1% 97.8%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 60 9.1% 97.8%;
 
-      --border: 20 5.9% 90%;
-      --input: 20 5.9% 90%;
-      --ring: 20 14.3% 4.1%;
+        --border: 20 5.9% 90%;
+        --input: 20 5.9% 90%;
+        --ring: 20 14.3% 4.1%;
 
-      --radius: 0.5rem;
+        --radius: 0.5rem;
     }
 
     .dark {
-      --background: 20 14.3% 4.1%;
-      --foreground: 60 9.1% 97.8%;
+        --background: 20 14.3% 4.1%;
+        --foreground: 60 9.1% 97.8%;
 
-      --card: 20 14.3% 4.1%;
-      --card-foreground: 60 9.1% 97.8%;
+        --card: 20 14.3% 4.1%;
+        --card-foreground: 60 9.1% 97.8%;
 
-      --popover: 20 14.3% 4.1%;
-      --popover-foreground: 60 9.1% 97.8%;
+        --popover: 20 14.3% 4.1%;
+        --popover-foreground: 60 9.1% 97.8%;
 
-      --primary: 60 9.1% 97.8%;
-      --primary-foreground: 24 9.8% 10%;
+        --primary: 60 9.1% 97.8%;
+        --primary-foreground: 24 9.8% 10%;
 
-      --secondary: 12 6.5% 15.1%;
-      --secondary-foreground: 60 9.1% 97.8%;
+        --secondary: 12 6.5% 15.1%;
+        --secondary-foreground: 60 9.1% 97.8%;
 
-      --muted: 12 6.5% 15.1%;
-      --muted-foreground: 24 5.4% 63.9%;
+        --muted: 12 6.5% 15.1%;
+        --muted-foreground: 24 5.4% 63.9%;
 
-      --accent: 12 6.5% 15.1%;
-      --accent-foreground: 60 9.1% 97.8%;
+        --accent: 12 6.5% 15.1%;
+        --accent-foreground: 60 9.1% 97.8%;
 
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 60 9.1% 97.8%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 60 9.1% 97.8%;
 
-      --border: 12 6.5% 15.1%;
-      --input: 12 6.5% 15.1%;
-      --ring: 24 5.7% 82.9%;
+        --border: 12 6.5% 15.1%;
+        --input: 12 6.5% 15.1%;
+        --ring: 24 5.7% 82.9%;
     }
-  }
+}
 
-  @layer base {
+@layer base {
     * {
-      @apply border-border;
+        @apply border-border;
     }
+
     body {
-      @apply bg-background text-foreground;
+        @apply bg-background text-foreground;
     }
-  }
+}
 
 .data-\[state\=active\]\:bg-background[data-state=active] {
-  background: #3C53FF !important;
-  color: white !important;
+    background: #3C53FF !important;
+    color: white !important;
 }
-.container-my{
-  max-width: 1200px;
-  margin: 0 auto;
+
+.container-my {
+    max-width: 1200px;
+    margin: 0 auto;
 }
-.bg-gray{
-  background-color: #F6F7F8;
+
+.bg-gray {
+    background-color: #F6F7F8;
 }
+
 .ant-slider-handle {
-  height: 16px !important;
-  width: 14px !important;
-  margin-top: -3px !important;
+    height: 16px !important;
+    width: 14px !important;
+    margin-top: -3px !important;
 
 }
-.ant-slider-handle::before{
-  display: none;
-  /*height: 16px !important;*/
-  /*  width: 14px !important;*/
+
+.ant-slider-handle::before {
+    display: none;
+    /*height: 16px !important;*/
+    /*  width: 14px !important;*/
 }
-.ant-slider-handle::after{
-  border-radius: 3px !important;
-  margin: 0 !important;
-  height: 16px !important;
-  width: 14px !important;
-  left: 0 !important;
-  top: 0 !important;
-  box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.14) !important;
-  background-image: url("../../public/handler_background.png");
-  background-size: cover;
+
+.ant-slider-handle::after {
+    border-radius: 3px !important;
+    margin: 0 !important;
+    height: 16px !important;
+    width: 14px !important;
+    left: 0 !important;
+    top: 0 !important;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.14) !important;
+    background-image: url("../../public/handler_background.png");
+    background-size: cover;
 }
-.ant-table-cell::before{
-  content: none !important;
+
+.ant-table-cell::before {
+    content: none !important;
 }
-.ant-table-thead{
-  height: 70px !important;
-  background-color: white !important;
-  .ant-table-cell{
-    color: rgba(51,51,51,0.6) !important;
+
+.ant-table-thead {
+    height: 70px !important;
     background-color: white !important;
-    font-weight: 400 !important;
-    font-size: 16px !important;
-  }
+
+    .ant-table-cell {
+        color: rgba(51, 51, 51, 0.6) !important;
+        background-color: white !important;
+        font-weight: 400 !important;
+        font-size: 16px !important;
+    }
 }
-.ant-table-container{
-  border: 1px solid rgba(233,233,233,0.76) !important;
-  border-radius: 12px !important;
-  overflow-y: hidden !important;
+
+.ant-table-container {
+    border: 1px solid rgba(233, 233, 233, 0.76) !important;
+    border-radius: 12px !important;
+    overflow-y: hidden !important;
 }
-.ant-table-cell-fix-left-last::after{
-  content: none !important;
+
+.ant-table-cell-fix-left-last::after {
+    content: none !important;
 }
-.ant-table-expanded-row-fixed{
-  padding: 0 !important;
+
+.ant-table-expanded-row-fixed {
+    padding: 0 !important;
 }
-.ant-checkbox+span {
-  padding-inline-end: 0px !important;
+
+.ant-checkbox + span {
+    padding-inline-end: 0px !important;
 }
-.ant-modal-content{
-  padding: 32px !important;
-  border-radius: 20px !important;
+
+.ant-modal-content {
+    padding: 32px !important;
+    border-radius: 20px !important;
 }
-.ant-modal-title{
-  line-height: 37px !important;
-  font-weight: 600 !important;
-  font-size: 20px !important;
-  color: #333333;
+
+.ant-modal-title {
+    line-height: 37px !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    color: #333333;
 }
-.ant-card-body{
-  padding: 32px 40px !important;
+
+.ant-card-body {
+    padding: 32px 40px !important;
 }
-.ant-popover-inner{
-  box-shadow:  0px 0px 16px 0px rgba(7,48,48,0.11) !important;
+
+.ant-popover-inner {
+    box-shadow: 0px 0px 16px 0px rgba(7, 48, 48, 0.11) !important;
 }
-.ant-modal-mask{
-  backdrop-filter: blur(5px) !important;
+
+.ant-modal-mask {
+    backdrop-filter: blur(5px) !important;
 }
-.ant-modal-footer{
-  margin-top: 0 !important;
+
+.ant-modal-footer {
+    margin-top: 0 !important;
 }
-.ant-modal-close{
-  top: 26px !important;
+
+.ant-modal-close {
+    top: 26px !important;
     right: 26px !important;
 }
-.ant-layout{
-  background-color: #f6f7f8;
+
+.ant-layout {
+    background-color: #f6f7f8;
 }
-.ant-input-group-addon{
-  background-color: white !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  color: #333333 !important;
+
+.ant-input-group-addon {
+    background-color: white !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #333333 !important;
 }
-.ant-input-group >.ant-input:first-child{
-  border-right: none;
-  text-align: center;
+
+.ant-input-group > .ant-input:first-child {
+    border-right: none;
+    text-align: center;
 }
-.ant-select-selector{
-  border-color: #E9E9E9 !important;
+
+.ant-select-selector {
+    border-color: #E9E9E9 !important;
 }
-.ant-layout-content{
-  min-height: 800px !important;
-  overflow-y: scroll !important;
+
+.ant-layout-content {
+    min-height: 800px !important;
+    overflow-y: scroll !important;
 }
-.ant-form-item{
-  justify-content: space-between;
+
+.ant-form-item {
+    justify-content: space-between;
 }
-.ant-form-item-label{
+
+.ant-form-item-label {
     font-weight: 500 !important;
     font-size: 16px !important;
     color: #333333 !important;
-  text-align: left !important;
-  margin-top: 6px !important;
+    text-align: left !important;
+    margin-top: 6px !important;
+}
+
+.PhoneInputCountryIcon {
+    width: 25px;
+}
+
+.PhoneInputCountrySelect {
+    width: 80px;
+}
+
+.PhoneInputCountry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PhoneInputInput {
+    flex: 1;
+}
+:root{
+  --react-international-phone-height: 52px;
+  --react-international-phone-border-radius: 12px;
+}
+
+.react-international-phone-country-selector {
+    position: relative
+}
+
+.react-international-phone-country-selector-button {
+    display: flex;
+    height: var(--react-international-phone-height, 52px);
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--react-international-phone-country-selector-border-color, var(--react-international-phone-border-color, gainsboro));
+    margin: 0;
+    appearance: button;
+    -webkit-appearance: button;
+    background-color: var(--react-international-phone-country-selector-background-color, var(--react-international-phone-background-color, white));
+    cursor: pointer;
+    text-transform: none;
+    user-select: none;
+  width: 80px;
+}
+
+.react-international-phone-country-selector-button:hover {
+    background-color: var(--react-international-phone-country-selector-background-color-hover, whitesmoke)
+}
+
+.react-international-phone-country-selector-button--hide-dropdown {
+    cursor: auto
+}
+
+.react-international-phone-country-selector-button--hide-dropdown:hover {
+    background-color: transparent
+}
+
+.react-international-phone-country-selector-button__button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.react-international-phone-country-selector-button__flag-emoji {
+    margin: 0 4px
+}
+
+.react-international-phone-country-selector-button__flag-emoji--disabled {
+    opacity: .75
+}
+
+.react-international-phone-country-selector-button__dropdown-arrow {
+    border-top: var(--react-international-phone-country-selector-arrow-size, 4px) solid var(--react-international-phone-country-selector-arrow-color, #777);
+    border-right: var(--react-international-phone-country-selector-arrow-size, 4px) solid transparent;
+    border-left: var(--react-international-phone-country-selector-arrow-size, 4px) solid transparent;
+    margin-right: 4px;
+    transition: all .1s ease-out
+}
+
+.react-international-phone-country-selector-button__dropdown-arrow--active {
+    transform: rotateX(180deg)
+}
+
+.react-international-phone-country-selector-button__dropdown-arrow--disabled {
+    border-top-color: var(--react-international-phone-disabled-country-selector-arrow-color, #999)
+}
+
+.react-international-phone-country-selector-button--disabled {
+    background-color: var(--react-international-phone-disabled-country-selector-background-color, var(--react-international-phone-disabled-background-color, whitesmoke));
+    cursor: auto
+}
+
+.react-international-phone-country-selector-button--disabled:hover {
+    background-color: var(--react-international-phone-disabled-country-selector-background-color, var(--react-international-phone-disabled-background-color, whitesmoke))
+}
+
+.react-international-phone-flag-emoji {
+    width: var(--react-international-phone-flag-width, 24px);
+    height: var(--react-international-phone-flag-height, 24px);
+    box-sizing: border-box
+}
+
+.react-international-phone-country-selector-dropdown {
+    position: absolute;
+    z-index: 1;
+    top: var(--react-international-phone-dropdown-top, 44px);
+    left: var(--react-international-phone-dropdown-left, 0);
+    display: flex;
+    width: 300px;
+    max-height: 200px;
+    flex-direction: column;
+    padding: 4px 0;
+    margin: 0;
+    background-color: var(--react-international-phone-dropdown-item-background-color, var(--react-international-phone-background-color, white));
+    box-shadow: var(--react-international-phone-dropdown-shadow, 2px 2px 16px rgba(0, 0, 0, .25));
+    color: var(--react-international-phone-dropdown-item-text-color, var(--react-international-phone-text-color, #222));
+    list-style: none;
+    overflow-y: scroll
+}
+
+.react-international-phone-country-selector-dropdown__preferred-list-divider {
+    height: 1px;
+    border: none;
+    margin: var(--react-international-phone-dropdown-preferred-list-divider-margin, 0);
+    background: var(--react-international-phone-dropdown-preferred-list-divider-color, var(--react-international-phone-border-color, gainsboro))
+}
+
+.react-international-phone-country-selector-dropdown__list-item {
+    display: flex;
+    min-height: var(--react-international-phone-dropdown-item-height, 28px);
+    box-sizing: border-box;
+    align-items: center;
+    padding: 2px 8px
+}
+
+.react-international-phone-country-selector-dropdown__list-item-flag-emoji {
+    margin-right: 8px
+}
+
+.react-international-phone-country-selector-dropdown__list-item-country-name {
+    overflow: hidden;
+    margin-right: 8px;
+    font-size: var(--react-international-phone-dropdown-item-font-size, 14px);
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.react-international-phone-country-selector-dropdown__list-item-dial-code {
+    color: var(--react-international-phone-dropdown-item-dial-code-color, gray);
+    font-size: var(--react-international-phone-dropdown-item-font-size, 14px)
+}
+
+.react-international-phone-country-selector-dropdown__list-item:hover {
+    background-color: var(--react-international-phone-selected-dropdown-item-background-color, var(--react-international-phone-selected-dropdown-item-background-color, whitesmoke));
+    cursor: pointer
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected, .react-international-phone-country-selector-dropdown__list-item--focused {
+    background-color: var(--react-international-phone-selected-dropdown-item-background-color, whitesmoke);
+    color: var(--react-international-phone-selected-dropdown-item-text-color, var(--react-international-phone-text-color, #222))
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected .react-international-phone-country-selector-dropdown__list-item-dial-code, .react-international-phone-country-selector-dropdown__list-item--focused .react-international-phone-country-selector-dropdown__list-item-dial-code {
+    color: var(--react-international-phone-selected-dropdown-item-dial-code-color, var(--react-international-phone-dropdown-item-dial-code-color, gray))
+}
+
+.react-international-phone-country-selector-dropdown__list-item--focused {
+    background-color: var(--react-international-phone-selected-dropdown-item-background-color, var(--react-international-phone-selected-dropdown-item-background-color, whitesmoke))
+}
+
+.react-international-phone-dial-code-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border: 1px solid var(--react-international-phone-dial-code-preview-border-color, var(--react-international-phone-border-color, gainsboro));
+    margin-right: -1px;
+    background-color: var(--react-international-phone-dial-code-preview-background-color, var(--react-international-phone-background-color, white));
+    color: var(--react-international-phone-dial-code-preview-text-color, var(--react-international-phone-text-color, #222));
+    font-size: var(--react-international-phone-dial-code-preview-font-size, var(--react-international-phone-font-size, 13px))
+}
+
+.react-international-phone-dial-code-preview--disabled {
+    background-color: var(--react-international-phone-dial-code-preview-disabled-background-color, var(--react-international-phone-disabled-background-color, whitesmoke));
+    color: var(--react-international-phone-dial-code-preview-disabled-text-color, var(--react-international-phone-disabled-text-color, #666))
+}
+
+.react-international-phone-input-container {
+    display: flex
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button {
+    border-radius: var(--react-international-phone-border-radius, 4px);
+    margin-right: -1px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+    overflow: visible;
+    height: var(--react-international-phone-height, 52px);
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1px solid var(--react-international-phone-border-color, gainsboro);
+    border-radius: var(--react-international-phone-border-radius, 4px);
+    margin: 0;
+    background-color: var(--react-international-phone-background-color, white);
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    color: var(--react-international-phone-text-color, #222);
+    font-family: inherit;
+    font-size: var(--react-international-phone-font-size, 13px);
+  flex: 1;
+}
+
+.react-international-phone-input-container .react-international-phone-input:focus {
+    outline: none
+}
+
+.react-international-phone-input-container .react-international-phone-input--disabled {
+    background-color: var(--react-international-phone-disabled-background-color, whitesmoke);
+    color: var(--react-international-phone-disabled-text-color, #666)
+}
+.ant-message-notice-content{
+    /*display: none !important;*/
 }

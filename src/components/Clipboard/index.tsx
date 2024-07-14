@@ -8,7 +8,7 @@ import {cn} from "@/lib/utils";
 import CopyIcon from '../../../public/copy-icon.png'
 import Image from "next/image";
 
-export const Clipboard = ({str = '', linkUrl = '', maxTextWidth = '100%', style = {}, noBg=false}: {str: string, linkUrl?: string, maxTextWidth?:string, style?: Record<string, string>, noBg?: boolean}) => {
+export const Clipboard = ({str = '', wrapperStyle = {}, linkUrl = '', maxTextWidth = '100%', style = {}, noBg=false}: {wrapperStyle? : Record<string, string>; str: string, linkUrl?: string, maxTextWidth?:string, style?: Record<string, string>, noBg?: boolean}) => {
     const [data, setData] = useState(str)
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -22,7 +22,7 @@ export const Clipboard = ({str = '', linkUrl = '', maxTextWidth = '100%', style 
     }
 
     return (<>
-        <div className={cn( noBg? css.noBgWrapper : css.wrapper)} onClick={handleCopy}>
+        <div className={cn( noBg? css.noBgWrapper : css.wrapper)} style={wrapperStyle} onClick={handleCopy}>
             <span className={css.text} style={{
                 maxWidth: maxTextWidth,
                 color: linkUrl ? '#3c53ff' : '#333',

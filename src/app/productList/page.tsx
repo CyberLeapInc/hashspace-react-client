@@ -16,6 +16,7 @@ import IconList from "@/components/IconList";
 
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
+    const {state, dispatch} = useContext(MyContext);
     useEffect(() => {
         console.log(data)
     }, [data]);
@@ -73,7 +74,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 }}/>
             }
 
-            <Link href={`productDetail?good_id=${data.good_id}`}>
+            <Link href={state?.userInfo?.email ? `productDetail?good_id=${data.good_id}` : '/login'}>
                 <Button
                     disabled={data.is_soldout}
                     className={

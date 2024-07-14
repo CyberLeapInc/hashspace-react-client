@@ -22,6 +22,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
     const TIMER_CONST = 60;
     const [focus, setFocus] = useState(false);
     const [timer, setTimer] = useState(0);
+    const [sent, setSent] = useState(false);
     const [sending, setSending] = useState(false);
 
     useEffect(() => {
@@ -59,6 +60,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
         try {
             setSending(true);
             await onSend();
+            setSent(true)
             setTimer(TIMER_CONST);
             message.success('验证码已发送');
         } catch (e) {
@@ -76,6 +78,11 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                 className={cn("code-sender-wrapper", focus ? 'code-sender-wrapper-focus' : '', errorStatus ? 'code-sender-wrapper-error' : '')}
             >
                 <Input
+                    disabled={!sent}
+                    style={{
+                        cursor: !sent ? 'not-allowed' : 'auto',
+                        height: '50px'
+                    }}
                     maxLength={6}
                     value={value}
                     onChange={(e) => {
@@ -84,7 +91,6 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     }}
                     onFocus={onFocus}
                     onBlur={onBlur}
-                    style={{ height: '50px' }}
                     bordered={false}
                 />
                 <Button
@@ -94,7 +100,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     loading={sending}
                     disabled={((sending || (timer < TIMER_CONST)) && timer !== 0) || disabled}
                 >
-                    {timer === 0 ? <span style={{color: '#3C53FF'}}>发送验证码</span> : <span style={{color: '#A1A3AB'}}>{`${timer}秒后重试`}</span>}
+                    {timer === 0 ? <span style={{color: disabled ? '#A1A3AB' :'#3C53FF'}}>发送验证码</span> : <span style={{color: '#A1A3AB'}}>{`${timer}秒后重试`}</span>}
                 </Button>
             </div>
         </div>

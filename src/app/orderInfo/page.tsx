@@ -1,12 +1,12 @@
 'use client'
 import React, {memo, useContext, useEffect, useState} from 'react';
 import Image, {StaticImageData} from "next/image";
-import calAllgain from '../../../public/cal-allgain.png'
-import calAllPay from '../../../public/cal-allpay.png'
-import calDailyGain from '../../../public/cal-dailygain.png'
-import calPayBackDay from '../../../public/cal-paybackday.png'
-import calPayBackMoney from '../../../public/cal-paybackmoney.png'
-import calProfit from '../../../public/cal-profit.png'
+import TodayMine from '../../../public/today-mine.png'
+import TotalHashrate from '../../../public/total-hashrate.png'
+import TotalProfit from '../../../public/total-profit.png'
+import YesterdayProfit from '../../../public/yestarday-profit.png'
+import YesterdayEleFee from '../../../public/yesterday-ele-fee.png'
+import YesterdayHashrate from '../../../public/yesterday-hashrate.png'
 import {
     getOrderInfo,
     getPaymentList,
@@ -93,12 +93,12 @@ interface CardData {
 }
 
 const cardData : CardData[] = [
-    { image: calAllgain, alt: '总收入', title: '实时交付算力', showKey: 'realtime_hashrate'},
-    { image: calAllPay, alt: '总支出', title: '昨日交付算力', showKey: 'yesterday_hashrate'},
-    { image: calProfit, alt: '净利润', title: '昨日电费', showKey: 'yesterday_electricity_cost'},
-    { image: calDailyGain, alt: '每日收入', title: '昨日收益', showKey: 'yesterday_income'},
-    { image: calPayBackDay, alt: '回本天数', title: '总收益', showKey: 'total_income' },
-    { image: calPayBackMoney, alt: '回本币价', title: '今日已挖预估', showKey: 'today_estimate_income' },
+    { image: TotalHashrate, alt: '总收入', title: '实时交付算力', showKey: 'realtime_hashrate'},
+    { image: YesterdayHashrate, alt: '总支出', title: '昨日交付算力', showKey: 'yesterday_hashrate'},
+    { image: YesterdayEleFee, alt: '净利润', title: '昨日电费', showKey: 'yesterday_electricity_cost'},
+    { image: YesterdayProfit, alt: '每日收入', title: '昨日收益', showKey: 'yesterday_income'},
+    { image: TotalProfit, alt: '回本天数', title: '总收益', showKey: 'total_income' },
+    { image: TodayMine, alt: '回本币价', title: '今日已挖预估', showKey: 'today_estimate_income' },
 ];
 
 interface CardProps {
@@ -189,7 +189,7 @@ const DemoArea = ({dataList, isMobile, unit}: {
     }, [dataList]);
     const config = {
         xField: (d: any) => {
-            return moment(d.created_at * 1000).format('MM/DD/YYYY');
+            return moment(d.created_at * 1000).format('MM/DD');
         },
         yField: (d: any) => {
             return Number(d.hashrate)

@@ -93,6 +93,11 @@ export function formatThousands(num: string | number, isDecimal = true) {
         throw new Error('Input must be a number or a string that can be converted to a number.');
     }
 
+    // Check if the number is negative.
+    const isNegative = num < 0;
+    // Make the number positive for formatting.
+    num = Math.abs(num);
+
     // Split the number into its integer and decimal parts.
     let [integer, decimal] = num.toString().split('.');
 
@@ -112,11 +117,12 @@ export function formatThousands(num: string | number, isDecimal = true) {
 
     // If there was a decimal part, add it back to the end of the string.
     if (decimal !== undefined) {
-        return `${integer}${isDecimal? '.' : ''}${isDecimal ? decimal : ''}`;
+        return `${isNegative ? '-' : ''}${integer}${isDecimal ? '.' : ''}${isDecimal ? decimal : ''}`;
     } else {
-        return `${integer}${isDecimal ? '.00' : ''}`;
+        return `${isNegative ? '-' : ''}${integer}${isDecimal ? '.00' : ''}`;
     }
 }
+
 
 export function roundUp(num: number, precision: number) {
     precision = Math.pow(10, precision)

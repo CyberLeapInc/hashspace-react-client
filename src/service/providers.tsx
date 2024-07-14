@@ -6,10 +6,9 @@ import {themeConfig} from "@/service/themeConfig";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import NotificationBar from "@/components/NotificationBar";
 import NoEleFee from "@/components/NoEleFee";
-
-
 import HeaderCus from "@/components/Header";
 import FooterCus from "@/components/Footer";
+import {LoadingComponent} from "@/service/loading";
 
 const { Header, Content, Footer } = Layout;
 
@@ -58,7 +57,8 @@ export const Providers = ({children}: { children: ReactNode }) => {
                 <Layout
                     style={{
                         maxWidth: '100vw',
-                        overflow: 'scroll'
+                        overflow: 'scroll',
+                        minWidth:  isMobile ? '250px' : '1200px',
                     }}
                 >
                     <Content>

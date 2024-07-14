@@ -367,7 +367,7 @@ const ProductDetail = () => {
                             marginTop: state.isMobile ? '0' : goodDetail?.mining_currency === 'LTC' ? '10px' : '42px',
                             marginBottom: state.isMobile ? '0' : '22px'
                         }}>
-                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={''}>《服务协议》</a>和<a href={''}>《隐私政策》</a><a href={''}>《免责声明》</a>。</Checkbox>
+                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={'/user_agreement_cn.html'} target="_blank">《服务协议》</a>和<a href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a><a href={'/disclaimer_cn.html'} target="_blank">《免责声明》</a>。</Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button

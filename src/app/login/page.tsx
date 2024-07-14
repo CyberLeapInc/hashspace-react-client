@@ -44,6 +44,7 @@ const CryptoPage: React.FC = () => {
     const [totpEnabled, setTotpEnabled] = useState(false)
     const [totpCode, setTotpCode] = useState('')
     const [totpCodeErrorStatus, setTotpCodeErrorStatus] = useState(false);
+    const [isFirstRegister, setIsFirstRegister] = useState(true)
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {state, dispatch} = useContext(MyContext);
@@ -77,6 +78,10 @@ const CryptoPage: React.FC = () => {
             console.log(res)
             setSessionId(res.session_id || '')
             setTotpEnabled(res.totp_enabled || false)
+            setIsFirstRegister(Boolean(res.register))
+            if (!res.register) {
+                setAgree(true)
+            }
             setStep(1)
         }).catch(e => {
             setStatus('no')
@@ -132,7 +137,7 @@ const CryptoPage: React.FC = () => {
                 setTotpCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
-                    content: 'Google Authenticator验证码有误',
+                    content: 'Google验证码有误',
                 });
             }
         })
@@ -241,11 +246,11 @@ const CryptoPage: React.FC = () => {
                                                     setTotpCodeErrorStatus(false)
                                                 }}
                                                 allowClear
-                                                placeholder={'请输入Google Authenticator验证码'}
+                                                placeholder={'请输入Google验证码'}
                                             ></Input>
                                             {
                                                 totpCodeErrorStatus &&
-                                                <div className={css.errorMessage}>Google Authenticator验证码错误</div>
+                                                <div className={css.errorMessage}>Google验证码错误</div>
                                             }
                                             <div
                                                 className={css.message}>请打开您的Google Authenticator，输入6位验证码
@@ -255,10 +260,13 @@ const CryptoPage: React.FC = () => {
                                     <Space className={
                                         state.isMobile? css.fixedZone : ''
                                     } direction={"vertical"} size={'small'} style={{width: '100%'}}>
-                                        <Checkbox onChange={onChange}
-                                                  className={css.loginValidate}>
-                                            <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href="">《服务条款》</a>和 <a href="">《隐私政策》</a></span>
-                                        </Checkbox>
+                                        {
+                                            isFirstRegister && <Checkbox onChange={onChange}
+                                                                                                     className={css.loginValidate}>
+                                                <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《服务条款》</a>和 <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a></span>
+                                            </Checkbox>
+                                        }
+
                                         <Button type="primary" block size={'large'} shape={'round'}
                                                 disabled={!agree || !(code.length === 6) || (totpEnabled && totpCode.length !== 6) || codeErrorStatus || totpCodeErrorStatus}
                                                 style={{

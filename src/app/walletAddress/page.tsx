@@ -7,7 +7,7 @@ import Image, {StaticImageData} from "next/image";
 import IconBtc from "../../../public/icon-btc.png";
 import IconDoge from "../../../public/icon-doge.png";
 import IconLtc from "../../../public/icon-ltc.png";
-import {bindAddressFinish, bindAddressStart, bindPhoneFinish, getTotpCode, getUserInfo} from "@/service/api";
+import {bindAddressFinish, bindAddressStart, getTotpCode, getUserInfo} from "@/service/api";
 import css from './index.module.css'
 import {CodeSender} from "@/components/ui/codeSender";
 import Clipboard from "@/components/Clipboard";
@@ -44,10 +44,16 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
     const [isSendCode, setIsSendCode] = useState(false)
     const [errorStatus, setErrorStatus] = useState(false)
     const [googleErrorStatus, setGoogleErrorStatus] = useState(false)
+    const [loading, setLoading]= useState(false)
     const startChange = () => {
         if (!address) {
             return;
         }
+        if (remark.length === 1) {
+            setRemarkErrorMessage('备注过短')
+            return;
+        }
+        setLoading(true)
         bindAddressStart(currency, remark, address).then(res => {
             if (!res.session_id) return;
             setSessionId(res.session_id);
@@ -57,9 +63,21 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                 message.error('解绑Google验证后，24h内禁止设置/修改地址')
             } else {
                 message.error(e.message)
+                if (e.details.type === 'InvalidAddress') {
+                    setAddressErrorMessage('地址错误')
+                }
             }
-        })
+        }).finally(() => {
+            setLoading(false)
+            }
+        )
     }
+    useEffect(() => {
+        setAddressErrorMessage('')
+    }, [address]);
+    useEffect(() => {
+        setRemarkErrorMessage('')
+    }, [remark]);
 
     const getCode = () => {
         return getTotpCode({
@@ -85,6 +103,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         if (state.userInfo.has_totp) {
             query.totp = totp
         }
+        setLoading(true)
         bindAddressFinish(query).then(res => {
             onFinish(true)
             console.log(res)
@@ -96,7 +115,10 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                 setGoogleErrorStatus(true)
             }
             onFinish(false)
-        })
+        }).finally(() => {
+            setLoading(false)
+            }
+        )
     }
 
     const getMinPayment = (currency: string) => {
@@ -105,31 +127,40 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         return res.f2pool_payment_threshold
     }
 
+    const [addressErrorMessage, setAddressErrorMessage] = useState('')
+    const [remarkErrorMessage, setRemarkErrorMessage] = useState('')
+
+
     // @ts-ignore
     return (<div>
         {
             step === 0 && (
                 <div>
-                    <div className={css.modalTitle}>{ogAddress ? '更改':'设置'}{currency}收款地址</div>
+                    <div className={css.modalTitle}>{ogAddress ? '更改' : '设置'}{currency}收款地址</div>
                     {
                         ogAddress && (
                             <div>
                                 <div className={css.modalSubTitle}>原地址</div>
-                                <div><Input style={{color:'#999', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7'}} className={css.myInput} disabled={true} value={ogAddress}/></div>
+                                <div><Input style={{color: '#999', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7'}}
+                                            className={css.myInput} disabled={true} value={ogAddress}/></div>
                             </div>
                         )
                     }
                     <div className={css.modalSubTitle}>{ogAddress ? '新' : ''}主网地址</div>
-                    <div><Input placeholder={`请输入新的${currency}主网地址`} className={css.myInput} onChange={(v) => setAddress(v.target.value)}/></div>
+                    <div><Input placeholder={`请输入新的${currency}主网地址`} className={css.myInput}
+                                onChange={(v) => setAddress(v.target.value)}/></div>
+                    <div className={css.errorMessage}>{addressErrorMessage}</div>
                     <div className={css.modalSubTitle}>备注</div>
-                    <div><Input placeholder={'请输入该地址的备注'} className={css.myInput} onChange={(v) => setRemark(v.target.value)}/></div>
+                    <div><Input placeholder={'请输入该地址的备注'} minLength={2} maxLength={20} className={css.myInput}
+                                onChange={(v) => setRemark(v.target.value)}/></div>
+                    <div className={css.errorMessage}>{remarkErrorMessage}</div>
                     <div className={css.tip}>
                         <div style={{margin: '20px 0 8px'}}>温馨提示</div>
                         <div>1. 云算力运行时，最小支付金额：{getMinPayment(currency)}{currency}。</div>
                         <div>2. 修改地址后，支付冻结48h。</div>
                         <div>3. 一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。</div>
                     </div>
-                    <Button disabled={!address} shape={"round"} block size={"large"} type={"primary"}
+                    <Button loading={loading} disabled={loading || !address || Boolean(remarkErrorMessage) || Boolean(addressErrorMessage)} shape={"round"} block size={"large"} type={"primary"}
                             onClick={() => startChange()}>下一步</Button>
 
                 </div>
@@ -154,7 +185,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                     {
                         state.userInfo.has_totp && (
                             <div>
-                                <div className={css.modalSubTitle}>Google Authenticator验证码</div>
+                                <div className={css.modalSubTitle}>Google验证码</div>
                                 <div><Input maxLength={6} onChange={(v) => {
                                     setTotp(v.target.value)
                                     setGoogleErrorStatus(false)
@@ -165,7 +196,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                             </div>
                         )
                     }
-                    <Button style={{marginTop: '32px'}} shape={"round"} block size={"large"} type={"primary"}
+                    <Button  loading={loading} disabled={loading} style={{marginTop: '32px'}} shape={"round"} block size={"large"} type={"primary"}
                             onClick={() => finish()}>确认</Button>
                 </div>
             )
@@ -199,7 +230,7 @@ const SuccessContent = ({location,currency, onCountDownFinish} : {
             <div className={css.successLocationBar}>
                 {location}
             </div>
-            <Button size={"large"} shape={'round'} type={"primary"} block>返回{
+            <Button onClick={() => onCountDownFinish()} size={"large"} shape={'round'} type={"primary"} block>返回{
                 countdown > 0 ? ` (${countdown}S)` : ''
             }</Button>
         </div>
@@ -235,7 +266,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                 message.error(e.message || '获取用户信息失败')
             })
         } else {
-            message.error('绑定失败')
+            message.error('更改错误')
         }
 
     }
@@ -250,7 +281,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                 <SetAddress ogAddress={addressDict['address']} key={modalKey} currency={currency} onFinish={handleBind}/>
             </Modal>
             <Modal open={isShowBindSuccessModal} width={420} footer={null} onCancel={() => setIsShowBindSuccessModal(false)}>
-                <SuccessContent currency={currency} location={addressDict['address']} onCountDownFinish={handleCountDownFinish}/>
+                <SuccessContent key={new Date().getTime()} currency={currency} location={addressDict['address']} onCountDownFinish={handleCountDownFinish}/>
             </Modal>
             <div className={'card-column-box-row'} style={{
                 display: 'flex',
@@ -262,17 +293,65 @@ const AddressCard = ({currency, icon, getAddress}: {
                 }}>
                     <Image width={58} src={icon} alt={currency}/>
                 </div>
-                <div className={state.isMobile ? css.mobileContent : css.content}>
-                    <div style={styles.label}><span style={{width: state.isMobile? '' : '180px', fontSize: state.isMobile ? '14px' : '16px'}}>{currency}</span> <span className={state.isMobile? css.remarkMobile : css.remark} style={{width: state.isMobile?'' : '100px'}}>{addressDict['remark']}</span></div>
-                    <div style={styles.address}>
-                        { addressDict['address'] && <Clipboard noBg={true} str={addressDict['address']} maxTextWidth={state.isMobile? '150px' : ''} />}
+                {
+                    state.isMobile && <div className={css.mobileContent}>
+                        <div style={styles.label}><span style={{
+                            width: state.isMobile ? '' : '180px',
+                            fontSize: state.isMobile ? '14px' : '16px'
+                        }}>{currency}</span>
+                            <span
+                                className={state.isMobile ? css.remarkMobile : css.remark}
+                                style={{ color: addressDict['remark'] ? '#333' : '#999999'}}>
+                                {addressDict['remark'] || '暂无备注'}
+                            </span>
+                        </div>
+                        <div style={styles.address}>
+                            {addressDict['address'] && <Clipboard noBg={true} str={addressDict['address']}
+                                                                  maxTextWidth={state.isMobile ? '150px' : ''}/>}
+                        </div>
                     </div>
-                </div>
+                }
+                {
+                    !state.isMobile && <div className={css.content}>
+                        <div style={styles.label}>
+                            <span style={{
+                            width: '132px',
+                            fontSize: '16px'
+                        }}>{currency}</span>
+
+                        </div>
+                        <div style={styles.address}>
+                            <span className={css.remark} style={{
+                                color: addressDict['remark'] ? '#333' : '#999999',
+                            }}>
+                                {addressDict['remark'] || '暂无备注'}
+                            </span>
+                            {addressDict['address'] && <Clipboard
+                                style={{
+                                    fontSize:'16px',
+                                }}
+                                wrapperStyle={{
+                                    margin: '0',
+                                    height: '22px',
+                                    lineHeight: '22px'
+                                }}
+                                noBg={true}
+                                str={addressDict['address']}
+                                maxTextWidth={state.isMobile ? '150px' : ''}/>
+                            }
+                        </div>
+                    </div>
+                }
+
                 <div style={styles.buttonContainer}>
                     {
                         addressDict['address'] ?
-                            <Button shape={"round"} type={"text"} style={state.isMobile ? styles.mobileButton : styles.button} onClick={() => setIsShowBindModal(true)}>更改</Button> :
-                            <Button shape={"round"} type={"primary"} style={state.isMobile ? styles.mobileButton : styles.button} onClick={() => setIsShowBindModal(true)}>绑定</Button>
+                            <Button shape={"round"} type={"text"}
+                                    style={state.isMobile ? styles.mobileButton : styles.button}
+                                    onClick={() => setIsShowBindModal(true)}>更改</Button> :
+                            <Button shape={"round"} type={"primary"}
+                                    style={state.isMobile ? styles.mobileButton : styles.button}
+                                    onClick={() => setIsShowBindModal(true)}>绑定</Button>
                     }
                 </div>
             </div>

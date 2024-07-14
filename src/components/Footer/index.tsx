@@ -8,6 +8,7 @@ import {MyContext} from "@/service/context";
 
 import css from './index.module.css'
 import {cn} from "@/lib/utils";
+import Link from "next/link";
 
 export const Footer = () => {
     const {state} = useContext(MyContext);
@@ -21,9 +22,9 @@ export const Footer = () => {
                     paddingTop: state.isMobile ? '20px' : '0',
                     paddingBottom: state.isMobile ? '20px' : '0'
                 }}>
-                    <div className={css.agreement}>服务协议</div>
-                    <div className={css.agreement}>隐私政策</div>
-                    <div className={css.agreement}>免责声明</div>
+                    <a href={'/user_agreement_cn.html'} target="_blank" className={css.agreement}>服务协议</a>
+                    <a href={'/privacy_policy_cn.html'} target="_blank" className={css.agreement}>隐私政策</a>
+                    <a href={'/disclaimer_cn.html'} target="_blank" className={css.agreement}>免责声明</a>
                 </div>
                 <div className='pic-row'>
                     <Image src={TwitterPic}

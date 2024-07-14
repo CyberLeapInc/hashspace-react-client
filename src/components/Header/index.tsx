@@ -158,11 +158,13 @@ export const Header: React.FC = () => {
             }}
         >
             <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px',color: '#666'}}>
-                <div className="logospace">
-                    <Image style={{
-                        width: '152px'
-                    }} width={152} src={Logo} alt={'logo'}/>
-                </div>
+                <Link href={'/'}>
+                    <div className="logospace">
+                        <Image style={{
+                            width: '152px'
+                        }} width={152} src={Logo} alt={'logo'}/>
+                    </div>
+                </Link>
                 <div>
                     <div className={css.top}>
                         {
@@ -246,12 +248,17 @@ export const Header: React.FC = () => {
     } else {
         return (
             <header
+                style={{
+                    minWidth: '1200px'
+                }}
                 className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/100"
             >
                 <div className="container-my flex h-16 max-w-screen-2xl items-center" style={{'gap': '0',color: '#666'}}>
-                    <div className="logospace">
-                        <Image width={152} src={Logo} alt={'logo'}/>
-                    </div>
+                    <Link href={'/'}>
+                        <div className="logospace">
+                            <Image width={152} src={Logo} alt={'logo'}/>
+                        </div>
+                    </Link>
                     <Link className={css.menuBtn} href="/" legacyBehavior passHref>
                         <span className={css.menuBtn}>首页</span>
                     </Link>

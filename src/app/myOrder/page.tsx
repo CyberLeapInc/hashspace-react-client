@@ -193,7 +193,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
                 <span className={css.label}>币种:</span>
                 <span className={css.value} style={{display: 'flex', alignItems: 'center'}}>
                     <IconList list={data.good?.currency || []} size={20}/>
-                    {data.good?.name}
+                    {data.good?.currency.join("&")}
                 </span>
             </div>
             <div className={css.item}>
@@ -229,11 +229,14 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             </div>
             <div className={css.item}>
                 {
-                    ( data.state === 2 || data.state === 4) && (
+                    ( (data.state === 2 || data.state === 4) && data.payment_link) && (
                         <>
                             <span className={css.label}>TXID:</span>
-                            <span className={css.value}>
+                            <span className={css.value} style={{
+                                marginLeft: '-8px',
+                            }}>
                                 <Clipboard
+
                                     maxTextWidth={'67px'}
                                     linkUrl={data.payment_link}
                                     str={data.payment_link_source}

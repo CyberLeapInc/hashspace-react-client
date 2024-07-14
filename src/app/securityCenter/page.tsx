@@ -207,7 +207,7 @@ const SecurityCenter: React.FC = () => {
                                     fontSize: state.isMobile ? '12px' : '14px',
                                     color: '#666',
                                     fontWeight: 400
-                                }}>保护你的账户安全
+                                }}>实时接收订单信息
                                 </div>
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: state.isMobile ? '' : '80px'}}
@@ -218,7 +218,7 @@ const SecurityCenter: React.FC = () => {
                                 {
                                     state.userInfo.phone_number ?
                                         <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
-                                                type={"text"}>换绑</Button> :
+                                                type={"text"}>更改</Button> :
                                         <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
                                                 type={"primary"}>绑定</Button>
                                 }
@@ -252,7 +252,7 @@ const SecurityCenter: React.FC = () => {
         }}>
             <UnbindTowFactorAuth key={counter} onSuccess={() => handleOnUnbindTotpSuccess()}></UnbindTowFactorAuth>
         </Modal>
-        <Modal title={'绑定手机号'} open={isShowBindPhone} width={420} footer={''}
+        <Modal title={state.userInfo.phone_number ? '更改手机号' : '绑定手机号'} open={isShowBindPhone} width={420} footer={''}
                onCancel={() => setIsShowBindPhone(false)}>
             <PhoneBind onSuccess={() => handleOnBindPhoneSuccess()} key={counter}></PhoneBind>
         </Modal>

@@ -14,7 +14,7 @@ import css from './index.module.css'
 import {fullRevenue, FullRevenueResponse, getProductList, Good, GoodListItem, GoodWrapper} from "@/service/api";
 import {MyContext} from "@/service/context";
 import big from "big.js";
-import {formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
+import {cn, formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import IconList from "@/components/IconList";
 
 interface CurrencyListSelectorProps {
@@ -74,40 +74,34 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     [key: string]: number | string
     }) => void}) => {
     const {state, dispatch} = useContext(MyContext);
+    const [difficultySolid, setDifficultySolid] = useState<string>('')
     const [difficultyInner, setDifficultyInner] = useState<string>('')
+    const [currentRange, setCurrentRange] = useState<number>(0)
     const rangeList = [-0.05, 0, 0.05]
+    const handleDifficulty = (e: any) => {
+        setDifficultyInner(e.target.value)
+    }
     useEffect(() => {
         state?.chainList?.find((chain) => {
             if (chain.currency === currency) {
                 console.log(chain.difficulty)
+                setDifficultySolid(chain.difficulty)
                 setDifficultyInner(chain.difficulty)
             }
         })
-    }, [currency, setDifficultyInner, state]);
+    }, [currency, state]);
+    useEffect(() => {
+        if (currentRange === 0) {
+            setDifficultyInner(difficultySolid)
+        }
+        setDifficultyInner(big(difficultySolid || 0).times(big(1 + currentRange)).toFixed(0).toString())
+    }, [currentRange, difficultySolid]);
     useEffect(() => {
         onChange({[currency]: difficultyInner})
     }, [difficultyInner]);
-    const handleDifficulty = (e: any) => {
-        setDifficultyInner(e.target.value)
-    }
-    const handleQuickChangeDifficulty = (value: number) => {
-        if (value === 0) {
-            setDifficultyInner(state.chainList.find((chain) => chain.currency === currency)?.difficulty || '0')
-            return
-        } else {
-            const time = 1 + value;
-            const res = big(difficultyInner).times(big(time)).toFixed(2).toString();
-            setDifficultyInner(res)
-        }
-    }
     return <div>
         <Form.Item label="预期难度">
-            <Input style={{
-                textAlign: 'center',
-                fontWeight: '400 !important',
-                fontSize: '14px',
-                color: '#333333 !important',
-            }}
+            <Input className={css.diffInput}
                    value={difficultyInner}
                    onChange={handleDifficulty}
             />
@@ -121,7 +115,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
         }}>
             {
                 rangeList.map((item) => {
-                    return <Button onClick={() => handleQuickChangeDifficulty(item)} key={item} style={{flex: 1, height:'32px', borderRadius: '8px', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7', color: '#333333', fontWeight: 500}} size={'small'}>{item * 100}%</Button>
+                    return <Button onClick={() => setCurrentRange(item)} key={item} className={cn(css.rangeItem, currentRange === item && css.rangeItemSelected)} size={'small'}>{item * 100}%</Button>
                 })
             }
         </div>
@@ -294,6 +288,9 @@ const Calculator = () => {
                 }
             }
         )
+        setTimeout(() => {
+            getFullRevenue()
+        }, 0)
     }
 
     const handleBuyCountChange = (e: any) => {
@@ -381,7 +378,7 @@ const Calculator = () => {
                                 <Image src={calPayBackDay} alt={'回本天数'}></Image>
                                 回本天数
                             </div>
-                            <div className={'cal-card-count2'}>{formatThousands(fullRevenueData.payback_day || 0, false)}天</div>
+                            <div className={'cal-card-count2'}>{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? '无法回本' : `${formatThousands(fullRevenueData.payback_day || 0, false)}天`}</div>
                         </div>
                         {
                             goodItem?.mining_currency === 'BTC' ? (
@@ -441,7 +438,7 @@ const Calculator = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label="算力数量">
-                            <Input addonAfter={<div>TH/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>
+                            <Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>
                         </Form.Item>
                         <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
                         {
