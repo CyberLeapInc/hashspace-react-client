@@ -21,6 +21,16 @@
 .selectedCurrency{
     background: rgba(60,83,255,0.05);
     border: 1px solid #3C53FF;
+    font-weight: 500;
+    font-size: 14px;
+    color: #3C53FF;
+}
+.selectedCurrency2{
+    background: rgba(60,83,255,0.05);
+    border: 1px solid #3C53FF;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
 }
 .info{
     font-weight: 500;

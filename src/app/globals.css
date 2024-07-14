@@ -285,6 +285,10 @@
     margin: 0 4px
 }
 
+.ant-select-selector:after{
+    content: '' !important;
+}
+
 .react-international-phone-country-selector-button__flag-emoji--disabled {
     opacity: .75
 }
@@ -386,6 +390,10 @@
 
 .react-international-phone-country-selector-dropdown__list-item--focused {
     background-color: var(--react-international-phone-selected-dropdown-item-background-color, var(--react-international-phone-selected-dropdown-item-background-color, whitesmoke))
+}
+
+.ant-select-selection-item div{
+    padding-left: 6px !important;
 }
 
 .react-international-phone-dial-code-preview {

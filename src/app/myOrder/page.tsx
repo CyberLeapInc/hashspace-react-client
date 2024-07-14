@@ -285,7 +285,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             {
                 ( data.state === 2 || data.state === 4) && <div style={{
                     position: 'absolute',
-                    top: '12px',
+                    top: '6px',
                     right: '0px',
                 }}>
                     <Button style={{color: '#3C53FF'}} type={"link"}>

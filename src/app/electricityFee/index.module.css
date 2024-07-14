@@ -11,12 +11,19 @@
     display: flex;
     gap: 20px;
 }
+.modalTitle{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: center;
+}
 .box{
     height: 153px;
     background: #FFFFFF;
     border-radius: 20px;
     backdrop-filter: blur(0px);
-    padding: 32px 40px;
+    padding: 32px 32px;
     display: flex;
     width: 100%;
 }

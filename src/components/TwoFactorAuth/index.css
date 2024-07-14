@@ -3,16 +3,23 @@
     line-height: 24px;
     margin: 13px 0 0;
 }
-.step-index{
+.step-index-wrapper{
+    border: 1px solid rgba(60, 83, 255, 0.1);
     width: 30px;
-    min-width: 30px;
     height: 30px;
+    padding: 2px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.step-index{
+    height: 24px;
     color:#3C53FF;
     background-color: rgba(60, 83, 255, 0.1);
-    border-radius: 15px;
-    line-height: 30px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+    border-radius: 50%;
     text-align: center;
-    margin-right: 10px;
 }
 .step-intro{
     line-height: 24px;

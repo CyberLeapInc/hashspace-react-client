@@ -235,7 +235,7 @@ const ElectricityFee = () => {
             render: (data) => {
                 return <div>{moment(data*1000).format('MM/DD/YYYY HH:mm:ss')}</div>
             },
-            width: 200
+            width: 250
         },
         {
             title: '订单号',
@@ -246,7 +246,8 @@ const ElectricityFee = () => {
             dataIndex: 'state',
             render: (state, record) => {
                 return <StateHover record={record} onRecharge={handleRecharge}/>
-            }
+            },
+            width: 200
         },
         {
             title: '金额',
@@ -259,7 +260,8 @@ const ElectricityFee = () => {
                         </div>
                     </div>
                 )
-            }
+            },
+            width: 180
         },
     ]
 
@@ -270,10 +272,10 @@ const ElectricityFee = () => {
                    onCancel={() => closeModal()} footer={''}>
                 <ChargeFee onConfirm={onConfirmCost} min={min} step={step}/>
             </Modal>
-            <Modal width={420} title={'电费充值'} open={isBuyProductModalOpen} onCancel={() => closeBuyProductModal()} footer={''}>
+            <Modal width={420} open={isBuyProductModalOpen} onCancel={() => closeBuyProductModal()} footer={''}>
                 <BuyProduct key={buyProductKey} onBuy={onBuy} total_cost={cost} finishPay={closeBuyProductModal} />
             </Modal>
-            <Modal width={420} title={'电费充值'} open={!!record} onCancel={() => setRecord(null)} footer={''}>
+            <Modal width={420} open={!!record} onCancel={() => setRecord(null)} footer={''}>
                 <FinishPayment
                     fixPos={4}
                     duration={(record?.payment_expired_at  || 0) - (new Date().getTime() / 1000)}

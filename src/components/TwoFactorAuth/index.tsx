@@ -81,42 +81,52 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
         {contextHolder}
         <div style={{flex: 1}}>
             <div className={'step-row'}>
-                <div className={'step-index'}>1</div>
+                <div className={'step-index-wrapper'}>
+                    <div className={'step-index'}>1</div>
+                </div>
                 <div className={'step-intro'}>
                     下载并安装Google Authenticator（谷歌身份验证码）或Authy APP。</div>
             </div>
             <div className={'step-row'}>
-                <div className={'step-index'}>2</div>
+                <div className={'step-index-wrapper'}>
+                    <div className={'step-index'}>2</div>
+                </div>
                 <div className={'step-intro'}>
                     <div>扫描下方二维码。</div>
                     <div>
-                        <QRCode style={{margin: '10px 0 10px'}} size={161} value={qrcodeUrl} />
+                        <QRCode style={{margin: '10px 0 10px'}} size={161} value={qrcodeUrl}/>
                     </div>
                     <div style={{
                         marginBottom: '-5px'
-                    }}>或者输入密钥</div>
-                    <div style={{fontWeight: "bold", fontSize: '14px', marginLeft: '-16px'}}><Clipboard noBg={true} style={{
-                        fontSize: '14px',
-                        marginLeft: '0px'
-                    }} str={secret} /></div>
+                    }}>或者输入密钥
+                    </div>
+                    <div style={{fontWeight: "bold", fontSize: '14px', marginLeft: '-16px'}}><Clipboard noBg={true}
+                                                                                                        style={{
+                                                                                                            fontSize: '14px',
+                                                                                                            marginLeft: '0px'
+                                                                                                        }}
+                                                                                                        str={secret}/>
+                    </div>
                 </div>
 
             </div>
         </div>
         <div style={{flex: 1}}>
             <div className={'step-row'}>
-                <div  className={'step-index'}>3</div>
+                <div className={'step-index-wrapper'}>
+                    <div className={'step-index'}>3</div>
+                </div>
                 <div className={'step-intro'}>
                     <div>
                         Google身份验证器配置完成后，会显示一个6位数字，每隔30秒变化一次，这个数字即为您的Google验证码。
                     </div>
                 </div>
             </div>
-            <div  style={{
-                marginLeft: state.isMobile?'0' :'40px',
+            <div style={{
+                marginLeft: state.isMobile ? '0' : '40px',
                 marginTop: '10px'
             }}>
-                {
+            {
                     sessionId && <CodeSender
                         immidity={false}
                         onError={() => {

@@ -16,6 +16,7 @@ import {MyContext} from "@/service/context";
 import big from "big.js";
 import {cn, formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import IconList from "@/components/IconList";
+import {CustomInput} from "@/components/CustomInput";
 
 interface CurrencyListSelectorProps {
     goodItem: GoodListItem | null;
@@ -63,7 +64,7 @@ const CurrencyListSelector = ({
         {
             good?.currency.map((item)=> {
                 return <Form.Item label={`预期${item}币价`} key={item} >
-                    <Input addonAfter={<div>USDT</div>} type={'number'} value={getValue(item)} onChange={(e) => handleChange(item, e)}/>
+                    <CustomInput inputMarginLeft={'55px'} onChange={(e) => handleChange(item, e)} unit={'USDT'} defaultValue={getValue(item)} type={'number'}/>
                 </Form.Item>
             })
         }
@@ -431,14 +432,19 @@ const Calculator = () => {
                                 {
                                     goodItemList.map((item) => {
                                         return <Select.Option value={item.good_id} key={item.good_id}>
-                                            <div className={css.selectOptionCus}>{item.name}</div>
+                                            <div className={css.selectOptionCus}>
+                                                <div>
+                                                    <div>{item.name}</div>
+                                                </div>
+                                            </div>
                                         </Select.Option>
                                     })
                                 }
                             </Select>
                         </Form.Item>
                         <Form.Item label="算力数量">
-                            <Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>
+                            <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange} defaultValue={buyCount} type={'number'} unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'} step={1} min={0} max={999999999999999}/>
+                            {/*<Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>*/}
                         </Form.Item>
                         <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
                         {

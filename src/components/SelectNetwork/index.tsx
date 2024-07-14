@@ -30,7 +30,7 @@ export const SelectNetwork: React.FC<{
                 {paymentCurrency.map(item => {
                     return (
                         <Button block
-                                className={cn(css.bigButton, currentCurrency.currency === item.currency ? css.selectedCurrency : '')}
+                                className={cn(css.bigButton, currentCurrency.currency === item.currency ? css.selectedCurrency2 : '')}
                                 key={item.currency} onClick={() => setCurrency(item)}>
                             <div style={{
                                 display: 'flex',
