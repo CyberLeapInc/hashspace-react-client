@@ -6,6 +6,7 @@
     background-image: url("../../public/banner.png");
     height: 636px;
     background-size: inherit;
+    background-color: white;
 }
 .title{
     font-weight: bold;

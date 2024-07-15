@@ -97,6 +97,7 @@ max-width: 1200px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     flex-wrap: wrap;
+    align-items: baseline;
 }
 .cal-card-info2{
     font-weight: 400;

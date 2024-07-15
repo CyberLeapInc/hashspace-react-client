@@ -8,10 +8,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.03s;
 }
 .inputWrapperFocus{
     border-color: #3C53FF;
-    transition: all 0.03s;
+    box-shadow: 0 0 0 2px rgba(60, 83, 255, 0.06) !important;
 }
 .input{
     text-align: center;

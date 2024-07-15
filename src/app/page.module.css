@@ -2,8 +2,10 @@
     background-image: url("../../public/banner.png");
     background-size: cover;
     padding-top: 150px;
+    background-repeat: no-repeat;
     padding-bottom: 342px;
     background-position-y: -64px;
+    background-color: white;
 }
 .mobileBanner{
     background-image: url("../../public/mobile-background.png");
@@ -46,6 +48,7 @@
     text-align: center;
 }
 .card{
+    transition: all 0.2s;
     border-radius: 40px;
     height: 250px;
     min-width: 250px;
@@ -56,6 +59,10 @@
     @media screen and (max-width: 768px){
         padding:40px 24px;
     }
+}
+.card:hover{
+    box-shadow: 0px 2px 40px 0px rgba(0,0,0,0.06);
+    transform: scale(1.01);
 }
 .cardImage{
     height: 40px;

@@ -199,7 +199,7 @@
 }
 
 .ant-select-selector {
-    border-color: #E9E9E9 !important;
+    /*border-color: #E9E9E9 !important;*/
 }
 
 .ant-layout-content {
@@ -262,6 +262,11 @@
     user-select: none;
   width: 80px;
 }
+
+/*.ant-select-focused:where(.css-dev-only-do-not-override-1lumasx).ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {*/
+/*    border-color: #3C53FF !important;*/
+/*    box-shadow: 0 0 0 2px rgba(60, 83, 255, 0.0) !important;*/
+/*}*/
 
 .react-international-phone-country-selector-button:hover {
     background-color: var(--react-international-phone-country-selector-background-color-hover, whitesmoke)

@@ -137,7 +137,7 @@ export default function Home() {
           </div>
           <div style={{paddingBottom: '40px', backgroundColor: "white"}}  id={'question'}>
               <div className="container-my" style={{padding: state.isMobile ? '0 12px' : ''}}>
-                  <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题 Q&A</div>
+                  <div className={cn(css.questionTitle, state.isMobile && css.mobileQuestionTitle)}>常见问题 <span style={{fontWeight: 500}}>Q&A</span></div>
                   {
                       questionList && questionList.map((item) => (
                           <Collapsible open={questionOpen === item.index} key={item.index} onClick={() => {

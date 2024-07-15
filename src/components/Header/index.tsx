@@ -152,7 +152,7 @@ export const Header: React.FC = () => {
     }, [dispatch]);
     if (state.isMobile) {
         return <header
-            className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur"
+            className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
             style={{
                 borderBottom: "none"
             }}
@@ -251,7 +251,7 @@ export const Header: React.FC = () => {
                 style={{
                     minWidth: '1200px'
                 }}
-                className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/100"
+                className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
             >
                 <div className="container-my flex h-16 max-w-screen-2xl items-center" style={{'gap': '0',color: '#666'}}>
                     <Link href={'/'}>
