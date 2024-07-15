@@ -121,7 +121,7 @@ const SecurityCenter: React.FC = () => {
     }}>
         {state.userInfo.email && <div className={'container-my'}>
             <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
-                <Card bordered={false}>
+                <Card>
                     <div className={'card-column-box-title'}>
                         账户安全
                     </div>

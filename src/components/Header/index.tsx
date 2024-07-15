@@ -59,7 +59,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                     padding: '0 26px',
                     paddingTop: '26px'
                 }}>
-                    <Image  style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'} />
+                    <Image  style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'} />
                     <div>
                         <div style={{fontWeight: 400}}>{outState.userInfo.email}</div>
                         <div style={{fontSize: '12px', color: '#999'}}>{outState.userInfo.has_identity ? <span style={{color: 'green'}}>已认证</span> : <span>未认证</span>}</div>
@@ -177,7 +177,7 @@ export const Header: React.FC = () => {
                         }
                         {
                             (state?.userInfo?.email) && (
-                                <Image onClick={() => openDrawerWithType('user')} style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>                        )
+                                <Image onClick={() => openDrawerWithType('user')} style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'}/>                        )
                         }
                         <Button size={"large"} type={"text"} icon={<MenuOutlined />} onClick={() => openDrawerWithType('navi')}/>
                     </div>
@@ -234,7 +234,7 @@ export const Header: React.FC = () => {
                             <div className={css.mobileHeader}>
                                 <div></div>
                                 <div  className={css.top}>
-                                    <Image style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>
+                                    <Image style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'}/>
                                     <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
                                             onClick={() => setOpenDrawer(false)}/>
                                 </div>
@@ -289,7 +289,7 @@ export const Header: React.FC = () => {
                                 borderRadius: '20px',
                                 minWidth: '210px'
                             }} content={() => <HoverContent isMobile={state.isMobile} outState={state} onLogOut={logOut}/>}>
-                                <Image style={{marginLeft: 'auto'}} width={40} src={IconAvatar} alt={'avatar'}/>
+                                <Image style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'}/>
                                 {/*<Avatar style={{marginLeft: 'auto'}} size={40} icon={<UserOutlined />} />*/}
                             </Popover>
                         )

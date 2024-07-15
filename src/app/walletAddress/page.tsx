@@ -355,7 +355,6 @@ const AddressCard = ({currency, icon, getAddress}: {
                     }
                 </div>
             </div>
-            <DividerCus/>
         </div>
     )
 }
@@ -389,13 +388,18 @@ const WalletAddress = () => {
                             收款地址
                         </div>
                         <Flex vertical={true} className={'card-column-box'}>
-                            {currencies.map((currency) =>
-                                <AddressCard
-                                    key={currency.name}
-                                    currency={currency.name}
-                                    icon={currency.icon}
-                                    getAddress={getAddressDict}
-                                />
+                            {currencies.map((currency, index) =>
+                                <>
+                                    <AddressCard
+                                        key={currency.name}
+                                        currency={currency.name}
+                                        icon={currency.icon}
+                                        getAddress={getAddressDict}
+                                    />
+                                    {
+                                        (index+1) !== currencies.length && <DividerCus />
+                                    }
+                                </>
                             )}
                         </Flex>
                     </Card>
