@@ -100,12 +100,17 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                         marginBottom: '-5px'
                     }}>或者输入密钥
                     </div>
-                    <div style={{fontWeight: "bold", fontSize: '14px', marginLeft: '-16px'}}><Clipboard noBg={true}
-                                                                                                        style={{
-                                                                                                            fontSize: '14px',
-                                                                                                            marginLeft: '0px'
-                                                                                                        }}
-                                                                                                        str={secret}/>
+                    <div style={{fontWeight: "bold"}}>
+                        <Clipboard noBg={true}
+                                   wrapperStyle={{
+                                       justifyContent: 'start',
+                                       height:'24px',
+                                       alignItems: 'center',
+                                       marginTop: '10px'
+                                   }}
+                                   style={{
+                            fontSize: state.isMobile ? '12px' : '14px',
+                        }} str={secret}/>
                     </div>
                 </div>
 

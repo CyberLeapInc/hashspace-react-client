@@ -19,7 +19,7 @@
     position: relative;
     width: 100%;
     max-width: 100%;
-    padding-top: 20px;
+    padding:20px 0px 20px 16px;
 }
 .smallCost{
     font-weight: 500 !important;

@@ -20,4 +20,7 @@
     line-height: 30px;
     padding: 44px 0 20px;
     text-align: center;
+    @media (max-width: 768px) {
+        padding: 20px 0 20px;
+    }
 }

@@ -169,7 +169,7 @@ const SecurityCenter: React.FC = () => {
                                 }}>保护你的账户安全
                                 </div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: state.isMobile ? '' : '80px'}}
+                            <div style={{marginLeft: 'auto', paddingTop: !state.isMobile ? '8px' :'', paddingRight: state.isMobile ? '' : '80px'}}
                                  onClick={handleBindGoogle}>
                                 {
                                     state.userInfo.has_totp ?
@@ -210,16 +210,16 @@ const SecurityCenter: React.FC = () => {
                                 }}>实时接收订单信息
                                 </div>
                             </Flex>
-                            <div style={{marginLeft: 'auto', paddingTop: '8px', paddingRight: state.isMobile ? '' : '80px'}}
+                            <div style={{marginLeft: 'auto', paddingTop: !state.isMobile ? '8px' :'', paddingRight: state.isMobile ? '' : '80px'}}
                                  onClick={() => {
                                 setCounter(++counter)
                                 setIsShowBindPhone(true)
                             }}>
                                 {
                                     state.userInfo.phone_number ?
-                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
+                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={state.isMobile ? "small" : 'large'} shape={"round"}
                                                 type={"text"}>更改</Button> :
-                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={"large"} shape={"round"}
+                                        <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={state.isMobile ? "small" : 'large'} shape={"round"}
                                                 type={"primary"}>绑定</Button>
                                 }
 

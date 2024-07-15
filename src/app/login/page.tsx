@@ -203,11 +203,22 @@ const CryptoPage: React.FC = () => {
                     {
                         step === 1 && (
                             <div>
-                                <div className={css.loginHello} style={{
-                                    marginBottom: '16px'
-                                }}>验证</div>
-                                <Space direction={"vertical"} size={"large"} style={{width: '100%'}}>
-                                    <div>
+                                {
+                                    state.isMobile && (
+                                        <div className={css.mobileHello}>欢迎加入HashSpace</div>
+                                    )
+                                }
+                                {
+                                    !state.isMobile && (
+                                        <div className={css.loginHello} style={{
+                                            marginBottom: '16px'
+                                        }}>验证</div>
+                                    )
+                                }
+                                <div style={{width: '100%'}}>
+                                <div style={{
+                                    marginBottom: '24px'
+                                }}>
                                         <CodeSender
                                             label={'邮箱'}
                                             immidity={true}
@@ -228,12 +239,18 @@ const CryptoPage: React.FC = () => {
                                         {
                                             codeErrorStatus && <div className={css.errorMessage}>邮箱验证码错误</div>
                                         }
-                                        <div
-                                            className={css.message} >请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
-                                        </div>
-                                    </div>
+                                    {
+                                        !state.isMobile && (
+                                            <div
+                                                className={css.message}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
+                                            </div>
+                                        )
+                                    }
+                                </div>
                                     {totpEnabled && (
-                                        <div>
+                                        <div style={{
+                                            marginBottom: '24px'
+                                        }}>
                                             <div className={css.loginTitleText}>Google验证码</div>
                                             <Input
                                                 status={totpCodeErrorStatus ? 'error' : ''}
@@ -257,13 +274,14 @@ const CryptoPage: React.FC = () => {
                                             </div>
                                         </div>
                                     )}
-                                    <Space className={
+                                    <div className={
                                         state.isMobile? css.fixedZone : ''
-                                    } direction={"vertical"} size={'small'} style={{width: '100%'}}>
+                                    } style={{width: '100%'}}>
                                         {
-                                            isFirstRegister && <Checkbox onChange={onChange}
-                                                                                                     className={css.loginValidate}>
-                                                <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《服务条款》</a>和 <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a></span>
+                                            isFirstRegister && <Checkbox
+                                                onChange={onChange}
+                                                className={css.loginValidate}>
+                                                    <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《服务条款》</a>和 <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a></span>
                                             </Checkbox>
                                         }
 
@@ -275,8 +293,8 @@ const CryptoPage: React.FC = () => {
                                                 onClick={() => {
                                                     onVerify()
                                                 }}>下一步</Button>
-                                    </Space>
-                                </Space>
+                                    </div>
+                                </div>
                             </div>
                         )
                     }

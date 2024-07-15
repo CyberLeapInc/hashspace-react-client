@@ -13,6 +13,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {getUserInfo, logout} from "@/service/api";
 import Logo from "../../../public/logo-group.png";
+import NavMobile from '../../../public/nav-mobile.png'
 
 
 import css from './index.module.css'
@@ -151,25 +152,27 @@ export const Header: React.FC = () => {
         });
     }, [dispatch]);
     if (state.isMobile) {
-        return <header
-            className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        return <><header
+            className="sticky top-0 z-50 w-full border-b border-border/40"
             style={{
-                borderBottom: "none"
+                borderBottom: "none",
+                backgroundColor: 'rgba(255,255,255,0.91)',
             }}
         >
-            <div className={cn('container-my flex h-14 max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px',color: '#666'}}>
+            <div className={cn('container-my flex max-w-screen-2xl items-center', css.mobileHeader)} style={{'gap': '24px',color: '#666', backdropFilter: 'blur(10px)'}}>
                 <Link href={'/'}>
                     <div className="logospace">
                         <Image style={{
-                            width: '152px'
-                        }} width={152} src={Logo} alt={'logo'}/>
+                            width: '110px',
+                            marginLeft: '5px'
+                        }} width={110} src={Logo} alt={'logo'}/>
                     </div>
                 </Link>
                 <div>
                     <div className={css.top}>
                         {
                             !(state?.userInfo?.email) &&
-                            <Button style={{marginLeft: 'auto'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
+                            <Button style={{marginLeft: 'auto', height: '28px', lineHeight: '18px'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
                                 <Link href="/login" legacyBehavior passHref>
                                     开始挖矿
                                 </Link>
@@ -177,74 +180,83 @@ export const Header: React.FC = () => {
                         }
                         {
                             (state?.userInfo?.email) && (
-                                <Image onClick={() => openDrawerWithType('user')} style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'}/>                        )
+                                <Image onClick={() => openDrawerWithType('user')} style={{marginLeft: 'auto'}} width={28} src={IconAvatar} alt={'avatar'}/>                        )
                         }
-                        <Button size={"large"} type={"text"} icon={<MenuOutlined />} onClick={() => openDrawerWithType('navi')}/>
+                        <div style={{marginLeft: '20px', marginRight: '5px'}} onClick={() => openDrawerWithType('navi')}>
+                            <Image alt={'nav'} width={14} src={NavMobile} />
+                        </div>
                     </div>
                 </div>
-                <Drawer
-                    placement="top"
-                    closable={false}
-                    open={openDrawer}
-                    getContainer={false}
-                    height={'100vh'}
-                    bodyStyle={{
-                        padding: '0',
-                    }}
-                >
-                    {
-                        type === 'navi' && <div onClick={() => setOpenDrawer(false)}>
-                            <div className={css.mobileHeader}>
-                                <div></div>
-                                <div>
-                                    {
-                                        !(state?.userInfo?.email) &&
-                                        <Button style={{marginLeft: 'auto'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
-                                            <Link href="/login" legacyBehavior passHref>
-                                                开始挖矿
-                                            </Link>
-                                        </Button>
-
-                                    }
-                                    <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
-                                            onClick={() => setOpenDrawer(false)}/>
-                                </div>
-                            </div>
-                            <div className={css.mobileList}>
-                                <Link href="/" legacyBehavior passHref>
-                                    首页
-                                </Link>
-                                <Link href="/productList" legacyBehavior passHref>
-                                    云算力
-                                </Link>
-                                <Link href="/#question" legacyBehavior passHref>
-                                    常见问题
-                                </Link>
-                                <Link href="/calculator" legacyBehavior passHref>
-                                    计算器
-                                </Link>
-                                <Link href="/#footer" legacyBehavior passHref>
-                                    关于
-                                </Link>
-                            </div>
-                        </div>
-                    }
-                    {
-                        type === 'user' && <div  onClick={() => setOpenDrawer(false)}>
-                            <div className={css.mobileHeader}>
-                                <div></div>
-                                <div  className={css.top}>
-                                    <Image style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'}/>
-                                    <Button size={"large"} type={"text"} icon={<CloseOutlined/>}
-                                            onClick={() => setOpenDrawer(false)}/>
-                                </div>
-                            </div>
-                            <HoverContent isMobile={state.isMobile} outState={state} onLogOut={logOut}/>
-                        </div>
-                    }
-                </Drawer>
             </div>
+            <Drawer
+                placement="top"
+                closable={false}
+                open={openDrawer}
+                getContainer={false}
+                height={'100vh'}
+                bodyStyle={{
+                    padding: '0',
+                    backgroundColor: 'rgba(255,255,255,0.91)',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'all 0.01s'
+                }}
+            >
+                {
+                    type === 'navi' && <div onClick={() => setOpenDrawer(false)}>
+                        <div className={css.mobileHeader}>
+                            <div></div>
+                            <div style={{height: '28px',display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                {
+                                    !(state?.userInfo?.email) &&
+                                    <Button style={{marginLeft: 'auto', height: '28px', lineHeight: '18px'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
+                                        <Link href="/login" legacyBehavior passHref>
+                                            开始挖矿
+                                        </Link>
+                                    </Button>
+
+                                }
+                                <div onClick={() => setOpenDrawer(false)}>
+                                    <CloseOutlined width={14} style={{marginLeft: '20px', marginRight: '5px'}}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={css.mobileList}>
+                            <Link href="/" legacyBehavior passHref>
+                                首页
+                            </Link>
+                            <Link href="/productList" legacyBehavior passHref>
+                                云算力
+                            </Link>
+                            <Link href="/#question" legacyBehavior passHref>
+                                常见问题
+                            </Link>
+                            <Link href="/calculator" legacyBehavior passHref>
+                                计算器
+                            </Link>
+                            <Link href="/#footer" legacyBehavior passHref>
+                                关于
+                            </Link>
+                        </div>
+                    </div>
+                }
+                {
+                    type === 'user' && <div  onClick={() => setOpenDrawer(false)}>
+                        <div className={css.mobileHeader}>
+                            <div></div>
+                            <div  className={css.top}>
+                                <Image width={28} src={IconAvatar} alt={'avatar'}/>
+                                <div
+                                    onClick={() => setOpenDrawer(false)}>
+                                    <CloseOutlined width={14} style={{marginLeft: '20px', marginRight: '5px'}}/>
+                                </div>
+                            </div>
+                        </div>
+                        <HoverContent isMobile={state.isMobile} outState={state} onLogOut={logOut}/>
+                    </div>
+                }
+            </Drawer>
         </header>
+        </>
     } else {
         return (
             <header

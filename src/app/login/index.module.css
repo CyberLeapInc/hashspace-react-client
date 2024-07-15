@@ -17,10 +17,21 @@
 .logoImg{
     margin-right: 10px;
 }
+.fixedButton{
+    margin-top: calc(100vh / 2 - 105px) !important;
+}
 .mobileWrapper{
     padding-top: 40px;
     background-color: white;
-    height: calc(100vh - 56px - 78px);
+    height: calc(100vh - 128px);
+}
+.mobileHello{
+    font-size: 26px;
+    color: #333333;
+    line-height: 35px;
+    font-weight: 600;
+    margin-top: -10px;
+    margin-bottom: 30px;
 }
 .loginCard {
     width: 420px;
@@ -47,7 +58,8 @@
 }
 .moblieLoginHello{
     margin-top: 0;
-    margin-bottom: 40px;
+    margin-bottom: 44px;
+    font-size: 26px;
 }
 
 .loginTitleText {
@@ -94,11 +106,16 @@
     line-height: 24px;
     text-align: left;
     font-style: normal;
+    margin-bottom: 12px;
+    @media (max-width: 768px) {
+        font-size: 10px !important;
+
+    }
 }
 
 .fixedZone{
-    position: fixed !important;
-    bottom: 120px;
-    width: 80vw !important;
-    left: calc(50% - 40vw);
+    position: fixed;
+    bottom: 125px;
+    width: calc(100vw - 56px) !important;
+
 }
