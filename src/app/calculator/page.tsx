@@ -17,6 +17,8 @@ import big from "big.js";
 import {cn, formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import IconList from "@/components/IconList";
 import {CustomInput} from "@/components/CustomInput";
+import _ from 'lodash'
+import {useDebounceEffect} from "ahooks";
 
 interface CurrencyListSelectorProps {
     goodItem: GoodListItem | null;
@@ -240,8 +242,15 @@ const Calculator = () => {
         total_income: ""
     })
     const getFullRevenue = () => {
+        const sum = Number(currencyPrice['BTC']) + Number(currencyPrice['LTC']) + Number(currencyPrice['DOGE'])
+        if (sum === 0 || _.isEmpty(currencyPrice)) return;
         fullRevenue({
-            price: currencyPrice,
+            price: {
+                BTC: '0',
+                LTC: '0',
+                DOGE: '0',
+                ...currencyPrice
+            },
             difficulty: currentGood?.mining_currency === 'BTC' ? String(currencyDifficulty['BTC']) : '',
             good_id: goodId,
             hashrate_qty: String(buyCount)
@@ -276,10 +285,16 @@ const Calculator = () => {
                 setGoodItem(item.list && item.list[0] ? item.list[0] : null)
                 // @ts-ignore
                 setGoodId(item.list && item.list[0] ? item.list[0].good_id : '')
-                getFullRevenue()
             }
         })
     }
+    useDebounceEffect(() => {
+        getFullRevenue()
+    }, [selectedMineCurrency, goodId, goodItem,currencyPrice], {
+        wait: 50,
+        leading: false,
+        trailing: true,
+    })
     const handleGoodItemChange = (goodId: string) => {
         currentGood?.list?.find(
             (item) => {
@@ -289,9 +304,6 @@ const Calculator = () => {
                 }
             }
         )
-        setTimeout(() => {
-            getFullRevenue()
-        }, 0)
     }
 
     const handleBuyCountChange = (e: any) => {
@@ -341,9 +353,9 @@ const Calculator = () => {
                                     </div>
                                 })
                             }
-                            <div className={'cal-card-info2'}>{
-                                getTotalPrice(fullRevenueData.total_coin_income)
-                            }</div>
+                            <div className={'cal-card-info2'}>
+                                ≈${fullRevenueData.total_income ? formatThousands(big(fullRevenueData.total_income || '0').toFixed(getToFixedLength())) : '0'}
+                            </div>
                         </div>
                         <div className={'cal-card'}>
                             <div className={'cal-card-title2'}>
@@ -372,7 +384,9 @@ const Calculator = () => {
                                     </div>
                                 }) : null
                             }
-                            <div className={'cal-card-info2'}>{getTotalPrice(fullRevenueData.daily_coin_income)}</div>
+                            <div className={'cal-card-info2'}>
+                                ≈${formatThousands(big(fullRevenueData.daily_income || '0').toFixed(getToFixedLength()))}
+                            </div>
                         </div>
                         <div className={'cal-card'}>
                             <div className={'cal-card-title2'}>

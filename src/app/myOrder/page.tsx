@@ -93,7 +93,7 @@ const columns: TableProps<OrderItem>['columns'] = [
         render: (text, record, index) => {
             return <div>{
                 formatThousands(parseHashrateByNumber(Number(record.hashrate), 2, record.good?.unit || '').hashrate, false)
-            } {parseHashrateByNumber(Number(record.hashrate), 2, record.good?.unit || '').unit || ''}H</div>
+            } {parseHashrateByNumber(Number(record.hashrate), 2, record.good?.unit || '').unit || ''}</div>
         },
         width: 100
     },
@@ -219,7 +219,7 @@ const RenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (
             }
             <div className={css.item}>
                 <span className={css.label}>算力:</span>
-                <span className={css.value}>{formatThousands(parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).hashrate, false)} {parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).unit}H</span>
+                <span className={css.value}>{formatThousands(parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).hashrate, false)} {parseHashrateByNumber(Number(data.hashrate), 2, data.good.unit).unit}</span>
             </div>
             <div className={css.item}>
                 <span className={css.label}>电费:</span>

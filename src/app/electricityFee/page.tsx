@@ -113,7 +113,11 @@ const StateHover = ({record, onRecharge} : StateHoverProps) => {
             </div>
             <div style={{display: "flex", lineHeight: '40px', alignItems: 'center'}}>
                 <span style={{marginTop: '2px'}}>TXID:</span>
-                <span><Clipboard noBg={true} linkUrl={paymentLink} str={payment_link_source}></Clipboard></span>
+                <span style={{flex:1, textAlign: 'center'}}>
+                    {
+                        paymentLink ? <Clipboard noBg={true} linkUrl={paymentLink} str={payment_link_source} /> : '--'
+                    }
+                </span>
             </div>
         </div>
     }
