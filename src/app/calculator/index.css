@@ -72,19 +72,7 @@ max-width: 1200px;
     flex: 1;
 }
 .cal-card-title2{
-    font-weight: 400;
-    font-size: 14px;
-    color: #666666;
-    line-height: 28px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    img{
-        height: 28px;
-        width: 28px;
-        display: inline-block;
-        margin-right: 8px;
-    }
+
 }
 .cal-card-count2{
     font-weight: 600;

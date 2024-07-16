@@ -9,6 +9,24 @@
     align-items: center;
     justify-content: center;
 }
+.title{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 30px;
+    text-align: left;
+    font-style: normal;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.titleMobile{
+    font-weight: 600;
+    font-size: 16px;
+    color: #333333;
+    line-height: 22px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
 .rangeItem{
     flex: 1;
     height: 32px;
@@ -24,9 +42,133 @@
     border: 1px solid #3C53FF;
     color: #3C53FF;
 }
+.calCardBig{
+    max-width: 1200px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    margin: 0 auto 20px;
+    padding: 20px 40px 32px;
+}
+.calCardBigMobile{
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding:20px 16px;
+    padding-top: 10px;
+    padding-bottom: 16px;
+    margin: 0 16px;
+    margin-bottom: 10px;
+}
 .diffInput{
     text-align: center;
     font-weight: 600 !important;
     font-size: 14px;
     color: #333333 !important;
+}
+.calCardList{
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: 204px 204px 204px;
+    /*grid-template-rows: 168px 168px;*/
+}
+.calCardListMobile{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.calCard{
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid rgba(233,233,233,0.76);
+    backdrop-filter: blur(0px);
+    padding: 28px 24px 28px;
+}
+.calCardMobile{
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px 12px;
+    border: 1px solid rgba(233,233,233,0.76);
+    flex: 1;
+    min-width: 120px;
+    min-height: 121px;
+}
+.calIcon{
+    height: 28px;
+    width: 28px;
+    display: inline-block;
+    margin-right: 8px;
+}
+.calIconMobile{
+    height: 24px;
+    width: 24px;
+    display: inline-block;
+    margin-right: 8px;
+}
+.itemTitle{
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 28px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+.itemTitleMobile{
+    font-weight: 400;
+    font-size: 12px;
+    color: #666666;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.calCardCount{
+    font-weight: 600;
+    font-size: 20px;
+    color: #333333;
+    line-height: 28px;
+    display: flex;
+    gap: 4px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.calCardCountMobile{
+    font-size: 16px;
+    color: #333333;
+    font-weight: 600;
+    line-height: 24px;
+    display: flex;
+    gap: 4px;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.smallText{
+    font-weight: 600;
+    font-size: 12px;
+    color: #333333;
+    line-height: 28px;
+}
+.smallTextMobile{
+    font-weight: 600;
+    font-size: 10px;
+    color: #333333;
+}
+.calCardInfo{
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    padding-top: 4px;
+}
+.calCardInfoMobile{
+    font-weight: 400;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    padding-top: 4px;
 }

@@ -104,7 +104,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     }, [difficultyInner]);
     return <div>
         <Form.Item label="预期难度">
-            <Input className={css.diffInput}
+            <Input size={"large"} className={css.diffInput}
                    value={difficultyInner}
                    onChange={handleDifficulty}
             />
@@ -112,7 +112,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
         <div style={{
             display: 'flex',
             gap: '9px',
-            marginLeft: '100px',
+            marginLeft: state.isMobile ? '0' : '100px',
             marginTop: '-10px',
             marginBottom: '40px'
         }}>
@@ -328,150 +328,214 @@ const Calculator = () => {
         })
         return '≈$' + formatThousands(res.toFixed(getToFixedLength()));
     }
-    return <div style={{height: 'calc(100vh - 232px)',paddingTop: '25px'}}>
-        <div className={'cal-card-big'}>
+    return <div style={{height: !state.isMobile ?  'calc(100vh - 232px)' : '',paddingTop: '25px'}}>
+        <div className={state.isMobile ? css.calCardBigMobile : css.calCardBig}>
             <div className={'flex-wrap'}>
                 <div className={'intro'}>
-                    <div className={'login-hello'}>收益挖矿计算器</div>
-                    <TitleBar currencyDifficulty={currencyDifficulty} currencyList={goodItem?.currency || []} currencyPrice={currencyPrice} />
-                    <div className={'cal-card-list'}>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title2'}>
-                                <Image src={calAllgain} alt={'总收入'}></Image>
+                    <div className={state.isMobile ? css.titleMobile : css.title}>挖矿收益计算器</div>
+                    {!state.isMobile && <TitleBar currencyDifficulty={currencyDifficulty} currencyList={goodItem?.currency || []} currencyPrice={currencyPrice} />}
+                    <div className={cn(state.isMobile ? css.calCardListMobile : css.calCardList)}>
+                        <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                            <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllgain} alt={'总收入'}></Image>
                                 总收入
                             </div>
                             {
                                 goodItem?.currency.map((item) => {
-                                    return <div className={'cal-card-count2'} key={item}>
-                                        <span style={{
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                            flexWrap: 'wrap',
-                                        }}>{}</span>
+                                    return <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} key={item}>
                                         {formatThousands(big(fullRevenueData?.total_coin_income[item] || 0).toNumber().toFixed(getToFixedLength(item)))}
-                                        <span  className={'small-text'}>{item}</span>
+                                        <span  className={state.isMobile ? css.smallTextMobile : css.smallText}>{item}</span>
                                     </div>
                                 })
                             }
-                            <div className={'cal-card-info2'}>
+                            <div className={state.isMobile ? css.calCardInfoMobile : css.calCardInfo}>
                                 ≈${fullRevenueData.total_income ? formatThousands(big(fullRevenueData.total_income || '0').toFixed(getToFixedLength())) : '0'}
                             </div>
                         </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title2'}>
-                                <Image src={calAllPay} alt={'总支出'}></Image>
+                        <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                            <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllPay} alt={'总支出'}></Image>
                                 总支出
                             </div>
-                            <div className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))}</div>
                         </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title2'}>
-                                <Image src={calProfit} alt={'净利润'}></Image>
+                        <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                            <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calProfit} alt={'净利润'}></Image>
                                 净利润
                             </div>
-                            <div className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength()))}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength()))}</div>
                         </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title2'}>
-                                <Image src={calDailyGain} alt={'每日收入'}></Image>
+                        <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                            <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calDailyGain} alt={'每日收入'}></Image>
                                 每日收入
                             </div>
                             {
                                 fullRevenueData.daily_coin_income ? Object.keys(fullRevenueData.daily_coin_income).map((item) => {
-                                    return <div className={'cal-card-count2'} key={item}>
-                                        {formatThousands(big(fullRevenueData.daily_coin_income[item] || 0).toFixed(getToFixedLength(item)))}
-                                        <span className={'small-text'}>{item}</span>
-                                    </div>
+                                    return (
+                                        <div key={item}  className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>
+                                            {formatThousands(big(fullRevenueData.daily_coin_income[item] || 0).toFixed(getToFixedLength(item)))}
+                                            <span className={state.isMobile ? css.smallTextMobile : css.smallText}>{item}</span>
+                                        </div>
+                                    )
                                 }) : null
                             }
-                            <div className={'cal-card-info2'}>
+                            <div className={state.isMobile ? css.calCardInfoMobile : css.calCardInfo}>
                                 ≈${formatThousands(big(fullRevenueData.daily_income || '0').toFixed(getToFixedLength()))}
                             </div>
                         </div>
-                        <div className={'cal-card'}>
-                            <div className={'cal-card-title2'}>
-                                <Image src={calPayBackDay} alt={'回本天数'}></Image>
+                        <div className={cn(state.isMobile ? css.calCardMobile : css.calCard)}>
+                            <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                            <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackDay} alt={'回本天数'}></Image>
                                 回本天数
                             </div>
-                            <div className={'cal-card-count2'}>{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? '无法回本' : `${formatThousands(fullRevenueData.payback_day || 0, false)}天`}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? '无法回本' : `${formatThousands(fullRevenueData.payback_day || 0, false)}天`}</div>
                         </div>
                         {
                             goodItem?.mining_currency === 'BTC' ? (
-                                <div className={'cal-card'}>
-                                    <div className={'cal-card-title2'}>
-                                        <Image src={calPayBackMoney} alt={'回本币价'}></Image>
+                                <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                                    <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={'回本币价'}></Image>
                                         回本币价
                                     </div>
-                                    <div
-                                        className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength()))}</div>
+                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength()))}</div>
                                 </div>
                             ):null
                         }
                         {
                             goodItem?.mining_currency === 'LTC' ? (
-                                <div className={'cal-card'}>
-                                    <div className={'cal-card-title2'}>
-                                        <Image src={calPayBackMoney} alt={'回本币价'}></Image>
+                                <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
+                                    <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
+                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={'回本币价'}></Image>
                                         总电费
                                     </div>
-                                    <div
-                                        className={'cal-card-count2'}>${formatThousands(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))}</div>
+                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>${formatThousands(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))}</div>
                                 </div>
                             ):null
                         }
                     </div>
                 </div>
-                <div className={'divider'}></div>
-                <div className={'form'}>
-                    <Form
-                        labelCol={{span: 6}}
-                        wrapperCol={{span: 18}}
-                        layout="horizontal"
-                        initialValues={{size: 'large'}}
-                        onValuesChange={onFormLayoutChange}
-                        size={'large'}
-                        style={{maxWidth: 1200, marginTop: '72px'}}
-                    >
-                        <Form.Item label="选择币种">
-                            <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
-                                {mineCurrencyList.map((item) => {
-                                    return <Select.Option value={item} key={item}>
-                                        <CurrencySelectorContent currency={item} />
-                                    </Select.Option>
-                                })}
-                            </Select>
-                        </Form.Item>
-                        <Form.Item label="选择套餐">
-                            <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
-                                {
-                                    goodItemList.map((item) => {
-                                        return <Select.Option value={item.good_id} key={item.good_id}>
-                                            <div className={css.selectOptionCus}>
-                                                <div>
-                                                    <div>{item.name}</div>
-                                                </div>
-                                            </div>
-                                        </Select.Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                        <Form.Item label="算力数量">
-                            <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange} defaultValue={buyCount} type={'number'} unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'} step={1} min={0} max={999999999999999}/>
-                            {/*<Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>*/}
-                        </Form.Item>
-                        <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
-                        {
-                            goodItem?.mining_currency === 'BTC' ? <CurrencyDifficulty onChange={setCurrencyDifficulty} currency={goodItem.mining_currency || 'BTC'}/> : null
-                        }
-                        <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
-                            开始计算
-                        </Button>
-                    </Form>
-                </div>
+                {
+                    !state.isMobile && (
+                        <>
+                            <div className={'divider'}></div>
+                            <div className={'form'}>
+                                <Form
+                                    labelCol={{span: 6}}
+                                    wrapperCol={{span: 18}}
+                                    layout="horizontal"
+                                    initialValues={{size: 'large'}}
+                                    onValuesChange={onFormLayoutChange}
+                                    size={'large'}
+                                    style={{maxWidth: 1200, marginTop: '72px'}}
+                                >
+                                    <Form.Item label="选择币种">
+                                        <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
+                                            {mineCurrencyList.map((item) => {
+                                                return <Select.Option value={item} key={item}>
+                                                    <CurrencySelectorContent currency={item}/>
+                                                </Select.Option>
+                                            })}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item label="选择套餐">
+                                        <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
+                                            {
+                                                goodItemList.map((item) => {
+                                                    return <Select.Option value={item.good_id} key={item.good_id}>
+                                                        <div className={css.selectOptionCus}>
+                                                            <div>
+                                                                <div>{item.name}</div>
+                                                            </div>
+                                                        </div>
+                                                    </Select.Option>
+                                                })
+                                            }
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item label="算力数量">
+                                        <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange}
+                                                     defaultValue={buyCount} type={'number'}
+                                                     unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
+                                                     step={1} min={0} max={999999999999999}/>
+                                        {/*<Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>*/}
+                                    </Form.Item>
+                                    <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
+                                    {
+                                        goodItem?.mining_currency === 'BTC' ?
+                                            <CurrencyDifficulty onChange={setCurrencyDifficulty}
+                                                                currency={goodItem.mining_currency || 'BTC'}/> : null
+                                    }
+                                    <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
+                                        开始计算
+                                    </Button>
+                                </Form>
+                            </div>
+                        </>
+                    )
+                }
+
             </div>
 
         </div>
+        {
+            state.isMobile && (
+                <div className={state.isMobile ? css.calCardBigMobile : css.calCardBig} style={{marginBottom: '40px'}}>
+                    <div className={'form'}>
+                        <Form
+                            labelCol={{span: 6}}
+                            wrapperCol={{span: 18}}
+                            layout="horizontal"
+                            initialValues={{size: 'large'}}
+                            onValuesChange={onFormLayoutChange}
+                            size={"small"}
+                        >
+                            <Form.Item label="选择币种">
+                                <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
+                                    {mineCurrencyList.map((item) => {
+                                        return <Select.Option value={item} key={item}>
+                                            <CurrencySelectorContent currency={item}/>
+                                        </Select.Option>
+                                    })}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label="选择套餐">
+                                <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
+                                    {
+                                        goodItemList.map((item) => {
+                                            return <Select.Option value={item.good_id} key={item.good_id}>
+                                                <div className={css.selectOptionCus}>
+                                                    <div>
+                                                        <div>{item.name}</div>
+                                                    </div>
+                                                </div>
+                                            </Select.Option>
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label="算力数量">
+                                <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange}
+                                             defaultValue={buyCount} type={'number'}
+                                             unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
+                                             step={1} min={0} max={999999999999999}/>
+                                {/*<Input addonAfter={<div>{currentGood?.mining_currency === 'BTC' ? 'T' : 'M'}H/s</div>} type={'number'} defaultValue={buyCount} step={1} onChange={handleBuyCountChange}/>*/}
+                            </Form.Item>
+                            <CurrencyListSelector onChange={handleCurrencyPriceChange} goodItem={goodItem}/>
+                            {
+                                goodItem?.mining_currency === 'BTC' ?
+                                    <CurrencyDifficulty onChange={setCurrencyDifficulty}
+                                                        currency={goodItem.mining_currency || 'BTC'}/> : null
+                            }
+                            <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
+                                开始计算
+                            </Button>
+                        </Form>
+                    </div>
+                </div>
+            )
+        }
     </div>
 }
 
