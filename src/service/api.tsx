@@ -42,7 +42,7 @@ const useHideLoading = () => {
     }
 }
 
-let ApiPrefix = 'https://api.hashspace.com/'
+let ApiPrefix = 'https://api.hashspace.one/'
 const ApiPrefixTest = 'https://api.test.hashspace.dev/'
 
 if (env === 'development') {
