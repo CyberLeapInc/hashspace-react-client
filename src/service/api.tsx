@@ -45,7 +45,7 @@ const useHideLoading = () => {
 let ApiPrefix = 'https://api.hashspace.one/'
 const ApiPrefixTest = 'https://api.test.hashspace.dev/'
 
-if (env === 'development' || process.env.IS_TEST === 'true') {
+if (env === 'development' || process.env.IS_TEST === 'test') {
     ApiPrefix = ApiPrefixTest
 }
 
