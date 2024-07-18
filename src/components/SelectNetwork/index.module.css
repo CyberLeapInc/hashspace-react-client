@@ -17,13 +17,20 @@
     height: 32px;
     background: #F7F7F7;
     border: none;
+    font-size: 14px;
+    @media (max-width: 768px) {
+        font-size: 10px;
+    }
 }
 .selectedCurrency{
     background: rgba(60,83,255,0.05);
     border: 1px solid #3C53FF;
     font-weight: 500;
-    font-size: 14px;
     color: #3C53FF;
+    font-size: 14px;
+    @media (max-width: 768px) {
+        font-size: 10px;
+    }
 }
 .selectedCurrency2{
     background: rgba(60,83,255,0.05);
@@ -56,6 +63,9 @@
     text-align: left;
     text-align: center;
     margin-bottom: 12px;
+    @media (max-width: 768px) {
+        font-size: 32px;
+    }
 }
 .payButton{
     margin-top: 40px;

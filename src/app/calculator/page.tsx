@@ -34,6 +34,15 @@ const CurrencyListSelector = ({
         'DOGE': 0
     })
     const {state, dispatch} = useContext(MyContext)
+    const [inputMarginLeft, setInputMarginLeft] = useState<string>('55px')
+
+    useEffect(() => {
+        if (state.isMobile) {
+            setInputMarginLeft('38px');
+        } else {
+            setInputMarginLeft('55px');
+        }
+    }, [state]);
 
     const getValue = (currency: string) => {
         if (!good) {
@@ -66,7 +75,7 @@ const CurrencyListSelector = ({
         {
             good?.currency.map((item)=> {
                 return <Form.Item label={`预期${item}币价`} key={item} >
-                    <CustomInput inputMarginLeft={'55px'} onChange={(e) => handleChange(item, e)} unit={'USDT'} defaultValue={getValue(item)} type={'number'}/>
+                    <CustomInput inputMarginLeft={inputMarginLeft} onChange={(e) => handleChange(item, e)} unit={'USDT'} defaultValue={getValue(item)} type={'number'}/>
                 </Form.Item>
             })
         }
@@ -315,6 +324,15 @@ const Calculator = () => {
     const handleCurrencyPriceChange = (data: {[key: string] : number | string }) => {
         setCurrencyPrice(data)
     }
+    const [inputMarginLeft, setInputMarginLeft] = useState<string>('55px')
+
+    useEffect(() => {
+        if (state.isMobile) {
+            setInputMarginLeft('38px');
+        } else {
+            setInputMarginLeft('55px');
+        }
+    }, [state]);
     const getTotalPrice = (data: {
         [key: string]: string | number
     }) => {
@@ -455,7 +473,7 @@ const Calculator = () => {
                                         </Select>
                                     </Form.Item>
                                     <Form.Item label="算力数量">
-                                        <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange}
+                                        <CustomInput inputMarginLeft={inputMarginLeft} onChange={handleBuyCountChange}
                                                      defaultValue={buyCount} type={'number'}
                                                      unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
                                                      step={1} min={0} max={999999999999999}/>
@@ -516,7 +534,7 @@ const Calculator = () => {
                                 </Select>
                             </Form.Item>
                             <Form.Item label="算力数量">
-                                <CustomInput inputMarginLeft={'55px'} onChange={handleBuyCountChange}
+                                <CustomInput inputMarginLeft={inputMarginLeft} onChange={handleBuyCountChange}
                                              defaultValue={buyCount} type={'number'}
                                              unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
                                              step={1} min={0} max={999999999999999}/>

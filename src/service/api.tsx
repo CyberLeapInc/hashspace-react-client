@@ -3,13 +3,15 @@ import axios from "axios";
 import {message} from "antd";
 import React, {useContext} from 'react';
 import {LoadingComponent} from "@/service/loading";
-import {ActionType, MyContext} from "@/service/context";
 import {createRoot} from "react-dom/client";
 
 let isShow = false;
 let count = 0;
 
+const env = process.env.NODE_ENV;
+
 const useShowLoading = ()=> {
+    console.log(env)
     if (document && typeof document !== undefined && typeof document !== 'undefined') {
         'use client'
         if (isShow) {
@@ -40,9 +42,12 @@ const useHideLoading = () => {
     }
 }
 
-const ApiPrefix = 'https://api.test.hashspace.dev/'
-const ApiPrefixProd = 'https://api.hashspace.com/';
+let ApiPrefix = 'https://api.hashspace.com/'
+const ApiPrefixTest = 'https://api.test.hashspace.dev/'
 
+if (env === 'development') {
+    ApiPrefix = ApiPrefixTest
+}
 
 
 const axiosInstance = axios.create({
