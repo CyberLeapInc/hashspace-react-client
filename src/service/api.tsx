@@ -11,7 +11,9 @@ let count = 0;
 const env = process.env.NODE_ENV;
 
 const useShowLoading = ()=> {
-    console.log(env)
+    console.log(process.env.IS_TEST === 'test')
+    console.log(process.env.IS_TEST)
+    console.log(process.env)
     if (document && typeof document !== undefined && typeof document !== 'undefined') {
         'use client'
         if (isShow) {
