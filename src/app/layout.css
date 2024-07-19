@@ -12,6 +12,13 @@
     height: 60px;
     line-height: 60px;
     text-align: center;
+    @media screen and (max-width: 768px) {
+        font-size: 10px;
+        color: #333333;
+        height: 50px;
+        line-height: 30px;
+        padding-bottom: 20px;
+    }
 }
 .footer-container{
     max-width: 1200px;
