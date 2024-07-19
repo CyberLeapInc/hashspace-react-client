@@ -31,7 +31,6 @@ export const Footer = () => {
                          display: 'flex',
                          justifyContent: 'center',
                          alignItems: 'center',
-                         lineHeight: '20px',
                          verticalAlign: 'middle',
                      }}>
                          <Image src={EmailPic}
@@ -42,7 +41,11 @@ export const Footer = () => {
                                     marginRight: '10px'
                                 }}
                          />
-                         support@cyberleap.us
+                         <span style={{
+                             lineHeight: '16px',
+                             height: '20px',
+                             display: 'inline-block'
+                         }}>support@cyberleap.us</span>
                      </a>
 
                 </div>

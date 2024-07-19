@@ -45,8 +45,7 @@
     min-width: 100px;
     display: flex;
     justify-content: space-between;
-    height: 18px;
-    margin-top: 10px;
+    align-items: center;
 }
 .container-my{
      max-width: 1200px;
