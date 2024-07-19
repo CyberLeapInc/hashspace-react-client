@@ -104,6 +104,17 @@
     line-height: 17px;
     display: flex;
 }
+.countdownMobile{
+    font-weight: 400;
+    font-size: 14px;
+    color: #EA2A2A;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    line-height: 20px;
+    margin-top: 8px;
+}
 .contentWrapper{
     min-width: 150px;
     padding: 0 20px;
@@ -117,4 +128,12 @@
     color: #333333;
     line-height: 24px;
     margin-top: 10px;
+}
+.smallTitleMobile{
+    font-weight: 600;
+    font-size: 16px;
+    color: #333333;
+    line-height: 30px;
+    text-align: center;
+    margin-bottom: 24px;
 }
