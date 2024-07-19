@@ -3,12 +3,11 @@ import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
 import {MyContext, MyContextProvider} from "@/service/context";
 import {ConfigProvider, Modal} from "antd";
 import {themeConfig} from "@/service/themeConfig";
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import NotificationBar from "@/components/NotificationBar";
-import NoEleFee from "@/components/NoEleFee";
+import {Layout} from 'antd';
 import HeaderCus from "@/components/Header";
 import FooterCus from "@/components/Footer";
-import {LoadingComponent} from "@/service/loading";
+import {cn} from "@/lib/utils";
+import {GlobalModals} from "@/components/GlobalModals";
 
 const { Header, Content, Footer } = Layout;
 
@@ -22,9 +21,6 @@ const isNotShowFooter = () => {
 
 export const Providers = ({children}: { children: ReactNode }) => {
     const [isMobile, setIsMobile] = useState(false);
-    const [isNoFeeModel, setIsNoFeeModel] = useState(false);
-    const [isShowNotification, setIsShowNotification] = useState(false);
-    const {state} = useContext(MyContext);
     const value = useMemo(() => ({isMobile}), [isMobile]);
     const isShowFooter = useMemo(() => {
         if (!isMobile) {
@@ -40,14 +36,7 @@ export const Providers = ({children}: { children: ReactNode }) => {
         ));
         setIsMobile(mobile);
     }, []);
-    useEffect(() => {
-        if (state.userInfo.insufficient_electricity_balance) {
-            setIsNoFeeModel(true)
-        }
-        if (state.userInfo.warning_electricity_balance) {
-            setIsShowNotification(true)
-        }
-    }, [state.userInfo.insufficient_electricity_balance, state.userInfo.warning_electricity_balance]);
+
     return (
         <MyContextProvider value={value}>
             <ConfigProvider
@@ -65,29 +54,14 @@ export const Providers = ({children}: { children: ReactNode }) => {
                         {children}
                     </Content>
                     {
-                        isShowFooter && <FooterCus/>
-                    }
-                    {
-                        !isShowFooter &&
-                        <div style={{
-                            height: '14px',
-                            lineHeight: '14px',
-                            textAlign: 'center',
-                            padding: '10px 0 54px',
-                            backgroundColor: 'white',
-                            display: 'block',
-                            boxSizing: 'content-box',
-                            fontSize: '10px',
-                            color: '#999999'
-                        }}>
-                            © 2024 Hashspce. All rights reserved
-                        </div>
+                        isShowFooter ? <FooterCus/> : (
+                            <div className={cn('copyright')}>
+                                © 2024 Hashspce. All rights reserved
+                            </div>
+                        )
                     }
                 </Layout>
-                <NotificationBar show={isShowNotification} onClose={() => setIsShowNotification(false)} />
-                <Modal width={420} closable={false} open={isNoFeeModel} footer={null}>
-                    <NoEleFee onCharge={() => setIsNoFeeModel(false)} />
-                </Modal>
+                <GlobalModals />
             </ConfigProvider>
         </MyContextProvider>
     )

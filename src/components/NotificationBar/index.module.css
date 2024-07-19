@@ -7,7 +7,7 @@
     justify-content: center;
     align-items: center;
     background: #FFFFFF;
-    box-shadow: 5px 5px 20px 0px rgba(0,0,0,0.05);
+    box-shadow: 5px 5px 30px 0px rgba(0,0,0,0.05);
     border-radius: 16px;
     font-weight: 400;
     font-size: 12px;
@@ -23,5 +23,31 @@
             position: fixed; /* 固定在屏幕上 */
         }
     }
+    @media screen and (max-width: 568px) {
+        height: 40px; /* 高度40px */
+        line-height: 40px; /* 行高40px */
+        font-size: 12px; /* 字体大小10px */
+        margin: 0 16px;
+        width: calc(100% - 32px);
+        transform: translateX(0%); /* 水平居中 */
+        left: 0;
+        top: 64px
+    }
     z-index: 51;
+}
+.warningIcon{
+    width: 16px;
+    @media screen and (max-width: 768px) {
+        width: 14px;
+    }
+}
+.closeIcon{
+    cursor: pointer;
+    position: absolute;
+    right: 24px;
+    width: 20px;
+    @media screen and (max-width: 768px) {
+        right: 16px;
+        width: 16px;
+    }
 }
