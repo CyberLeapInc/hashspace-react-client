@@ -538,7 +538,7 @@ export interface GoodDetail {
      * 算力单位 T。G
      */
     unit: string;
-    mining_currency: string;
+    mining_currency: 'BTC' | 'LTC';
     [property: string]: any;
 }
 

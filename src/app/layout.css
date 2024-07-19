@@ -42,7 +42,7 @@
     }
 }
 .pic-row{
-    width: 100px;
+    min-width: 100px;
     display: flex;
     justify-content: space-between;
     height: 18px;
@@ -189,6 +189,13 @@
         }
     }
 }
+.mobile-right{
+    @media screen and (max-width: 768px) {
+        text-align: right;
+        flex: 1;
+    }
+
+}
 .card-column-box-title{
     font-weight: 600;
     @media screen and (max-width: 768px){
@@ -218,6 +225,12 @@
     vertical-align: middle;
     display: inline-block;
     margin-left: 10px;
+    @media screen and (max-width: 768px){
+        font-size: 10px;
+        height: 18px;
+        width: 40px;
+        line-height: 18px;
+    }
 }
 .tips-cus-success{
     color: #0DBB78;

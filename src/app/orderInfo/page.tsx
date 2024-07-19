@@ -240,7 +240,7 @@ const OrderInfo = () => {
             <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                 <div className={css.flexWrap}>
                     <div className={css.intro}>
-                        <div className={'login-hello'}>算力数据</div>
+                        <div className={'login-hello'} style={{marginBottom: state.isMobile ? '8px' : ''}}>算力数据</div>
                         <div className={state.isMobile ? css.mobileCalCardList : css.calCardList}>
                             {cardData.map((card, index) => (
                                 <Card rawData={orderInfo} key={card.showKey} {...card} />

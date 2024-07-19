@@ -13,6 +13,9 @@ import {PriceSlider} from "@/components/PriceSlider";
 import { ColumnConfig } from '@ant-design/plots';
 import {useDebounceFn} from "ahooks";
 import {MyContext} from "@/service/context";
+import BtcMachine from '../../../public/btc_machine.png';
+import LtcMachine from '../../../public/ltc_machine.png';
+import Image from 'next/image';
 
 import dynamic from 'next/dynamic'
 import Link from "next/link";
@@ -85,7 +88,12 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
         legend: false,
         height: 166
     };
-    return <Column {...config} width={204} data={dataList}/>;
+    return <div style={{
+        width: "204px",
+        margin: '0 auto'
+    }}>
+        <Column {...config} width={204} data={dataList}/>
+    </div>;
 };
 
 const DEFAULT_BUY_DAYS = 10;
@@ -249,6 +257,23 @@ const ProductDetail = () => {
         }
     }
 
+    const mineMachine = {
+        BTC: {
+            name: 'S19XP',
+            hashrate: '141T',
+            power: '3031.5W',
+            heat: '21.5J/T',
+            img: BtcMachine
+        },
+        LTC: {
+            name: 'ANTMINER L9',
+            hashrate: '16G',
+            power: '3360W',
+            heat: '210J/G',
+            img: LtcMachine
+        }
+    }
+
 
 
     return (
@@ -257,15 +282,25 @@ const ProductDetail = () => {
                 <div className={cn(state.isMobile ? css.mobileProductDetailWrapper:css.productDetailWrapper)}>
                     <div className={cn(state.isMobile ? css.mobileLeft : css.left)}>
                         <div className={css.block}>
-                            <div className={css.productTitle}>S19J Pro</div>
+                            <div className={css.productTitle}>{
+                                mineMachine[goodDetail?.mining_currency || 'BTC'].name
+                            }</div>
                             <div className={css.productInfo}>
-                                <span>106T</span>
+                                <span>{
+                                    mineMachine[goodDetail?.mining_currency || 'BTC'].hashrate
+                                }</span>
                                 <Divider orientationMargin={40} style={{height: '25px',marginLeft: '40px', marginRight: '40px'}} type={'vertical'}/>
-                                <span>19.5J/T</span>
+                                <span>{
+                                    mineMachine[goodDetail?.mining_currency || 'BTC'].heat
+                                }</span>
                                 <Divider orientationMargin={40} style={{height: '25px',marginLeft: '40px', marginRight: '40px'}} type={'vertical'}/>
-                                <span>2068W</span>
+                                <span>{
+                                    mineMachine[goodDetail?.mining_currency || 'BTC'].power
+                                }</span>
                             </div>
-                            <div style={{height: '290px',lineHeight: '220px', textAlign: 'center'}}>产品{goodId}对应的图片展示在这里</div>
+                            <div style={{height: '290px',lineHeight: '220px', textAlign: 'center'}}>
+                                <Image className={css.productImage} src={mineMachine[goodDetail?.mining_currency || 'BTC'].img} alt={'machine'} />
+                            </div>
                         </div>
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px', flexDirection: state.isMobile ? 'column' : 'row'}}>
                             <div className={cn(css.chart, css.block)}>
@@ -289,7 +324,7 @@ const ProductDetail = () => {
                              suppressHydrationWarning>{getLocalDate(goodDetail?.start_at)} - {getLocalDate(goodDetail?.end_at)}</div>
                         <div className={cn(state.isMobile ? css.mobileCard : css.card)}>
                             <div className={css.row}>
-                                <div className={css.label}>选择数量</div>
+                                <div className={cn(css.label)} style={{paddingBottom: state.isMobile? '8px' : ''}}>选择数量</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
@@ -323,7 +358,7 @@ const ProductDetail = () => {
                             {/*    </div>*/}
                             {/*}*/}
                             <div className={css.row}>
-                                <div className={css.label}>电费天数</div>
+                                <div className={css.label} style={{paddingBottom: state.isMobile? '8px' : ''}}>电费天数</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
@@ -340,7 +375,7 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                             <div className={css.row2}>
-                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合约费用</div>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>套餐费用</div>
                                 <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(hashrateCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                             <div className={css.row2} style={{

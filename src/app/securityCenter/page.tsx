@@ -128,18 +128,18 @@ const SecurityCenter: React.FC = () => {
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'}>UID</div>
-                            <div className={'card-column-box-row-content'}>{state.userInfo.uid}</div>
+                            <div className={'card-column-box-row-content mobile-right'}>{state.userInfo.uid}</div>
                         </div>
                         <DividerCus/>
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'}>注册日期</div>
                             <div
-                                className={'card-column-box-row-content'}>{moment(state.userInfo.created_at * 1000).format('MM/DD/YYYY')}</div>
+                                className={'card-column-box-row-content mobile-right'}>{moment(state.userInfo.created_at * 1000).format('MM/DD/YYYY')}</div>
                         </div>
                         <DividerCus/>
                         <div className={'card-column-box-row'}>
                             <div className={'card-column-box-row-label'}>邮箱账号</div>
-                            <div className={'card-column-box-row-content'}>{state.userInfo.email}</div>
+                            <div className={'card-column-box-row-content mobile-right'}>{state.userInfo.email}</div>
                         </div>
                     </Flex>
                 </Card>
@@ -155,7 +155,7 @@ const SecurityCenter: React.FC = () => {
                                 <Image width={state.isMobile ? 40 : 58} src={IconGoogle} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
-                                <Flex style={{verticalAlign: 'middle'}}>Google验证
+                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>Google验证
                                     <Tips text={state.userInfo.has_totp ? '已绑定' : '未绑定'}
                                           type={state.userInfo.has_totp ? 'success' : 'danger'}/>
                                 </Flex>
@@ -196,7 +196,7 @@ const SecurityCenter: React.FC = () => {
                                 <Image width={state.isMobile ? 40 : 58} src={IconPhone} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
-                                <Flex style={{verticalAlign: 'middle'}}>手机
+                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>手机
                                     <Tips text={state.userInfo.phone_number ? '已绑定' : '未绑定'}
                                           type={state.userInfo.phone_number ? 'success' : 'danger'}/>
                                 </Flex>

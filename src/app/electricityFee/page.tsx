@@ -337,7 +337,7 @@ const ElectricityFee = () => {
             {
                 state.isMobile && (
                     <div className={css.mobileBox} style={{flexDirection: 'column'}}>
-                        <div style={{display: "flex"}}>
+                        <div style={{display: "flex", paddingTop: '8px'}}>
                             <div>
                                 <div className={css.boxMainTitle} style={{lineHeight: '24px', fontSize: '12px'}}>
                                     <Image width={24} src={DollarBlue} alt={'dollar'}/>

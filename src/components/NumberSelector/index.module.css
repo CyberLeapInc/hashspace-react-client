@@ -28,3 +28,8 @@
 .handler:active{
     background-color: rgba(60, 83, 255, 0.25) ;
 }
+.unit{
+    @media screen and (max-width: 768px){
+        font-size: 19px;
+    }
+}

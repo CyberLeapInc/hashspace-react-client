@@ -27,21 +27,24 @@ export const Footer = () => {
                     <a href={'/disclaimer_cn.html'} target="_blank" className={css.agreement}>免责声明</a>
                 </div>
                 <div className='pic-row'>
-                    <Image src={TwitterPic}
-                           width={20}
-                           height={20}
-                           alt="twitter"
-                    />
-                    <Image src={TgPic}
-                           width={20}
-                           height={20}
-                           alt="twitter"
-                    />
-                    <Image src={EmailPic}
-                           width={20}
-                           height={20}
-                           alt="twitter"
-                    />
+                     <a href={'mailto:support@cyberleap.us'} style={{
+                         display: 'flex',
+                         justifyContent: 'center',
+                         alignItems: 'center',
+                         lineHeight: '20px',
+                         verticalAlign: 'middle',
+                     }}>
+                         <Image src={EmailPic}
+                                width={20}
+                                height={20}
+                                alt="twitter"
+                                style={{
+                                    marginRight: '10px'
+                                }}
+                         />
+                         support@cyberleap.us
+                     </a>
+
                 </div>
             </div>
             <div className="footer-info">© 2024 Hashspce. All rights reserved</div>

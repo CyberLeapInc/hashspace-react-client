@@ -54,7 +54,9 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
         <div>
             <div style={{display: 'flex', alignItems: 'center', textAlign: 'right'}}>
                 {
-                    unit === '$' && <span style={{
+                    unit === '$' && <span
+                        className={css.unit}
+                        style={{
                         width: calInputWidth('$'),
                         display: 'inline-block',
                         textAlign: 'right',
@@ -99,10 +101,12 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
                     }}
                 />
                 {
-                    unit !== '$' && <span style={{
+                    unit !== '$' && <span
+                        className={css.unit}
+                        style={{
                         width: calInputWidth(unit || ''),
                         display: 'inline-block',
-                        textAlign: 'left',
+                        textAlign: 'left'
                     }}>{unit || ''}</span>
                 }
             </div>
