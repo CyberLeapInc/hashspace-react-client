@@ -22,6 +22,10 @@ const isNotShowFooter = () => {
 export const Providers = ({children}: { children: ReactNode }) => {
     const [isMobile, setIsMobile] = useState(false);
     const value = useMemo(() => ({isMobile}), [isMobile]);
+    const [isLoad, setIsLoad] = useState(false)
+    useEffect(() => {
+        setIsLoad(true)
+    }, []);
     const isShowFooter = useMemo(() => {
         if (!isMobile) {
             return true
@@ -42,26 +46,33 @@ export const Providers = ({children}: { children: ReactNode }) => {
             <ConfigProvider
                 theme={themeConfig}
             >
-                <HeaderCus/>
-                <Layout
-                    style={{
-                        maxWidth: '100vw',
-                        overflow: 'scroll',
-                        minWidth:  isMobile ? '250px' : '1200px',
-                    }}
-                >
-                    <Content>
-                        {children}
-                    </Content>
-                    {
-                        isShowFooter ? <FooterCus/> : (
-                            <div className={cn('copyright')}>
-                                © 2024 Hashspce. All rights reserved
-                            </div>
-                        )
-                    }
-                </Layout>
-                <GlobalModals />
+                {
+                    isLoad && (
+                        <>
+                            <HeaderCus/>
+                            <Layout
+                                style={{
+                                    maxWidth: '100vw',
+                                    overflow: 'scroll',
+                                    minWidth:  isMobile ? '250px' : '1200px',
+                                }}
+                            >
+                                <Content>
+                                    {children}
+                                </Content>
+                                {
+                                    isShowFooter ? <FooterCus/> : (
+                                        <div className={cn('copyright')}>
+                                            © 2024 Hashspce. All rights reserved
+                                        </div>
+                                    )
+                                }
+                            </Layout>
+                            <GlobalModals />
+                        </>
+                    )
+                }
+
             </ConfigProvider>
         </MyContextProvider>
     )
