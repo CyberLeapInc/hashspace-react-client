@@ -8,6 +8,7 @@ import calPayBackMoney from '../../../public/cal-money.png'
 import calProfit from '../../../public/cal-profit.png'
 import Image from "next/image";
 import {Button, Form, Input, Select} from 'antd';
+import {useTranslations} from "next-intl";
 
 import './index.css'
 import css from './index.module.css'
@@ -35,6 +36,7 @@ const CurrencyListSelector = ({
     })
     const {state, dispatch} = useContext(MyContext)
     const [inputMarginLeft, setInputMarginLeft] = useState<string>('55px')
+    const t = useTranslations('calculator');
 
     useEffect(() => {
         if (state.isMobile) {
@@ -74,7 +76,7 @@ const CurrencyListSelector = ({
     return <>
         {
             good?.currency.map((item)=> {
-                return <Form.Item label={`预期${item}币价`} key={item} >
+                return <Form.Item label={t('formLabels.expectedPrice', {currency: item})} key={item} >
                     <CustomInput inputMarginLeft={inputMarginLeft} onChange={(e) => handleChange(item, e)} unit={'USDT'} defaultValue={getValue(item)} type={'number'}/>
                 </Form.Item>
             })
@@ -86,6 +88,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
     [key: string]: number | string
     }) => void}) => {
     const {state, dispatch} = useContext(MyContext);
+    const t = useTranslations('calculator');
     const [difficultySolid, setDifficultySolid] = useState<string>('')
     const [difficultyInner, setDifficultyInner] = useState<string>('')
     const [currentRange, setCurrentRange] = useState<number>(0)
@@ -112,7 +115,7 @@ const CurrencyDifficulty = ({currency, onChange}: {currency: string; onChange: (
         onChange({[currency]: difficultyInner})
     }, [difficultyInner]);
     return <div>
-        <Form.Item label="预期难度">
+        <Form.Item label={t('formLabels.expectedDifficulty')}>
             <Input size={"large"} className={css.diffInput}
                    value={difficultyInner}
                    onChange={handleDifficulty}
@@ -144,6 +147,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
         'DOGE': 0
     })
     const [networkHashrate, setNetworkHashrate] = useState<string>('0')
+    const t = useTranslations('calculator');
 
     useEffect(() => {
         if (!state) return
@@ -159,7 +163,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
             {
                 currencyListInner.length > 1 ? currencyListInner.map((currency) => {
                     return <div className={'intro-single'} style={{textAlign:'center'}} key={currency}>
-                        <span className={'intro-label'}>{currency}价格：</span>
+                        <span className={'intro-label'}>{t('currencyPrice', {currency})}:</span>
                         <span className={'intro-value'}>${
                             Number(formatThousands(state?.chainList?.find((item) => {
                                 return item.currency === currency
@@ -172,13 +176,13 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                 currencyListInner.length === 1 ?
                     <>
                         <div className={'intro-single'}>
-                            <span className={'intro-label'}>BTC价格：</span>
+                            <span className={'intro-label'}>{t('introLabels.btcPrice')}</span>
                             <span className={'intro-value'}>${formatThousands(state?.chainList?.find((item) => {
                                 return item.currency === 'BTC'
                             })?.last_usdt_price || '')}</span>
                         </div>
                         <div className={'intro-single'} style={{textAlign: 'center'}}>
-                            <span className={'intro-label'}>挖矿难度：</span>
+                            <span className={'intro-label'}>{t('introLabels.miningDifficulty')}:</span>
                             <span className={'intro-value'}>{state?.chainList?.find((item) => {
                                 return item.currency === 'BTC'
                             })?.difficulty && (parseHashrateByNumber(
@@ -192,7 +196,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                             ).unit)}</span>
                         </div>
                         <div className={'intro-single'} style={{textAlign: 'right'}}>
-                            <span className={'intro-label'}>全网算力: </span>
+                            <span className={'intro-label'}>{t('introLabels.networkHashrate')}: </span>
                             <span className={'intro-value'}>{parseHashrateByNumber(Number(networkHashrate)).hashrate + ' ' + parseHashrateByNumber(Number(networkHashrate)).unit}H/s</span>
                         </div>
                     </> : null
@@ -211,6 +215,7 @@ const CurrencySelectorContent =  ({currency} : {currency: string}) => {
 }
 
 const Calculator = () => {
+    const t = useTranslations('calculator');
     const {state, dispatch} = useContext(MyContext)
     const [mineCurrencyList, setMineCurrencyList] = useState(['BTC', 'LTC'])
     const [selectedMineCurrency, setSelectedMineCurrency] = useState<string>('BTC')
@@ -350,13 +355,13 @@ const Calculator = () => {
         <div className={state.isMobile ? css.calCardBigMobile : css.calCardBig}>
             <div className={'flex-wrap'}>
                 <div className={'intro'}>
-                    <div className={state.isMobile ? css.titleMobile : css.title}>挖矿收益计算器</div>
+                    <div className={state.isMobile ? css.titleMobile : css.title}>{t('title')}</div>
                     {!state.isMobile && <TitleBar currencyDifficulty={currencyDifficulty} currencyList={goodItem?.currency || []} currencyPrice={currencyPrice} />}
                     <div className={cn(state.isMobile ? css.calCardListMobile : css.calCardList)}>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllgain} alt={'总收入'}></Image>
-                                总收入
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllgain} alt={t('cardTitles.totalIncome')}></Image>
+                                {t('cardTitles.totalIncome')}
                             </div>
                             {
                                 goodItem?.currency.map((item) => {
@@ -372,22 +377,22 @@ const Calculator = () => {
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllPay} alt={'总支出'}></Image>
-                                总支出
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllPay} alt={t('cardTitles.totalExpenditure')}></Image>
+                                {t('cardTitles.totalExpenditure')}
                             </div>
                             <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))}</div>
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calProfit} alt={'净利润'}></Image>
-                                净利润
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calProfit} alt={t('cardTitles.netProfit')}></Image>
+                                {t('cardTitles.netProfit')}
                             </div>
                             <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength()))}</div>
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calDailyGain} alt={'每日收入'}></Image>
-                                每日收入
+                                <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calDailyGain} alt={t('cardTitles.dailyIncome')}></Image>
+                                {t('cardTitles.dailyIncome')}
                             </div>
                             {
                                 fullRevenueData.daily_coin_income ? Object.keys(fullRevenueData.daily_coin_income).map((item) => {
@@ -405,8 +410,8 @@ const Calculator = () => {
                         </div>
                         <div className={cn(state.isMobile ? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                            <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackDay} alt={'回本天数'}></Image>
-                                回本天数
+                            <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackDay} alt={t('cardTitles.paybackDay')}></Image>
+                                {t('cardTitles.paybackDay')}
                             </div>
                             <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? '无法回本' : `${formatThousands(fullRevenueData.payback_day || 0, false)}天`}</div>
                         </div>
@@ -414,8 +419,8 @@ const Calculator = () => {
                             goodItem?.mining_currency === 'BTC' ? (
                                 <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                                     <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={'回本币价'}></Image>
-                                        回本币价
+                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={t('cardTitles.paybackPrice')}></Image>
+                                        {t('cardTitles.paybackPrice')}
                                     </div>
                                     <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength()))}</div>
                                 </div>
@@ -425,8 +430,8 @@ const Calculator = () => {
                             goodItem?.mining_currency === 'LTC' ? (
                                 <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                                     <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
-                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={'回本币价'}></Image>
-                                        总电费
+                                        <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={t('cardTitles.totalElectricityFee')}></Image>
+                                        {t('cardTitles.totalElectricityFee')}
                                     </div>
                                     <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>${formatThousands(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))}</div>
                                 </div>
@@ -448,7 +453,7 @@ const Calculator = () => {
                                     size={'large'}
                                     style={{maxWidth: 1200, marginTop: '72px'}}
                                 >
-                                    <Form.Item label="选择币种">
+                                    <Form.Item label={t('formLabels.selectCurrency')}>
                                         <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
                                             {mineCurrencyList.map((item) => {
                                                 return <Select.Option value={item} key={item}>
@@ -457,7 +462,7 @@ const Calculator = () => {
                                             })}
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item label="选择套餐">
+                                    <Form.Item label={t('formLabels.selectPackage')}>
                                         <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
                                             {
                                                 goodItemList.map((item) => {
@@ -472,7 +477,7 @@ const Calculator = () => {
                                             }
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item label="算力数量">
+                                    <Form.Item label={t('formLabels.hashrateQuantity')}>
                                         <CustomInput inputMarginLeft={inputMarginLeft} onChange={handleBuyCountChange}
                                                      defaultValue={buyCount} type={'number'}
                                                      unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
@@ -486,7 +491,7 @@ const Calculator = () => {
                                                                 currency={goodItem.mining_currency || 'BTC'}/> : null
                                     }
                                     <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
-                                        开始计算
+                                        {t('startCalculation')}
                                     </Button>
                                 </Form>
                             </div>
@@ -509,7 +514,7 @@ const Calculator = () => {
                             onValuesChange={onFormLayoutChange}
                             size={"small"}
                         >
-                            <Form.Item label="选择币种">
+                            <Form.Item label={t('formLabels.selectCurrency')}>
                                 <Select size={"large"} value={selectedMineCurrency} onSelect={handleCurrencyChange}>
                                     {mineCurrencyList.map((item) => {
                                         return <Select.Option value={item} key={item}>
@@ -518,7 +523,7 @@ const Calculator = () => {
                                     })}
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="选择套餐">
+                            <Form.Item label={t('formLabels.selectPackage')}>
                                 <Select size={"large"} value={goodId} onSelect={handleGoodItemChange}>
                                     {
                                         goodItemList.map((item) => {
@@ -533,7 +538,7 @@ const Calculator = () => {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="算力数量">
+                            <Form.Item label={t('formLabels.hashrateQuantity')}>
                                 <CustomInput inputMarginLeft={inputMarginLeft} onChange={handleBuyCountChange}
                                              defaultValue={buyCount} type={'number'}
                                              unit={currentGood?.mining_currency === 'BTC' ? 'TH/s' : 'MH/s'}
@@ -547,7 +552,7 @@ const Calculator = () => {
                                                         currency={goodItem.mining_currency || 'BTC'}/> : null
                             }
                             <Button onClick={getFullRevenue} type="primary" shape="round" size={'large'} block>
-                                开始计算
+                                {t('startCalculation')}
                             </Button>
                         </Form>
                     </div>

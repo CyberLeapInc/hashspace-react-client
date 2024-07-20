@@ -27,6 +27,7 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {formatThousands, getToFixedLength, parseHashrateByNumber} from "@/lib/utils";
 import Clipboard from "@/components/Clipboard";
 import moment from "moment";
+import {useTranslations} from "next-intl";
 
 const Area = dynamic(() => import('@ant-design/plots').then(({ Area }) => Area), {
     ssr: false
@@ -54,6 +55,7 @@ const paidContent = (item: Income) => {
 
 }
 const IncomeStatus = ({list}:IncomeItemProps) => {
+    const t = useTranslations('orderInfo')
     return <div>
         {
             list?.map((item, index) => (
@@ -62,12 +64,12 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
                         <Popover key={item.payment_link_source} zIndex={999} content={() => paidContent(item)}>
                             <div key={index} className={css.incomeItem}>
                                 <div
-                                    style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
+                                    style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? t('paid') : t('unpaid')}</div>
                             </div>
                         </Popover>
                         : <div key={index} className={css.incomeItem}>
                             <div
-                                style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? '已支付' : '待支付'}</div>
+                                style={{color: item.status === 1 ? '#16C984' : '#EA2A2A'}}>{item.status === 1 ? t('paid')  : t('unpaid')}</div>
                         </div>
                     }
                 </div>
@@ -76,30 +78,7 @@ const IncomeStatus = ({list}:IncomeItemProps) => {
     </div>
 }
 
-const columns: TableProps<PaymentItem>['columns'] = [
-    {title: '日期', dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY'), width: 200},
-    {title: '理论算力', dataIndex: 'theory_hashrate', render: (v) => formatThousands(parseHashrateByNumber(v, 2).hashrate) + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
-    { title: '实际算力', dataIndex: 'real_hashrate', render: (v) =>  formatThousands(parseHashrateByNumber(v, 2).hashrate)  + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
-    { title: '算力达标率', dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
-    { title: '收益', dataIndex: 'income', render: (v) => <IncomeItem list={v}/> },
-    { title: '状态', dataIndex: 'status', render: (v, record) => <IncomeStatus list={record.income || []} /> },
-];
 
-interface CardData {
-    image: StaticImageData;
-    alt: string;
-    title: string;
-    showKey: keyof OrderDetailResponse;
-}
-
-const cardData : CardData[] = [
-    { image: TotalHashrate, alt: '总收入', title: '实时交付算力', showKey: 'realtime_hashrate'},
-    { image: YesterdayHashrate, alt: '总支出', title: '昨日交付算力', showKey: 'yesterday_hashrate'},
-    { image: YesterdayEleFee, alt: '净利润', title: '昨日电费', showKey: 'yesterday_electricity_cost'},
-    { image: YesterdayProfit, alt: '每日收入', title: '昨日收益', showKey: 'yesterday_income'},
-    { image: TotalProfit, alt: '回本天数', title: '总收益', showKey: 'total_income' },
-    { image: TodayMine, alt: '回本币价', title: '今日已挖预估', showKey: 'today_estimate_income' },
-];
 
 interface CardProps {
     image: StaticImageData;
@@ -163,14 +142,11 @@ const Card = ({ image, alt, title, showKey, rawData}:CardProps) => {
                     }
                     {
                         !/income/.test(showKey) && <>
-
                             {!getUnit(showKey) && "$"}{formatThousands(Number(parseHashrateByNumber(Number(getShowKey(showKey))).hashrate).toFixed(getToFixedLength()))}
                             <span className={css.unit}  style={{fontSize: state.isMobile ? '12px' : '10px'}}>{parseHashrateByNumber(Number(getShowKey(showKey))).unit}{getUnit(showKey)}</span>
                         </>
                     }
-
                 </div>
-                {/*<div className={css.calCardInfo}>{getInfo(showKey)}</div>*/}
             </div>
         )
     )
@@ -183,6 +159,7 @@ const DemoArea = ({dataList, isMobile, unit}: {
     unit: string
 }) => {
     const [realData, setRealData] = useState<HashrateHistoryItem[]>(dataList);
+    const t = useTranslations('orderInfo')
     useEffect(() => {
         const temp = dataList.sort((a, b) => a.created_at - b.created_at);
         setRealData(temp)
@@ -199,8 +176,8 @@ const DemoArea = ({dataList, isMobile, unit}: {
         },
         interaction: {
             tooltip: { render: (event: string, { title, items }: {title: string; items: any}) => <div>
-                    <div>日期：{title}</div>
-                    <div>算力：{items[0].value.toFixed(2).toString()+ unit + 'H/s'}</div>
+                    <div>{t('date')}:{title}</div>
+                    <div>{t('hash')}:{items[0].value.toFixed(2).toString()+ unit + 'H/s'}</div>
                 </div>,},
         },
         marginBottom: 0,
@@ -219,6 +196,7 @@ const OrderInfo = () => {
     const [paymentList, setPaymentList] = useState<PaymentItem[]>([]);
     const [orderInfo, setOrderInfo] = useState<OrderDetailResponse | null>(null);
     const {state, dispatch} = useContext(MyContext)
+    const t = useTranslations('orderInfo')
     useOnMountUnsafe(() => {
         let tempOrderId = '';
         if (typeof window !== "undefined") {
@@ -235,12 +213,37 @@ const OrderInfo = () => {
         })
     })
 
+    const columns: TableProps<PaymentItem>['columns'] = [
+        {title: t('date'), dataIndex: 'created_at', render: (v) => moment(v * 1000).format('MM/DD/YYYY'), width: 200},
+        {title: t('theoryHashrate'), dataIndex: 'theory_hashrate', render: (v) => formatThousands(parseHashrateByNumber(v, 2).hashrate) + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
+        { title: t('realHashrate'), dataIndex: 'real_hashrate', render: (v) =>  formatThousands(parseHashrateByNumber(v, 2).hashrate)  + ' '+ parseHashrateByNumber(v, 0).unit + 'H/s' },
+        { title: t('complianceRate'), dataIndex: 'compliance_rate', render: (v) => `${big(v).times(100).toFixed(2).toString()}%`},
+        { title: t('income'), dataIndex: 'income', render: (v) => <IncomeItem list={v}/> },
+        { title: t('status'), dataIndex: 'status', render: (v, record) => <IncomeStatus list={record.income || []} /> },
+    ];
+
+    interface CardData {
+        image: StaticImageData;
+        alt: string;
+        title: string;
+        showKey: keyof OrderDetailResponse;
+    }
+
+    const cardData : CardData[] = [
+        { image: TotalHashrate, alt: t('realtimeHashrate'), title: t('realtimeHashrate'), showKey: 'realtime_hashrate'},
+        { image: YesterdayHashrate, alt:  t('yesterdayHashrate'), title: t('yesterdayHashrate'), showKey: 'yesterday_hashrate'},
+        { image: YesterdayEleFee, alt: t('yesterdayElectricityCost'), title: t('yesterdayElectricityCost'), showKey: 'yesterday_electricity_cost'},
+        { image: YesterdayProfit, alt:  t('yesterdayIncome'), title: t('yesterdayIncome'), showKey: 'yesterday_income'},
+        { image: TotalProfit, alt: t('totalProfit'), title: t('totalProfit'), showKey: 'total_income' },
+        { image: TodayMine, alt: t('todayEstimateIncome'), title: t('todayEstimateIncome'), showKey: 'today_estimate_income' },
+    ];
+
     return (
         <div style={{ minHeight: 'calc(100vh - 232px)', paddingTop: '25px', margin: state.isMobile ? '0 16px 20px' : '' }}>
             <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                 <div className={css.flexWrap}>
                     <div className={css.intro}>
-                        <div className={'login-hello'} style={{marginBottom: state.isMobile ? '8px' : ''}}>算力数据</div>
+                        <div className={'login-hello'} style={{marginBottom: state.isMobile ? '8px' : ''}}>{t('hashrateData')}</div>
                         <div className={state.isMobile ? css.mobileCalCardList : css.calCardList}>
                             {cardData.map((card, index) => (
                                 <Card rawData={orderInfo} key={card.showKey} {...card} />
@@ -253,8 +256,8 @@ const OrderInfo = () => {
                                 <div className={css.divider}></div>
                                 <div className={css.form}>
                                     <div className={'login-hello'}
-                                         style={{display: 'flex', justifyContent: 'space-between'}}>算力曲线
-                                        <Button href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                                         style={{display: 'flex', justifyContent: 'space-between'}}>{t('hashrateCurve')}
+                                        <Button href={link} shape={'round'} type={"primary"}>{t('miningPoolObserverLink')}</Button>
                                     </div>
                                     <div style={{marginTop: '50px', marginBottom: '10px'}} className={css.legend}>
                                         <span className={css.try}></span>
@@ -272,16 +275,16 @@ const OrderInfo = () => {
                     <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
                         <div className={css.form}>
                             <div className={css.loginHello} style={{display: 'flex', justifyContent: 'space-between'}}>
-                                算力曲线
+                                {t('hashrateCurve')}
                             </div>
                             <DemoArea  unit={orderInfo?.item.good.unit || ''} isMobile={true} dataList={orderInfo?.history || []}/>
-                            <Button className={css.blockBtn} href={link} shape={'round'} type={"primary"}>矿池观察者连接</Button>
+                            <Button className={css.blockBtn} href={link} shape={'round'} type={"primary"}>{t('miningPoolObserverLink')}</Button>
                         </div>
                     </div>
                 )
             }
             <div className={state.isMobile ? css.mobileCalCardBig : css.calCardBig}>
-                <div className={'login-hello'}>收益明细</div>
+                <div className={'login-hello'}>{t('incomeDetails')}</div>
                 <Table
                     scroll={{ x: 850 }}
                     columns={columns}

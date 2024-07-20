@@ -11,9 +11,6 @@ let count = 0;
 const env = process.env.NODE_ENV;
 
 const useShowLoading = ()=> {
-    console.log(process.env.IS_TEST === 'test')
-    console.log(process.env.IS_TEST)
-    console.log(process.env)
     if (document && typeof document !== undefined && typeof document !== 'undefined') {
         'use client'
         if (isShow) {
@@ -136,7 +133,6 @@ axiosInstance.interceptors.response.use((res) => {
             console.error(e);
             return Promise.reject(response.data)
     }
-
 })
 
 export const startLogin = function (email: string, captcha: string): Promise<{
@@ -895,7 +891,7 @@ export interface PageInfo {
     total_page: number;
 }
 
-export const getOrderList = (page = 1, pageSize = 20): Promise<OrderListResponse> => {
+export const getOrderList = (page = 1, pageSize = 100): Promise<OrderListResponse> => {
     return axiosInstance.get('/api/auth/user/order', {
         params: {
             page,
@@ -1450,7 +1446,7 @@ export const getPaymentList = (id:string): Promise<PaymentListResponse> => {
     return axiosInstance.get(`/api/auth/user/order/${id}/payment`, {
         params: {
             page: 1,
-            page_size: 30
+            page_size: 100
         }
     })
 }

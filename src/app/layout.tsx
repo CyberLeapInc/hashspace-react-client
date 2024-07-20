@@ -4,6 +4,8 @@ import {cn} from '@/lib/utils'
 import "./globals.css";
 import * as React from "react";
 import './layout.css'
+import {NextIntlClientProvider} from 'next-intl';
+import {getLocale, getMessages} from 'next-intl/server';
 import {Providers} from "@/service/providers";
 
 const fontSans = FontSans({
@@ -16,7 +18,12 @@ export const metadata: Metadata = {
     description: 'some Description',
 }
 
-export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
+    const locale = await getLocale();
+
+    // Providing all messages to the client
+    // side is the easiest way to get started
+    const messages = await getMessages();
     return (
         <html lang="en">
         <body
@@ -25,9 +32,11 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
                 fontSans.variable
             )}
         >
-        <Providers>
-            {children}
-        </Providers>
+        <NextIntlClientProvider messages={messages}>
+            <Providers>
+                {children}
+            </Providers>
+        </NextIntlClientProvider>
         </body>
         </html>
     );

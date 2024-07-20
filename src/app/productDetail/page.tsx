@@ -19,6 +19,7 @@ import Image from 'next/image';
 
 import dynamic from 'next/dynamic'
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 const Column = dynamic(() => import('@ant-design/plots').then(({ Column }) => Column), {
     ssr: false
@@ -31,6 +32,7 @@ const data = [
 
 const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
     const [dataList, setDataList] = useState(data || [])
+    const t = useTranslations('productDetail');
     useEffect(() => {
         setDataList(data)
     }, [data]);
@@ -57,10 +59,10 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
                 tick: false,
                 labelFormatter: (v: string) => {
                     if (v === 'hashrate_cost') {
-                        return '云算力费用'
+                        return t('cloudComputingCost')
                     }
                     if (v === 'total_income') {
-                        return '预期收益'
+                        return t('expectedIncome')
                     }
                 },
                 labelSpacing: 9,
@@ -119,6 +121,7 @@ const ProductDetail = () => {
     const [revenueData, setRevenueData] = useState({roi: '0', total_income: '0'})
     const [isShowSetDogeAddress, setIsShowSetDogeAddress] = useState(false)
     const {state, dispatch} = useContext(MyContext)
+    const t = useTranslations('productDetail')
 
     const onTargetPriceChange = (v: number, currency = 'BTC') => {
         if (currency === 'BTC') {
@@ -305,7 +308,7 @@ const ProductDetail = () => {
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px', flexDirection: state.isMobile ? 'column' : 'row'}}>
                             <div className={cn(css.chart, css.block)}>
                                 <div className={css.roi} style={{paddingBottom: '20px'}}>
-                                    <span>投资回报率: </span>
+                                    <span>{t('investmentReturnRate')}: </span>
                                     <span style={{color: '#3C53FF', fontWeight: 'bold'}}>{revenueData.roi}</span>
                                 </div>
                                 {/*@ts-ignore*/}
@@ -324,7 +327,7 @@ const ProductDetail = () => {
                              suppressHydrationWarning>{getLocalDate(goodDetail?.start_at)} - {getLocalDate(goodDetail?.end_at)}</div>
                         <div className={cn(state.isMobile ? css.mobileCard : css.card)}>
                             <div className={css.row}>
-                                <div className={cn(css.label)} style={{paddingBottom: state.isMobile? '8px' : ''}}>选择数量</div>
+                                <div className={cn(css.label)} style={{paddingBottom: state.isMobile? '8px' : ''}}>{t('chooseQuantityLabel')}</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
@@ -340,25 +343,8 @@ const ProductDetail = () => {
                                     ></NumberSelector>
                                 </div>
                             </div>
-                            {/*{*/}
-                            {/*    !state.isMobile && <div className={css.row}>*/}
-                            {/*        <div className={css.label}></div>*/}
-                            {/*        <div className={css.info}>*/}
-                            {/*            {*/}
-                            {/*                btnValueList.map(item => {*/}
-                            {/*                    return (*/}
-                            {/*                        <Button onClick={() => quickSetBuyCount(item)} key={item}*/}
-                            {/*                                className={cn(css.button)}*/}
-                            {/*                                type={item === buyCount ? 'primary' : 'default'}*/}
-                            {/*                                size={"small"}>{item}{goodDetail?.unit || ''}</Button>*/}
-                            {/*                    )*/}
-                            {/*                })*/}
-                            {/*            }*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*}*/}
                             <div className={css.row}>
-                                <div className={css.label} style={{paddingBottom: state.isMobile? '8px' : ''}}>电费天数</div>
+                                <div className={css.label} style={{paddingBottom: state.isMobile? '8px' : ''}}>{t('electricityDaysLabel')}</div>
                                 <div className={css.info}>
                                     <NumberSelector
                                         styles={{
@@ -369,19 +355,19 @@ const ProductDetail = () => {
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
-                                        unit={'天'}
+                                        unit={t('day')}
                                         onChange={handleBuyDaysChange}
                                     />
                                 </div>
                             </div>
                             <div className={css.row2}>
-                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>套餐费用</div>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('contractCostLabel')}</div>
                                 <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(hashrateCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                             <div className={css.row2} style={{
                                 paddingBottom: state.isMobile ? '' :'8px'
                             }}>
-                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>电费</div>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('electricityCostLabel')}</div>
                                 <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(electricityCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                             {
@@ -391,23 +377,23 @@ const ProductDetail = () => {
                                 paddingBottom: state.isMobile ? '' :'10px',
                                 paddingTop: state.isMobile ? '' :'10px'
                             }}>
-                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>合计费用</div>
+                                <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('totalCostLabel')}</div>
                                 <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${roundUp(Number(totalCost),2).toFixed(getToFixedLength())}</div>
                             </div>
                         </div>
                         {
-                            goodDetail?.mining_currency === 'LTC' && <div className={css.dogeInfo}>*根据矿池要求，请您下单前先设置DOGE收款地址。</div>
+                            goodDetail?.mining_currency === 'LTC' && <div className={css.dogeInfo}>*{t('setDogeAddressInfo')}</div>
                         }
                         <div style={{
                             marginTop: state.isMobile ? '0' : goodDetail?.mining_currency === 'LTC' ? '10px' : '42px',
                             marginBottom: state.isMobile ? '0' : '22px'
                         }}>
-                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>我接受<a href={'/user_agreement_cn.html'} target="_blank">《服务协议》</a>和<a href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a><a href={'/disclaimer_cn.html'} target="_blank">《免责声明》</a>。</Checkbox>
+                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>{t('acceptAgreementLabel')}<a href={'/user_agreement_cn.html'} target="_blank">{t('serviceAgreementLabel')}</a>{t('and')}<a href={'/privacy_policy_cn.html'} target="_blank">{t('privacyPolicyLabel')}</a><a href={'/disclaimer_cn.html'} target="_blank">{t('disclaimerLabel')}</a>。</Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button
                                 onClick={goBuyCheck}
-                                disabled={!checkboxValue} size={"large"} shape={"round"} type={"primary"} style={{height: '52px', width: state.isMobile ? '100%' : '265px'}}>立即购买</Button>
+                                disabled={!checkboxValue} size={"large"} shape={"round"} type={"primary"} style={{height: '52px', width: state.isMobile ? '100%' : '265px'}}>{t('buyNowButton')}</Button>
                         </div>
                     </div>
                 </div>
@@ -421,12 +407,12 @@ const ProductDetail = () => {
                         marginTop: '70px',
                         color: '#333333'
                     }}>
-                        根据矿池要求，请您下单前先设置DOGE收款地址
+                        {t('setDogeAddressInfo')}
                     </div>
                     <Link href={'/walletAddress'}>
                         <Button type={"primary"} shape={"round"} size={"large"} block style={{
                             marginTop: '60px'
-                        }}>设置
+                        }}>{t('set')}
                         </Button>
                     </Link>
                 </div>

@@ -13,10 +13,12 @@ import {cn, getToFixedLength} from "@/lib/utils";
 import {MyContext} from "@/service/context";
 import moment from "moment";
 import IconList from "@/components/IconList";
+import {useTranslations} from "next-intl";
 
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
     const {state, dispatch} = useContext(MyContext);
+    const t= useTranslations('productList')
     useEffect(() => {
         console.log(data)
     }, [data]);
@@ -35,31 +37,31 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
             </div>
             <div className="card-single-bottom">
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">算法</div>
+                    <div className="card-single-bottom-label">{t('algorithmLabel')}</div>
                     <div className="card-single-bottom-value">{data.algorithm}</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">挖矿日期</div>
+                    <div className="card-single-bottom-label">{t('miningDateLabel')}</div>
                     <div className="card-single-bottom-value">{moment((data?.start_at || 0) * 1000 || 0).format('MM/DD/YYYY')} - {moment((data?.end_at || 0) * 1000 || 0).format('MM/DD/YYYY')}</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">功耗</div>
+                    <div className="card-single-bottom-label">{t('powerConsumptionLabel')}</div>
                     <div className="card-single-bottom-value">{new big(data.power_consumption || 0).toFixed(2)}J/{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">每日电费</div>
+                    <div className="card-single-bottom-label">{t('dailyElectricityFeeLabel')}</div>
                     <div className="card-single-bottom-value">${new big(data.daily_electricity || 0).toFixed(4)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">每日收益</div>
+                    <div className="card-single-bottom-label">{t('dailyIncomeLabel')}</div>
                     <div className="card-single-bottom-value">${new big(data.daily_income || 0).toFixed(4)}/{data.unit}/D</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">最小购买数量</div>
+                    <div className="card-single-bottom-label">{t('minPurchaseQuantityLabel')}</div>
                     <div className="card-single-bottom-value">{new big(data['min_qty'] || 0).toFixed(2)}{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
-                    <div className="card-single-bottom-label">预期收益</div>
+                    <div className="card-single-bottom-label">{t('expectedIncomeLabel')}</div>
                     <div className="card-single-bottom-value">${new big((data.income|| 0)).toFixed(4)}</div>
                 </div>
 
@@ -79,7 +81,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                     disabled={data.is_soldout}
                     className={
                         'round-primary-button button-286'
-                    }>立即下单</Button>
+                    }>{t('placeOrderNow')}</Button>
             </Link>
 
 
@@ -91,6 +93,7 @@ export default function ProductList() {
     const [list, setList] = useState<Array<any>>([])
     const [listTwo, setListTow] = useState<Array<any>>([])
     const {state, dispatch} = useContext(MyContext);
+    const t = useTranslations('productList')
 
     useOnMountUnsafe(() => {
         getProductList().then(res=> {
@@ -115,8 +118,8 @@ export default function ProductList() {
                         width: '77%',
                     }}>
                         <TabsList isMobile={state.isMobile} className={cn('tabs-list', state.isMobile ? 'mobile-tabs-list' : '')}>
-                            <TabsTrigger isMobile={state.isMobile} value="btc">BTC 云算力</TabsTrigger>
-                            <TabsTrigger isMobile={state.isMobile} value="ltc">DOGE&LTC 云算力</TabsTrigger>
+                            <TabsTrigger isMobile={state.isMobile} value="btc">{t('btcCloudComputingPower')}</TabsTrigger>
+                            <TabsTrigger isMobile={state.isMobile} value="ltc">{t('dogeLtcCloudComputingPower')}</TabsTrigger>
                         </TabsList>
                     </div>
                     <TabsContent value="btc" className={cn('card-tabs-content',state.isMobile ? 'mobile-card-tabs-content' : '')}>

@@ -23,6 +23,7 @@ import {getStateTextColor, getAmountColor, getToFixedLength, formatThousands} fr
 import {MyContext} from "@/service/context";
 import EleStateHover from "@/components/EleStateHover";
 import EleStateHoverMobile from "@/components/EleStateHoverMobile";
+import {useTranslations} from "next-intl";
 
 
 interface ChargeFeeProps {
@@ -32,6 +33,7 @@ interface ChargeFeeProps {
 }
 
 const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
+    const t = useTranslations('electricityFee');
     const [cost, setCost] = useState(min)
     const [electricityCanUseLeftDays, setElectricityCanUseLeftDays] = useState('0')
     const handleChange = (v: number) => {
@@ -44,7 +46,7 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
         })
     }, [cost])
     return <div>
-        <div className={css.modalSubTitle}>电费金额</div>
+        <div className={css.modalSubTitle}>{t('chargeFee.modalSubTitle')}</div>
         <div>
             <NumberSelector
                 styles={{
@@ -60,16 +62,17 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
         </div>
         {
             !(Number(electricityCanUseLeftDays) < 0 ) && (
-                <div className={css.canUseCount}>预计可使用{electricityCanUseLeftDays}天</div>
+                <div className={css.canUseCount}>{t('chargeFee.canUseCount', {day:electricityCanUseLeftDays })}</div>
             )
         }
-        <Button disabled={cost < min} style={{height:'52px', marginTop: '40px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>确认</Button>
+        <Button disabled={cost < min} style={{height:'52px', marginTop: '40px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>{t('chargeFee.confirm')}</Button>
     </div>
 }
 
 
 
 const ElectricityFee = () => {
+    const t = useTranslations('electricityFee');
     const [electricityInfo, setElectricityInfo] = useState<ElectricityResponse>({
         balance: "",
         estimate_remain_day: 0,
@@ -143,7 +146,7 @@ const ElectricityFee = () => {
 
     const columns: TableProps<ElectricityList>['columns'] = [
         {
-            title: '时间',
+            title: t('time'),
             dataIndex: 'created_at',
             render: (data) => {
                 return <div>{moment(data*1000).format('MM/DD/YYYY HH:mm:ss')}</div>
@@ -151,11 +154,11 @@ const ElectricityFee = () => {
             width: 250
         },
         {
-            title: '订单号',
+            title: t('orderNumber'),
             dataIndex: 'order_id',
         },
         {
-            title: '订单状态',
+            title: t('orderStatus'),
             dataIndex: 'state',
             render: (hold, record) => {
                 return state.isMobile ? <EleStateHoverMobile record={record} onRecharge={handleRecharge}/> : <EleStateHover record={record} onRecharge={handleRecharge}/>
@@ -163,7 +166,7 @@ const ElectricityFee = () => {
             width: 200
         },
         {
-            title: '金额',
+            title: t('amount'),
             dataIndex: 'payment_request',
             render: (data,record) => {
                 return (
@@ -181,7 +184,7 @@ const ElectricityFee = () => {
 
     return (
         <div className={css.container}>
-            <Modal width={420} title={'电费充值'} open={isModalOpen} style={{maxHeight: '600px'}}
+            <Modal width={420} title={t('modalTitle')} open={isModalOpen} style={{maxHeight: '600px'}}
                    onCancel={() => closeModal()} footer={''}>
                 <ChargeFee onConfirm={onConfirmCost} min={min} step={step}/>
             </Modal>
@@ -212,30 +215,32 @@ const ElectricityFee = () => {
                             <div className={css.boxMain}>
                                 <div className={css.boxMainTitle}>
                                     <Image width={28} src={DollarBlue} alt={'dollar'}/>
-                                    <span className={css.boxMainTitleText}>电费余额</span>
+                                    <span className={css.boxMainTitleText}>{t('boxMainTitleText.electricityBalance')}</span>
                                 </div>
                                 <div className={css.bigText}>$ {formatThousands(Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0)}</div>
                             </div>
                             <div className={css.boxAction}>
                                 <Button type={"primary"} shape={"round"} block
                                         onClick={() => setIsModalOpen(true)}
-                                        style={{height: '52px', marginTop: '50px'}}>充值</Button>
+                                        style={{height: '52px', marginTop: '50px'}}>{t('recharge')}</Button>
                             </div>
                         </div>
                         <div className={css.box} style={{flex: 1}}>
                             <div className={css.boxMain}>
                                 <div className={css.boxMainTitle}>
                                     <Image width={28} src={CanMineIcon} alt={'dollar'}/>
-                                    <span className={css.boxMainTitleText}>预计可挖</span>
+                                    <span className={css.boxMainTitleText}>{t('boxMainTitleText.canMine')}</span>
                                 </div>
-                                <div className={css.smallText}>{formatThousands(electricityInfo.estimate_remain_day || 0, false)}日</div>
+                                <div className={css.smallText}>{t('boxMainTitleText.day', {
+                                    day: formatThousands(electricityInfo.estimate_remain_day || 0, false)
+                                })}</div>
                             </div>
                         </div>
                         <div className={css.box} style={{flex: 1}}>
                             <div className={css.boxMain}>
                                 <div className={css.boxMainTitle}>
                                     <Image width={28} src={YesterdayEleFeeIcon} alt={'dollar'}/>
-                                    <span className={css.boxMainTitleText}>昨日电费</span>
+                                    <span className={css.boxMainTitleText}>{t('boxMainTitleText.yesterdayElectricityFee')}</span>
                                 </div>
                                 <div className={css.smallText}>$ {formatThousands(Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0)}</div>
                             </div>
@@ -250,7 +255,7 @@ const ElectricityFee = () => {
                             <div>
                                 <div className={css.boxMainTitle} style={{lineHeight: '24px', fontSize: '12px'}}>
                                     <Image width={24} src={DollarBlue} alt={'dollar'}/>
-                                    <span className={css.boxMainTitleText}>电费余额</span>
+                                    <span className={css.boxMainTitleText}>{t('boxMainTitleText.electricityBalance')}</span>
                                 </div>
                                 <div className={css.bigText}
                                      style={{fontSize: '24px', marginTop: '12px'}}>$ {Number(electricityInfo.balance || 0).toFixed(getToFixedLength()) || 0}</div>
@@ -258,12 +263,14 @@ const ElectricityFee = () => {
                             <Divider style={{height: '60px', margin: '0 16px'}} type={"vertical"}></Divider>
                             <div>
                                 <div className={css.mobileLine}>
-                                    <span>预计可挖</span>
+                                    <span>{t('boxMainTitleText.canMine')}</span>
                                     <span
-                                        className={css.mobileLineStrong}>{electricityInfo.estimate_remain_day || 0}天</span>
+                                        className={css.mobileLineStrong}>{t('boxMainTitleText.day', {
+                                        day: formatThousands(electricityInfo.estimate_remain_day || 0, false)
+                                    })}</span>
                                 </div>
                                 <div className={css.mobileLine} style={{marginTop: '26px'}}>
-                                    <span>昨日电费</span>
+                                    <span>{t('boxMainTitleText.yesterdayElectricityFee')}</span>
                                     <span className={css.mobileLineStrong}>$ {Number(electricityInfo.yesterday_cost).toFixed(getToFixedLength()) || 0}</span>
                                 </div>
 
@@ -271,12 +278,12 @@ const ElectricityFee = () => {
                         </div>
                         <Button type={"primary"} shape={"round"} block
                                 onClick={() => setIsModalOpen(true)}
-                                style={{height: '52px', marginTop: '20px'}}>充值</Button>
+                                style={{height: '52px', marginTop: '20px'}}>{t('recharge')}</Button>
                     </div>
                 )
             }
             <div className={'cal-card-big'} style={{marginTop: '20px'}}>
-                <div className={'login-hello'}>历史明细</div>
+                <div className={'login-hello'}>{t('historyDetails')}</div>
                 <Table
                     scroll={{x: 850}}
                     columns={columns}

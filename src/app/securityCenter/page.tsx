@@ -14,6 +14,7 @@ import {getLoginHistory, getUserInfo, LoginHistoryItem, startTotp} from "@/servi
 import {TwoFactorAuth, UnbindTowFactorAuth} from "@/components/TwoFactorAuth";
 import {PhoneBind} from "@/components/PhoneBind";
 import moment from "moment";
+import {useTranslations} from "next-intl";
 
 
 const Tips = ({text = '', type = ''}) => {
@@ -22,33 +23,6 @@ const Tips = ({text = '', type = ''}) => {
     )
 }
 
-const columns = [
-    {
-        title: '时间',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        width: 200,
-        render: (v: number) => {
-            return <div>{moment(v * 1000).format('MM/DD/YYYY hh:mm:ss')}</div>
-        }
-    },
-    {
-        title: '登录方式',
-        dataIndex: 'user_agent',
-        key: 'user_agent',
-    },
-    {
-        title: 'IP',
-        dataIndex: 'ip',
-        key: 'ip',
-    },
-    {
-        title: '位置',
-        dataIndex: 'location',
-        key: 'location',
-    },
-];
-
 
 const SecurityCenter: React.FC = () => {
     const {state, dispatch} = useContext(MyContext);
@@ -56,8 +30,37 @@ const SecurityCenter: React.FC = () => {
     const [isShowUnbindTotpModal, setIsShowUnbindTotpModal] = useState(false);
     const [isShowBindPhone, setIsShowBindPhone] = useState(false);
     const [isShowUnbindPhone, setIsShowUnbindPhone] = useState(false);
+    const t = useTranslations('securityCenter')
     let [list, setList] = useState<LoginHistoryItem[]>([])
     let [counter, setCounter] = useState(0)
+
+    const columns = [
+        {
+            title: t('timeLabel'),
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 200,
+            render: (v: number) => {
+                return <div>{moment(v * 1000).format('MM/DD/YYYY hh:mm:ss')}</div>
+            }
+        },
+        {
+            title: t('loginMethodLabel'),
+            dataIndex: 'user_agent',
+            key: 'user_agent',
+        },
+        {
+            title: 'IP',
+            dataIndex: 'ip',
+            key: 'ip',
+        },
+        {
+            title: t('locationLabel'),
+            dataIndex: 'location',
+            key: 'location',
+        },
+    ];
+
     const closeModal = () => {
         setCounter(counter + 1)
         setIsOpenModal(false)
@@ -123,7 +126,7 @@ const SecurityCenter: React.FC = () => {
             <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
                 <Card>
                     <div className={'card-column-box-title'}>
-                        账户安全
+                        {t('accountSecurityTitle')}
                     </div>
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
@@ -132,20 +135,20 @@ const SecurityCenter: React.FC = () => {
                         </div>
                         <DividerCus/>
                         <div className={'card-column-box-row'}>
-                            <div className={'card-column-box-row-label'}>注册日期</div>
+                            <div className={'card-column-box-row-label'}>{t('registrationDateLabel')}</div>
                             <div
                                 className={'card-column-box-row-content mobile-right'}>{moment(state.userInfo.created_at * 1000).format('MM/DD/YYYY')}</div>
                         </div>
                         <DividerCus/>
                         <div className={'card-column-box-row'}>
-                            <div className={'card-column-box-row-label'}>邮箱账号</div>
+                            <div className={'card-column-box-row-label'}>{t('emailAccountLabel')}</div>
                             <div className={'card-column-box-row-content mobile-right'}>{state.userInfo.email}</div>
                         </div>
                     </Flex>
                 </Card>
                 <Card>
                     <div className={'card-column-box-title'}>
-                        安全验证
+                        {t('securityVerificationTitle')}
                     </div>
                     <Flex vertical={true} className={'card-column-box'}>
                         <div className={'card-column-box-row'}>
@@ -155,8 +158,8 @@ const SecurityCenter: React.FC = () => {
                                 <Image width={state.isMobile ? 40 : 58} src={IconGoogle} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
-                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>Google验证
-                                    <Tips text={state.userInfo.has_totp ? '已绑定' : '未绑定'}
+                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>{t('googleVerificationLabel')}
+                                    <Tips text={state.userInfo.has_totp ? t('hadBind') : t('notBind')}
                                           type={state.userInfo.has_totp ? 'success' : 'danger'}/>
                                 </Flex>
                                 {
@@ -166,7 +169,7 @@ const SecurityCenter: React.FC = () => {
                                     fontSize: state.isMobile ? '12px' : '14px',
                                     color: '#666',
                                     fontWeight: 400,
-                                }}>保护你的账户安全
+                                }}>{t('googleVerificationDescription')}
                                 </div>
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: !state.isMobile ? '8px' :'', paddingRight: state.isMobile ? '' : '80px'}}
@@ -177,13 +180,13 @@ const SecurityCenter: React.FC = () => {
                                             className={cn('cus-middle-button', state.isMobile && 'bbb')}
                                             shape={"round"}
                                             type={"text"}
-                                        >解绑</Button> :
+                                        >{t('googleVerificationUnbind')}</Button> :
                                         <Button
                                             className={cn('cus-middle-button', state.isMobile && 'bbb')}
                                             size={state.isMobile ? "small" : 'large'}
                                             shape={"round"}
                                             type={"primary"}
-                                        >绑定</Button>
+                                        >{t('googleVerificationBind')}</Button>
                                 }
 
                             </div>
@@ -196,8 +199,8 @@ const SecurityCenter: React.FC = () => {
                                 <Image width={state.isMobile ? 40 : 58} src={IconPhone} alt={'google'}/>
                             </div>
                             <Flex vertical={true} className={'card-column-box-row-content'}>
-                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>手机
-                                    <Tips text={state.userInfo.phone_number ? '已绑定' : '未绑定'}
+                                <Flex style={{verticalAlign: 'middle', alignItems: "center"}}>{t('phoneLabel')}
+                                    <Tips text={state.userInfo.phone_number ? t('hadBind') : t('notBind')}
                                           type={state.userInfo.phone_number ? 'success' : 'danger'}/>
                                 </Flex>
                                 {
@@ -207,7 +210,7 @@ const SecurityCenter: React.FC = () => {
                                     fontSize: state.isMobile ? '12px' : '14px',
                                     color: '#666',
                                     fontWeight: 400
-                                }}>实时接收订单信息
+                                }}>{t('phoneDescription')}
                                 </div>
                             </Flex>
                             <div style={{marginLeft: 'auto', paddingTop: !state.isMobile ? '8px' :'', paddingRight: state.isMobile ? '' : '80px'}}
@@ -218,9 +221,9 @@ const SecurityCenter: React.FC = () => {
                                 {
                                     state.userInfo.phone_number ?
                                         <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={state.isMobile ? "small" : 'large'} shape={"round"}
-                                                type={"text"}>更改</Button> :
+                                                type={"text"}>{t('phoneChange')}</Button> :
                                         <Button className={cn('cus-middle-button', state.isMobile && 'bbb')} size={state.isMobile ? "small" : 'large'} shape={"round"}
-                                                type={"primary"}>绑定</Button>
+                                                type={"primary"}>{t('phoneBind')}</Button>
                                 }
 
                             </div>
@@ -229,7 +232,7 @@ const SecurityCenter: React.FC = () => {
                 </Card>
                 <Card>
                     <div className={'card-column-box-title'}>
-                        登录历史
+                        {t('loginHistoryTitle')}
                     </div>
                     <Table
                         rowKey={'created_at'}
@@ -242,17 +245,17 @@ const SecurityCenter: React.FC = () => {
 
             </Space>
         </div>}
-        <Modal title={'Google验证'} open={isModalOpen} style={{maxHeight: '600px'}} width={820}
+        <Modal title={t('googleVerificationModalTitle')} open={isModalOpen} style={{maxHeight: '600px'}} width={820}
                onCancel={() => closeModal()} footer={''}>
             {isModalOpen && <TwoFactorAuth key={counter} onSuccess={() => handleOnSuccess()}></TwoFactorAuth>}
         </Modal>
-        <Modal title={'解绑Google验证'} open={isShowUnbindTotpModal} width={420} footer={''} onCancel={() => {
+        <Modal title={t('unbindGoogleVerificationModalTitle')} open={isShowUnbindTotpModal} width={420} footer={''} onCancel={() => {
             setIsShowUnbindTotpModal(false)
             setCounter(counter + 1)
         }}>
             <UnbindTowFactorAuth key={counter} onSuccess={() => handleOnUnbindTotpSuccess()}></UnbindTowFactorAuth>
         </Modal>
-        <Modal title={state.userInfo.phone_number ? '更改手机号' : '绑定手机号'} open={isShowBindPhone} width={420} footer={''}
+        <Modal title={state.userInfo.phone_number ? t('changePhoneNumberModalTitle') : t('bindPhoneNumberModalTitle')} open={isShowBindPhone} width={420} footer={''}
                onCancel={() => setIsShowBindPhone(false)}>
             <PhoneBind onSuccess={() => handleOnBindPhoneSuccess()} key={counter}></PhoneBind>
         </Modal>

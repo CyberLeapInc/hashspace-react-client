@@ -15,6 +15,7 @@ import './index.css';
 import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {CodeSender} from "@/components/ui/codeSender";
+import {useTranslations} from "next-intl";
 
 type FieldType = {
     username?: string;
@@ -45,7 +46,7 @@ const CryptoPage: React.FC = () => {
     const [totpCode, setTotpCode] = useState('')
     const [totpCodeErrorStatus, setTotpCodeErrorStatus] = useState(false);
     const [isFirstRegister, setIsFirstRegister] = useState(true)
-
+    const t = useTranslations('login')
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {state, dispatch} = useContext(MyContext);
     let goTo = '/'
@@ -61,13 +62,15 @@ const CryptoPage: React.FC = () => {
             if (e.details.type === 'SessionExpired') {
                 messageApi.open({
                     type: 'error',
-                    content: '回话session过期，请刷新页面重试',
+                    content: t('sessionExpired'),
                 });
             }
             if (e.details.type === 'SendCodeTooFrequent') {
                 messageApi.open({
                     type: 'error',
-                    content: `验证码请求过于频繁，请${e.details.left_second || 0}后重试`,
+                    content:  t('sendCodeTooFrequent', {
+                        left_second: e.details.left_second || 0
+                    })
                 });
             }
         })
@@ -89,22 +92,22 @@ const CryptoPage: React.FC = () => {
             if (e.details.type === 'UserLocked') {
                 messageApi.open({
                     type: 'error',
-                    content: '用户被锁定',
+                    content: t('userLockedError'),
                 });
             } else if (e.details.type === 'InvalidEmail') {
                 messageApi.open({
                     type: 'error',
-                    content: '邮箱异常，请重新输入',
+                    content:  t('invalidEmailError'),
                 });
             } else if (e.details.type === 'InvalidCaptcha') {
                 messageApi.open({
                     type: 'error',
-                    content: '人机检测失败，请刷新页面重试',
+                    content:  t('invalidCaptchaError'),
                 });
             } else {
                 messageApi.open({
                     type: 'error',
-                    content: e.message || '未知错误',
+                    content: e.message ||  t('unknownError'),
                 });
             }
         })
@@ -121,23 +124,22 @@ const CryptoPage: React.FC = () => {
                 router.push(goTo)
             })
         }).catch(e => {
-
             if (e.details.type === 'SessionExpired') {
                 messageApi.open({
                     type: 'error',
-                    content: '回话session过期，请刷新页面重试',
+                    content:  t('sessionExpired'),
                 });
             } else if (e.details.type === 'InvalidCode') {
                 setCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
-                    content: '邮箱验证码有误',
+                    content:  t('emailVerificationError'),
                 });
             } else if (e.details.type === 'InvalidTOTP') {
                 setTotpCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
-                    content: 'Google验证码有误',
+                    content:  t('googleVerificationError'),
                 });
             }
         })
@@ -159,14 +161,14 @@ const CryptoPage: React.FC = () => {
                     {
                         step === 0 && (
                             <div>
-                                <div className={cn(css.loginHello, state.isMobile? css.moblieLoginHello : '')}>欢迎加入 Hash Space</div>
-                                <div className={css.loginSmallText}>邮箱</div>
+                                <div className={cn(css.loginHello, state.isMobile? css.moblieLoginHello : '')}>{ t('welcomeToHashSpace')}</div>
+                                <div className={css.loginSmallText}>{t('email')}</div>
                                 <Input
                                     size={'large'}
                                     type={'email'}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder={'请输入您的邮箱'}
+                                    placeholder={ t('enterYourEmail')}
                                 ></Input>
                                 {
                                     status !== 'solved' && <Turnstile
@@ -196,7 +198,7 @@ const CryptoPage: React.FC = () => {
                                     disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'}
                                     shape={'round'} onClick={() => {
                                     submitEmail()
-                                }}>下一步</Button>
+                                }}>{ t('nextStep')}</Button>
                             </div>
                         )
                     }
@@ -205,14 +207,14 @@ const CryptoPage: React.FC = () => {
                             <div>
                                 {
                                     state.isMobile && (
-                                        <div className={css.mobileHello}>欢迎加入HashSpace</div>
+                                        <div className={css.mobileHello}>{ t('welcomeToHashSpace')}</div>
                                     )
                                 }
                                 {
                                     !state.isMobile && (
                                         <div className={css.loginHello} style={{
                                             marginBottom: '16px'
-                                        }}>验证</div>
+                                        }}>{t('verification')}</div>
                                     )
                                 }
                                 <div style={{width: '100%'}}>
@@ -220,7 +222,7 @@ const CryptoPage: React.FC = () => {
                                     marginBottom: '24px'
                                 }}>
                                         <CodeSender
-                                            label={'邮箱'}
+                                            label={t('email')}
                                             immidity={true}
                                             onError={() => {
                                                 setStatus('no')
@@ -237,12 +239,12 @@ const CryptoPage: React.FC = () => {
                                             disabled={status !== 'solved'}
                                         />
                                         {
-                                            codeErrorStatus && <div className={css.errorMessage}>邮箱验证码错误</div>
+                                            codeErrorStatus && <div className={css.errorMessage}>{t('emailCodeError')}</div>
                                         }
                                     {
                                         !state.isMobile && (
                                             <div
-                                                className={css.message}>请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效
+                                                className={css.message}>{t('enterEmailCode', {email})}
                                             </div>
                                         )
                                     }
@@ -251,7 +253,7 @@ const CryptoPage: React.FC = () => {
                                         <div style={{
                                             marginBottom: '24px'
                                         }}>
-                                            <div className={css.loginTitleText}>Google验证码</div>
+                                            <div className={css.loginTitleText}>{t('googleVerificationCode')}</div>
                                             <Input
                                                 status={totpCodeErrorStatus ? 'error' : ''}
                                                 maxLength={6}
@@ -263,14 +265,14 @@ const CryptoPage: React.FC = () => {
                                                     setTotpCodeErrorStatus(false)
                                                 }}
                                                 allowClear
-                                                placeholder={'请输入Google验证码'}
+                                                placeholder={t('enterGoogleVerificationCode')}
                                             ></Input>
                                             {
                                                 totpCodeErrorStatus &&
-                                                <div className={css.errorMessage}>Google验证码错误</div>
+                                                <div className={css.errorMessage}>{t('googleVerificationCodeError')}</div>
                                             }
                                             <div
-                                                className={css.message}>请打开您的Google Authenticator，输入6位验证码
+                                                className={css.message}>{t('openGoogleAuthenticator')}
                                             </div>
                                         </div>
                                     )}
@@ -281,7 +283,7 @@ const CryptoPage: React.FC = () => {
                                             isFirstRegister && <Checkbox
                                                 onChange={onChange}
                                                 className={css.loginValidate}>
-                                                    <span style={{marginLeft: '-3px'}}>创建账户即表示我同意Hash Space的<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《服务条款》</a>和 <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《隐私政策》</a></span>
+                                                    <span style={{marginLeft: '-3px'}}>{t('agreeToTerms')}<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《{t('termsOfService')}》</a>{t('and')} <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《{t('privacyPolicy')}》</a></span>
                                             </Checkbox>
                                         }
 
@@ -292,7 +294,7 @@ const CryptoPage: React.FC = () => {
                                                 }}
                                                 onClick={() => {
                                                     onVerify()
-                                                }}>下一步</Button>
+                                                }}>{t('nextStep')}</Button>
                                     </div>
                                 </div>
                             </div>
