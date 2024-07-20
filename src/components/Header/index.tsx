@@ -14,11 +14,13 @@ import {useRouter} from "next/navigation";
 import {getUserInfo, logout} from "@/service/api";
 import Logo from "../../../public/logo-group.png";
 import NavMobile from '../../../public/nav-mobile.png'
+import LanguageSelector from '@/components/LanguageSelector'
 
 
 import css from './index.module.css'
 import {CloseOutlined, LoginOutlined, MenuOutlined} from "@ant-design/icons";
 import {cn} from "@/lib/utils";
+import LanguageSelectorMobile from "@/components/LanguageSelectorMobile";
 
 const HoverContent = ({outState, onLogOut, isMobile = false}: {
     outState: State,
@@ -236,6 +238,7 @@ export const Header: React.FC = () => {
                             <Link href="/#footer" legacyBehavior passHref>
                                 关于
                             </Link>
+                            <LanguageSelectorMobile onClick={() => setOpenDrawer(false)}/>
                         </div>
                     </div>
                 }
@@ -306,6 +309,7 @@ export const Header: React.FC = () => {
                             </Popover>
                         )
                     }
+                    <LanguageSelector />
                 </div>
             </header>
         )

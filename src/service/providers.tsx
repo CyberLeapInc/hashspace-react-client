@@ -9,7 +9,7 @@ import FooterCus from "@/components/Footer";
 import {cn} from "@/lib/utils";
 import {GlobalModals} from "@/components/GlobalModals";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const blackList = [
     '/login'

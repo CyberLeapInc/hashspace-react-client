@@ -27,6 +27,9 @@ export default async function RootLayout({children}: Readonly<{ children: React.
     return (
         <html lang="en">
         <body
+            style={{
+                position: 'absolute'
+            }}
             className={cn(
                 "min-h-screen bg-background font-sans antialiased bg-gray",
                 fontSans.variable

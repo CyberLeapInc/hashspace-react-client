@@ -98,6 +98,11 @@ const whiteList = [
 ]
 
 axiosInstance.interceptors.request.use((config) => {
+    let acceptLanguage = 'en'
+    if (typeof window !== 'undefined') {
+        acceptLanguage = window.localStorage.getItem('language') || 'en'
+    }
+    config.headers['Accept-Language'] = acceptLanguage
     useShowLoading()
     return config
 }, err => {
