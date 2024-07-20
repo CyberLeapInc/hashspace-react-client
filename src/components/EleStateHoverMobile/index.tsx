@@ -4,12 +4,14 @@ import {Button, Drawer, Popover, Statistic} from "antd";
 import css from "@/app/electricityFee/index.module.css";
 import Clipboard from "@/components/Clipboard";
 import {getStateTextColor} from "@/lib/utils";
+import {useTranslations} from 'next-intl';
 
 interface StateHoverProps {
     record: ElectricityList,
     onRecharge: (record: ElectricityList) => void
 }
 const EleStateHoverMobile = ({record, onRecharge} : StateHoverProps) => {
+    const t = useTranslations('electricityFee');
     const {Countdown} = Statistic;
     const [visible, setVisible] = useState(false)
 
@@ -20,26 +22,26 @@ const EleStateHoverMobile = ({record, onRecharge} : StateHoverProps) => {
     const notPaidContent = (paymentExpiredAt: number, onRecharge: () => void) => {
         return <div>
             <div className={css.smallTitleMobile}>
-                未充值
+                {t("stateHover.notPaid")}
             </div>
             <div>
-                <Button size={"large"} shape={"round"} block type={"primary"} onClick={onRecharge}>立即支付</Button>
+                <Button size={"large"} shape={"round"} block type={"primary"} onClick={onRecharge}>{t("stateHover.payImmediately")}</Button>
             </div>
             <div className={css.countdownMobile}><Countdown valueStyle={{
                 fontWeight: '400',
                 color: '#ea2a2a',
                 fontSize: '14px'
-            }} value={paymentExpiredAt * 1000}/>内完成支付 </div>
+            }} value={paymentExpiredAt * 1000}/>{t("stateHover.finishPayment")}</div>
         </div>
     }
 
     const paidFailedContent = (onRecharge: () => void) => {
         return <div>
             <div className={css.smallTitleMobile}>
-                充值超时
+            {t("stateHover.rechargeOverTime")}
             </div>
             <div>
-                <Button size={"large"} shape={"round"} block type={"primary"} onClick={onRecharge}>重新充值</Button>
+                <Button size={"large"} shape={"round"} block type={"primary"} onClick={onRecharge}>{t("stateHover.rechargeAgain")}</Button>
             </div>
         </div>
     }
@@ -47,7 +49,7 @@ const EleStateHoverMobile = ({record, onRecharge} : StateHoverProps) => {
     const chargedContent = (paymentLink: string, payment_link_source: string) => {
         return <div>
             <div className={css.smallTitleMobile}>
-                已充值
+            {t("stateHover.charged")}
             </div>
             <div style={{display: "flex", lineHeight: '40px', alignItems: 'center', paddingRight: '10px',backgroundColor: '#F7F7F7', borderRadius: '8px'}}>
                 <span style={{marginTop: '2px',
@@ -73,17 +75,17 @@ const EleStateHoverMobile = ({record, onRecharge} : StateHoverProps) => {
                 <>
                     {
                         record.state === 1 && (
-                            <Button type={"text"} onClick={() => setVisible(true)} style={{color: getStateTextColor(record.state, record.type)}}>待支付</Button>
+                            <Button type={"text"} onClick={() => setVisible(true)} style={{color: getStateTextColor(record.state, record.type)}}>{t("stateHover.unpaid")}</Button>
                         )
                     }
                     {
                         record.state === 2 && (
-                            <Button type={"text"}  onClick={() => setVisible(true)} style={{color: getStateTextColor(record.state, record.type)}}>已充值</Button>
+                            <Button type={"text"}  onClick={() => setVisible(true)} style={{color: getStateTextColor(record.state, record.type)}}>{t("stateHover.charged")}</Button>
                         )
                     }
                     {
                         record.state === 3 && (
-                            <Button type={"text"}  onClick={() => setVisible(true)} danger style={{color: getStateTextColor(record.state, record.type)}}><span>充值超时</span></Button>
+                            <Button type={"text"}  onClick={() => setVisible(true)} danger style={{color: getStateTextColor(record.state, record.type)}}><span>{t("stateHover.rechargeOverTime")}</span></Button>
                         )
                     }
                 </>
@@ -91,7 +93,7 @@ const EleStateHoverMobile = ({record, onRecharge} : StateHoverProps) => {
         }
         {
             record.type === 2 && (
-                <Button type={"text"} >已扣除</Button>
+                <Button type={"text"} >{t("stateHover.deducted")}</Button>
             )
         }
         <Drawer

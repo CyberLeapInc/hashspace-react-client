@@ -4,12 +4,14 @@ import {Button, Popover, Statistic} from "antd";
 import css from "@/app/electricityFee/index.module.css";
 import Clipboard from "@/components/Clipboard";
 import {getStateTextColor} from "@/lib/utils";
+import {useTranslations} from 'next-intl';
 
 interface StateHoverProps {
     record: ElectricityList,
     onRecharge: (record: ElectricityList) => void
 }
 const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
+    const t = useTranslations('electricityFee');
     const {Countdown} = Statistic;
 
     const handleRecharge = () => {
@@ -19,26 +21,26 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
     const notPaidContent = (paymentExpiredAt: number, onRecharge: () => void) => {
         return <div className={css.contentWrapper}>
             <div className={css.smallTitle}>
-                未充值
+                {t("stateHover.notPaid")}
             </div>
             <div>
-                <Button shape={"round"} block type={"primary"} onClick={onRecharge}>立即支付</Button>
+                <Button shape={"round"} block type={"primary"} onClick={onRecharge}>{t("stateHover.payImmediately")}</Button>
             </div>
             <div className={css.countdown}><Countdown valueStyle={{
                 fontWeight: '400',
                 color: '#ea2a2a',
                 fontSize: '12px'
-            }} value={paymentExpiredAt * 1000}/>内完成支付 </div>
+            }} value={paymentExpiredAt * 1000}/>{t("stateHover.finishPayment")}</div>
         </div>
     }
 
     const paidFailedContent = (onRecharge: () => void) => {
         return <div className={css.contentWrapper}>
             <div className={css.smallTitle}>
-                充值超时
+            {t("stateHover.rechargeOverTime")}
             </div>
             <div>
-                <Button shape={"round"} block type={"primary"} onClick={onRecharge}>重新充值</Button>
+                <Button shape={"round"} block type={"primary"} onClick={onRecharge}> {t("stateHover.rechargeAgain")}</Button>
             </div>
         </div>
     }
@@ -46,7 +48,7 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
     const chargedContent = (paymentLink: string, payment_link_source: string) => {
         return <div className={css.contentWrapper}>
             <div className={css.smallTitle}>
-                已充值
+            {t("stateHover.charged")}
             </div>
             <div style={{display: "flex", lineHeight: '40px', alignItems: 'center'}}>
                 <span style={{marginTop: '2px'}}>TXID:</span>
@@ -66,21 +68,21 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
                     {
                         record.state === 1 && (
                             <Popover zIndex={999} content={() => notPaidContent(record.payment_expired_at, handleRecharge)}>
-                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>待支付</Button>
+                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>{t("stateHover.rechargeAgain")}</Button>
                             </Popover>
                         )
                     }
                     {
                         record.state === 2 && (
                             <Popover zIndex={999} content={() => chargedContent(record.payment_link, record.payment_link_source)}>
-                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>已充值</Button>
+                                <Button type={"text"} style={{color: getStateTextColor(record.state, record.type)}}>{t("stateHover.charged")}</Button>
                             </Popover>
                         )
                     }
                     {
                         record.state === 3 && (
                             <Popover zIndex={999} content={() => paidFailedContent(handleRecharge)}>
-                                <Button type={"text"} danger style={{color: getStateTextColor(record.state, record.type)}}><span>充值超时</span></Button>
+                                <Button type={"text"} danger style={{color: getStateTextColor(record.state, record.type)}}><span>{t("stateHover.rechargeOverTime")}</span></Button>
                             </Popover>
                         )
                     }
@@ -89,7 +91,7 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
         }
         {
             record.type === 2 && (
-                <Button type={"text"} >已扣除</Button>
+                <Button type={"text"} > {t("stateHover.stateHover")}</Button>
             )
         }
 

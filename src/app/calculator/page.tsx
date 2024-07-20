@@ -413,7 +413,7 @@ const Calculator = () => {
                             <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackDay} alt={t('cardTitles.paybackDay')}></Image>
                                 {t('cardTitles.paybackDay')}
                             </div>
-                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? '无法回本' : `${formatThousands(fullRevenueData.payback_day || 0, false)}天`}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? t('unableToPayback') : `${formatThousands(fullRevenueData.payback_day || 0, false)}${t('paybackInDays')}`}</div>
                         </div>
                         {
                             goodItem?.mining_currency === 'BTC' ? (

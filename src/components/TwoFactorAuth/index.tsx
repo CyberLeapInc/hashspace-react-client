@@ -11,8 +11,10 @@ import Clipboard from "@/components/Clipboard";
 import {QRCode} from "antd";
 import {CodeSender} from "@/components/ui/codeSender";
 import css from "@/app/login/index.module.css";
+import {useTranslations} from 'next-intl';
 
 export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
+    const t = useTranslations('twoFactorAuth');
     const {state} = useContext(MyContext);
     const [code, setCode] = useState('')
     const [googleCode, setGoogleCode] = useState('')
@@ -55,17 +57,17 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
             if (e.details.type === 'SendCodeTooFrequent') {
                 messageApi.open({
                     type: 'error',
-                    content: '发送验证码次数过多，请稍后再试',
+                    content: t('tryAgainLater'),
                 });
             } else {
                 let errMessage = ''
                 if (e.details.type === 'InvalidCode') {
                     setCodeErrorStatus(true)
-                    errMessage = '邮箱验证码错误'
+                    errMessage = t('emailCodeError')
                 }
                 if (e.details.type === 'InvalidTOTP') {
                     setTotpCodeErrorStatus(true)
-                    errMessage = 'Google验证码错误'
+                    errMessage = t('googleCodeError')
                 }
                 messageApi.open({
                     type: 'error',
@@ -85,20 +87,20 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                     <div className={'step-index'}>1</div>
                 </div>
                 <div className={'step-intro'}>
-                    下载并安装Google Authenticator（谷歌身份验证码）或Authy APP。</div>
+                    {t('step1')}</div>
             </div>
             <div className={'step-row'}>
                 <div className={'step-index-wrapper'}>
                     <div className={'step-index'}>2</div>
                 </div>
                 <div className={'step-intro'}>
-                    <div>扫描下方二维码。</div>
+                    <div>{t('step2')}</div>
                     <div>
                         <QRCode style={{margin: '10px 0 10px'}} size={161} value={qrcodeUrl}/>
                     </div>
                     <div style={{
                         marginBottom: '-5px'
-                    }}>或者输入密钥
+                    }}>{t('orEnterKey')}
                     </div>
                     <div style={{fontWeight: "bold"}}>
                         <Clipboard noBg={true}
@@ -123,7 +125,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                 </div>
                 <div className={'step-intro'}>
                     <div>
-                        Google身份验证器配置完成后，会显示一个6位数字，每隔30秒变化一次，这个数字即为您的Google验证码。
+                    {t('step3')}
                     </div>
                 </div>
             </div>
@@ -146,18 +148,18 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                         }}
                         onSend={() => getEmailCode(sessionId)}
                         disabled={false}
-                        label={'邮箱验证码'}
+                        label={t('emailVerificationCode')}
                     />
                 }
                 {
-                    codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
+                    codeErrorStatus && <div className={'errorMessage'}>{t('emailCodeError')}</div>
                 }
                 <div>
                     <div className={'login-title-text'} style={{
                         marginTop: '24px',
                         lineHeight: '24px',
                         marginBottom: '8px'
-                    }}>Google验证码</div>
+                    }}>{t('googleVerificationCode')}</div>
                 </div>
                 <Input
                     style={{
@@ -172,10 +174,10 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                         setGoogleCode(e.target.value)
                         setTotpCodeErrorStatus(false)
                     }}
-                    placeholder={'请输入验证码'}
+                    placeholder={t('enterCode')}
                 ></Input>
                 {
-                    totpCodeErrorStatus && <div className={'errorMessage'}>Google验证码错误</div>
+                    totpCodeErrorStatus && <div className={'errorMessage'}>{t('googleCodeError')}</div>
                 }
                 <Button
                     type="primary" block size={'large'} shape={'round'}
@@ -185,7 +187,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                     disabled={!(code.length === 6 && googleCode.length === 6 && !codeErrorStatus && !totpCodeErrorStatus && !loading)}
                     onClick={onConfirm}
                     loading={loading}
-                >确认绑定</Button>
+                >{t('confirmBind')}</Button>
             </div>
         </div>
     </div>
@@ -193,6 +195,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
 }
 
 export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
+    const t = useTranslations('twoFactorAuth');
     const {state} = useContext(MyContext);
     const [code, setCode] = useState('')
     const [totpCode, setTotpCode] = useState('')
@@ -242,11 +245,11 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
 
 
     return (<div>
-        <div className={'step-danger'}>解绑Google验证后，24h内禁止设置/修改地址</div>
-        <div className={'step-info'}>验证码将发送至{state.userInfo.email}</div>
+        <div className={'step-danger'}>{t('unbindWarning')}</div>
+        <div className={'step-info'}>{t('verificationCodeTip')}{state.userInfo.email}</div>
         {
             sessionId && <CodeSender
-            label={'邮箱验证码'}
+            label={t('setAddressEmailCode')}
                 immidity={false}
                 onError={() => {
                     setCodeErrorStatus(true)
@@ -263,10 +266,10 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
             />
         }
         {
-            codeErrorStatus && <div className={'errorMessage'}>邮箱验证码错误</div>
+            codeErrorStatus && <div className={'errorMessage'}>{t('emailCodeError')}</div>
         }
         <div>
-            <div className={css.loginTitleText}>Google验证码</div>
+            <div className={css.loginTitleText}>{t('googleVerificationCode')}</div>
             <Input
                 status={totpCodeErrorStatus ? 'error' : ''}
                 maxLength={6}
@@ -278,14 +281,14 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
                     setTotpCodeErrorStatus(false)
                 }}
                 allowClear
-                placeholder={'请输入Google验证码'}
+                placeholder={t('enterGoogleVerificationCode')}
             ></Input>
             {
                 totpCodeErrorStatus &&
-                <div className={css.errorMessage}>Google验证码错误</div>
+                <div className={css.errorMessage}>{t('googleCodeError')}</div>
             }
             <div
-                className={css.message}>请打开您的Google Authenticator，输入6位验证码
+                className={css.message}>{t('openGoogleAuthenticator')}
             </div>
         </div>
         <Button
@@ -296,6 +299,6 @@ export const UnbindTowFactorAuth = ({onSuccess}: { onSuccess: () => void }) => {
             disabled={!(code.length === 6 && !loading && !codeErrorStatus && !totpCodeErrorStatus && totpCode.length === 6)}
             loading={loading}
             onClick={onConfirm}
-        >确认</Button>
+        >{t('confirm')}</Button>
     </div>)
 }

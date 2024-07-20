@@ -7,8 +7,10 @@ import { CopyOutlined } from "@ant-design/icons";
 import {cn} from "@/lib/utils";
 import CopyIcon from '../../../public/copy-icon.png'
 import Image from "next/image";
+import {useTranslations} from 'next-intl';
 
 export const Clipboard = ({str = '', wrapperStyle = {}, linkUrl = '', maxTextWidth = '100%', style = {}, noBg=false}: {wrapperStyle? : Record<string, string>; str: string, linkUrl?: string, maxTextWidth?:string, style?: Record<string, string>, noBg?: boolean}) => {
+    const t = useTranslations('buyProduct');
     const [data, setData] = useState(str)
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -16,7 +18,7 @@ export const Clipboard = ({str = '', wrapperStyle = {}, linkUrl = '', maxTextWid
     const handleCopy = () => {
         messageApi.open({
             type: 'success',
-            content: '复制成功'
+            content:t("clipboard.copySuccess")
         });
         copy(data)
     }
