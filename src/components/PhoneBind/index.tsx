@@ -7,6 +7,7 @@ import {MyContext} from "@/service/context";
 import {PhoneInput} from 'react-international-phone';
 import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {bindPhoneFinish, bindPhoneStart, getPhoneCode, verifyCurrentCode} from "@/service/api";
+import {useTranslations} from 'next-intl';
 import './index.css'
 
 export const PhoneBind = ({
@@ -14,6 +15,7 @@ export const PhoneBind = ({
                           }: {
     onSuccess: () => void
 }) => {
+    const t = useTranslations('phoneBind');
     const [captchaRefreshKey, setCaptchaRefreshKey] = React.useState(0)
     const {state} = useContext(MyContext)
     const [status, setStatus] = React.useState('')
@@ -54,11 +56,11 @@ export const PhoneBind = ({
     }
     const onError = (e: any) => {
         if (e.details.type === 'SessionExpired') {
-            onPhoneError('Session过期，请关闭后重试。')
+            onPhoneError(t('sessionExpired'))
         } else if (e.details.type === 'InvalidCode') {
-            onPhoneError('手机号验证码错误')
+            onPhoneError(t('invalidCode'))
         } else if (e.details.type === 'NeedSendCode') {
-            onPhoneError('请先获取手机验证码')
+            onPhoneError(t('needSendCode'))
         }
     }
 
@@ -96,7 +98,7 @@ export const PhoneBind = ({
                 <div style={{
                     marginTop: '16px',
                 }}>
-                    <div className={'login-title-text'}>手机号</div>
+                    <div className={'login-title-text'}>{t('phoneNumber')}</div>
                     <div className={'phoneGroup phoneGroup-disable'} style={{
                         marginBottom: '14px'
                     }}>
@@ -137,7 +139,7 @@ export const PhoneBind = ({
                         }}
                         disabled={!(currentCode.length === 6 && !currentCodeErrorStatus)}
                         onClick={onVerifyCurrentCode}
-                    >下一步</Button>
+                    >{t('nextStep')}</Button>
                 </div>
 
             )
@@ -150,7 +152,7 @@ export const PhoneBind = ({
                         marginBottom: '17px'
                     }}>
                         <div className={'login-title-text'}>{
-                            state.userInfo.has_phone ? '新手机号' : '手机号'
+                            state.userInfo.has_phone ?  t('newPhoneNumber') : t('phoneNumber')
                         }</div>
                         <PhoneInput
                             style={{
@@ -171,7 +173,7 @@ export const PhoneBind = ({
                         }}
                         errorStatus={codeErrorStatus}
                         label={
-                            state.userInfo.has_phone ? '新手机号验证码' : '验证码'
+                            state.userInfo.has_phone ? t('newPhoneNumber') : t('verificationCode')
                         }
                         value={code}
                         onChange={(e) => {
@@ -213,7 +215,7 @@ export const PhoneBind = ({
                         disabled={!(code.length === 6 && !codeErrorStatus && !loading) || (state.userInfo.has_phone && currentCode.length !== 6 && currentCodeErrorStatus)}
                         onClick={onConfirm}
                         loading={loading}
-                    >确认绑定</Button>
+                    >{t('confirmBind')}</Button>
                 </>
             )
         }

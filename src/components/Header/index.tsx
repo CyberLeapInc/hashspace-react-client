@@ -20,6 +20,8 @@ import LanguageSelector from '@/components/LanguageSelector'
 import css from './index.module.css'
 import {CloseOutlined, LoginOutlined, MenuOutlined} from "@ant-design/icons";
 import {cn} from "@/lib/utils";
+import {useTranslations} from 'next-intl';
+
 import LanguageSelectorMobile from "@/components/LanguageSelectorMobile";
 
 const HoverContent = ({outState, onLogOut, isMobile = false}: {
@@ -27,29 +29,31 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
     onLogOut: Function,
     isMobile: Boolean
 }) => {
+    const t = useTranslations('header');
+
     const routerLinkList = [
         {
-            text: 'KYC认证',
+            text: t('kyc'),
             href: '/KYC',
             icon: IconKyc
         },
         {
-            text: '安全中心',
+            text: t('securityCenter'),
             href: '/securityCenter',
             icon: IconSecurity,
         },
         {
-            text: '我的订单',
+            text: t('myOrder'),
             href: '/myOrder',
             icon: IconMyorder,
         },
         {
-            text: '收款地址',
+            text: t('walletAddress'),
             href: '/walletAddress',
             icon: IconAddress
         },
         {
-            text: '电费余额',
+            text: t('electricityFee'),
             href: '/electricityFee',
             icon: IconElectfee
         },
@@ -65,7 +69,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                     <Image  style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'} />
                     <div>
                         <div style={{fontWeight: 400}}>{outState.userInfo.email}</div>
-                        <div style={{fontSize: '12px', color: '#999'}}>{outState.userInfo.has_identity ? <span style={{color: 'green'}}>已认证</span> : <span>未认证</span>}</div>
+                        <div style={{fontSize: '12px', color: '#999'}}>{outState.userInfo.has_identity ? <span style={{color: 'green'}}>{t('certified')}</span> : <span>{t('notCertified')}</span>}</div>
                     </div>
                 </Space>
 
@@ -109,7 +113,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                         display: 'flex'
                     }}>
                         <Button className={cn(css.logOutButton, !isMobile && css.logOutButtonPC)} icon={<LoginOutlined />} shape={'round'} type="default" onClick={() => onLogOut()}>
-                            退出账号
+                            {t('logout')}
                         </Button>
 
                     </div>
@@ -121,6 +125,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
 }
 
 export const Header: React.FC = () => {
+    const t = useTranslations('header');
     const {state, dispatch} = useContext(MyContext)
     const [openDrawer, setOpenDrawer] = useState(false)
     const [type, setType] = useState('')
@@ -176,7 +181,7 @@ export const Header: React.FC = () => {
                             !(state?.userInfo?.email) &&
                             <Button style={{marginLeft: 'auto', height: '28px', lineHeight: '18px'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
                                 <Link href="/login" legacyBehavior passHref>
-                                    开始挖矿
+                                    {t('startMining')}
                                 </Link>
                             </Button>
                         }
@@ -212,7 +217,7 @@ export const Header: React.FC = () => {
                                     !(state?.userInfo?.email) &&
                                     <Button style={{marginLeft: 'auto', height: '28px', lineHeight: '18px'}} shape={'round'} ghost className={css.logInButton} type={'primary'}>
                                         <Link href="/login" legacyBehavior passHref>
-                                            开始挖矿
+                                            {t('startMining')}
                                         </Link>
                                     </Button>
 
@@ -224,19 +229,19 @@ export const Header: React.FC = () => {
                         </div>
                         <div className={css.mobileList}>
                             <Link href="/" legacyBehavior passHref>
-                                首页
+                                {t('home')}
                             </Link>
                             <Link href="/productList" legacyBehavior passHref>
-                                云算力
+                                {t('cloudPower')}
                             </Link>
                             <Link href="/#question" legacyBehavior passHref>
-                                常见问题
+                                {t('frequentQuestions')}
                             </Link>
                             <Link href="/calculator" legacyBehavior passHref>
-                                计算器
+                                {t('calculator')}
                             </Link>
                             <Link href="/#footer" legacyBehavior passHref>
-                                关于
+                                {t('about')}
                             </Link>
                             <LanguageSelectorMobile onClick={() => setOpenDrawer(false)}/>
                         </div>
@@ -275,25 +280,25 @@ export const Header: React.FC = () => {
                         </div>
                     </Link>
                     <Link className={css.menuBtn} href="/" legacyBehavior passHref>
-                        <span className={css.menuBtn}>首页</span>
+                        <span className={css.menuBtn}>{t('home')}</span>
                     </Link>
                     <Link className={css.menuBtn} href="/productList" legacyBehavior passHref>
-                        <span className={css.menuBtn}>云算力</span>
+                        <span className={css.menuBtn}>{t('cloudPower')}</span>
                     </Link>
                     <Link href="/#question" legacyBehavior passHref>
-                        <span className={css.menuBtn}>常见问题</span>
+                        <span className={css.menuBtn}>{t('frequentQuestions')}</span>
                     </Link>
                     <Link className={css.menuBtn} href="/calculator" legacyBehavior passHref>
-                        <span className={css.menuBtn}>计算器</span>
+                        <span className={css.menuBtn}>{t('calculator')}</span>
                     </Link>
                     <Link href="/#footer" legacyBehavior passHref>
-                        <span className={css.menuBtn}>关于</span>
+                        <span className={css.menuBtn}>{t('about')}</span>
                     </Link>
                     {
                         !(state?.userInfo?.email) &&
                         <Button style={{marginLeft: 'auto'}} shape={'round'} size={'middle'} type={'primary'}>
                             <Link href="/login" legacyBehavior passHref>
-                                开始挖矿
+                                 {t('startMining')}
                             </Link>
                         </Button>
                     }

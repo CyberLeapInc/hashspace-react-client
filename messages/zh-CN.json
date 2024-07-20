@@ -55,14 +55,15 @@
     "difficultyRange": "{percentage}%",
     "currencyPrice": "{currency}价格",
     "unableToPayback": "无法回本",
-    "paybackInDays": "{days}天",
+    "paybackInDays": "天",
     "usdt": "USDT"
   },
   "codeSender": {
     "sendVerificationCode": "发送验证码",
     "retryAfter": "{seconds}秒后重试",
     "verificationCodeSent": "验证码已发送",
-    "verificationCodeSendFailed": "发送验证码失败"
+    "verificationCodeSendFailed": "发送验证码失败",
+    "code":"验证码"
   },
   "electricityFee": {
     "chargeFee": {
@@ -71,6 +72,7 @@
       "confirm": "确认"
     },
     "stateHover": {
+      "unpaid": "待支付",
       "notPaid": "未充值",
       "payImmediately": "立即支付",
       "finishPayment": "内完成支付",
@@ -98,7 +100,7 @@
     "amountToTransfer": "待转账金额",
     "orderId": "订单ID",
     "warning": "请按待转账金额付款，不同网络费用各不相同，转账时需要注意网络手续费",
-    "transferNetwork": "转账网络: {network}",
+    "transferNetwork": "转账网络: ",
     "completedTransfer": "已完成转账"
   },
   "footer": {
@@ -303,7 +305,8 @@
   },
   "priceSlider": {
     "slideToAdjustPrice": "左右滑动调整价格",
-    "expectedPrice": "预期"
+    "expectedPrice": "预期",
+    "currencyPrice": "{currency}价格"
   },
   "productDetail": {
     "chooseQuantityLabel": "选择数量",
@@ -381,32 +384,59 @@
     "googleVerificationCode": "Google验证码",
     "confirmBind": "确认绑定",
     "unbindWarning": "解绑Google验证后，24h内禁止设置/修改地址",
-    "verificationCodeTip": "验证码将发送至{email}",
+    "verificationCodeTip": "验证码将发送至",
     "googleCodeError": "Google验证码错误",
-    "confirm": "确认"
+    "confirm": "确认",
+    "tryAgainLater":"发送验证码次数过多，请稍后再试",
+    "emailCodeError": "邮箱验证码错误",
+    "openGoogleAuthenticator": "请打开您的Google Authenticator，输入6位验证码",
+    "enterGoogleVerificationCode": "请输入Google验证码",
+    "setAddressEmailCode": "邮箱验证码",
+    "enterCode":"请输入验证码"
   },
   "walletAddress": {
     "setAddressTitle": "设置{currency}收款地址",
+    "changeAddressTitle": "更改{currency}收款地址",
     "setAddressOldAddress": "原地址",
     "setAddressNewAddress": "新主网地址",
+    "setAddressCurrentAddress":"主网地址",
     "setAddressEnterNewAddress": "请输入新的{currency}主网地址",
+    "pleaseSetNew": "请输入新的",
+    "address":"主网地址",
     "setAddressRemark": "备注",
     "setAddressEnterRemark": "请输入该地址的备注",
     "setAddressTips": "温馨提示",
-    "setAddressMinimumPayment": "云算力运行时，最小支付金额：{minPayment}{currency}。",
+    "setAddressMinimumPayment": "云算力运行时，最小支付金额:",
     "setAddressAddressChange": "修改地址后，支付冻结48h。",
     "setAddressPayment": "一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。",
     "setAddressNext": "下一步",
     "setAddressInputEmailCode": "输入邮箱验证码",
     "setAddressEmailCodeTip": "请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效",
+    "setAddressEmailCodeTipFront": "请输入您在邮箱 ",
+    "setAddressEmailCodeTipAfter": " 收到的6位验证码，验证码30分钟有效",
     "setAddressEmailCode": "邮箱验证码",
+    "setAddressEmailCodeWrong": "邮箱验证码错误，请重新输入",
+    "setGoogleAddressEmailCodeWrong": "Google Authenticator验证码错误，请重新输入",
     "setAddressGoogleCode": "Google验证码",
     "setAddressConfirm": "确认",
     "setAddressSuccessTitle": "地址设置成功",
     "setAddressSuccessLocation": "{currency}地址为",
     "setAddressReturn": "返回",
+    "addressCardSet":"设置",
     "addressCardChange": "更改",
     "addressCardBind": "绑定",
-    "walletAddressTitle": "收款地址"
+    "walletAddressTitle": "收款地址",
+    "getUserInfoFailed":"获取用户信息失败",
+    "modificationError":"更改错误",
+    "noRemarks":"暂无备注",
+    "remarkTooShort":"备注过短",
+    "invalidAddress":"地址错误",
+    "sendFailed":"发送失败"
+  },
+  "firstConfirm":{
+    "declarationContent":"本人在此确认并申明：本人非古巴、伊朗、朝鲜、叙利亚以及其他受到相关国家或政府或国际机构管理或执行的制裁的国家或地区居民。Hash Space提供的服务在本人所在的国家或地区是符合法律法规和相关政策的。",
+    "declarationDesc":"由于本人所在的国家或者地区使用Hash Space提供的服务系违法导致的所有法律风险和责任将完全由本人独立承担。",
+    "confirm": "确定",
+    "notification":"提示"
   }
 }

@@ -6,7 +6,7 @@ import {message} from "antd";
 import React from "react";
 import {SelectNetwork} from "@/components/SelectNetwork";
 import {FinishPayment} from "@/components/FinishPayment";
-
+import {useTranslations} from 'next-intl';
 
 export interface BuyProductProp {
     onBuy: (info: {currency: string, network: string, trace_id: string}) => Promise<{
@@ -30,6 +30,7 @@ enum Step {
 
 
 export const BuyProduct = (data: BuyProductProp) => {
+    const t = useTranslations('buyProduct');
     const [messageApi, contextHolder] = message.useMessage();
     const [step, setStep] = useState(Step.selectNetwork)
     const [isCountDownFinish, setIsCountDownFinish] = useState(false)
@@ -74,7 +75,7 @@ export const BuyProduct = (data: BuyProductProp) => {
     }
 
     const setTimeStatus = () => {
-        messageApi.error('支付超时')
+        messageApi.error(t("messages.paymentTimeout"))
         setIsCountDownFinish(true)
         data.finishPay();
     }
@@ -93,22 +94,22 @@ export const BuyProduct = (data: BuyProductProp) => {
                         console.log("待支付");
                         break;
                     case 2:
-                        messageApi.success('支付成功');
+                        messageApi.success(t("messages.paymentSuccessful"));
                         clearInterval(intervalId); // 如果已支付，停止轮询
                         break;
                     case 3:
-                        messageApi.error('支付超时');
+                        messageApi.error(t("messages.paymentTimeout"));
                         console.log("支付超时");
                         clearInterval(intervalId); // 如果支付超时，停止轮询
                         break;
                     default:
-                        messageApi.error('未知状态');
+                        messageApi.error(t("messages.unknownState"));
                         clearInterval(intervalId); // 如果支付超时，停止轮询
                         break;
                 }
             }).catch(error => {
                 clearInterval(intervalId); // 如果请求失败，停止轮询
-                messageApi.error(error.message || 'unknown error');
+                messageApi.error(error.message || t("messages.unknownError"));
             });
         }, 3000) as unknown as number; // 每3秒请求一次
         setPollingIntervalId(intervalId)

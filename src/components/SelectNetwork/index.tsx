@@ -7,6 +7,8 @@ import {cn} from "@/lib/utils";
 import React from "react";
 import css from './index.module.css';
 import {MyContext} from "@/service/context";
+import {useTranslations} from 'next-intl';
+
 export const SelectNetwork: React.FC<{
     paymentCurrency: PaymentCurrency[];
     currentCurrency: PaymentCurrency;
@@ -17,15 +19,16 @@ export const SelectNetwork: React.FC<{
     goPay: () => void;
     total_cost: string | number
 }> = ({paymentCurrency, total_cost, currentCurrency, currentNetWork, loading, setCurrency, setNetwork, goPay}) => {
+    const t = useTranslations('selectNetwork');
     const {state} = useContext(MyContext);
     return (
         <div>
-            <div className={css.title}>订单支付</div>
-            <div className={css.tip}>待付金额</div>
+            <div className={css.title}>{t('orderPayment')}</div>
+            <div className={css.tip}>{t('amountToPay')}</div>
             <div className={css.money}>${total_cost}</div>
             <div className={css.info} style={{
                 marginTop: '38px'
-            }}>选择币种</div>
+            }}>{t('chooseCurrency')}</div>
             <div>
                 {paymentCurrency.map(item => {
                     return (
@@ -44,7 +47,7 @@ export const SelectNetwork: React.FC<{
                     )
                 })}
             </div>
-            <div className={css.info}>选择网络</div>
+            <div className={css.info}>{t('chooseNetwork')}</div>
             <div className={''} style={{display: "flex", gap: '10px', flexWrap: 'wrap'}}>
                 {
                     currentCurrency?.networks?.map(item => {
@@ -62,7 +65,7 @@ export const SelectNetwork: React.FC<{
             <div>
                 <Button disabled={loading} loading={loading} className={css.payButton} type={"primary"} block
                         size={"large"}
-                        shape={"round"} onClick={goPay}>立即支付</Button>
+                        shape={"round"} onClick={goPay}>{t('payNow')}</Button>
             </div>
         </div>
     )

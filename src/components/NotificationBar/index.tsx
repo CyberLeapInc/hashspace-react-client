@@ -3,12 +3,14 @@ import css from './index.module.css'
 import WarningIcon from '../../../public/warning-icon.png';
 import CloseIcon from '../../../public/close-icon.png'
 import Image from "next/image";
+import {useTranslations} from 'next-intl';
 
 export interface NotificationBarProps {
     show: boolean;
     onClose: () => void;
 }
 export const NotificationBar = ({show, onClose}:NotificationBarProps) => {
+    const t = useTranslations('notificationBar');
     const handleClick = () => {
         onClose();
     }
@@ -22,7 +24,7 @@ export const NotificationBar = ({show, onClose}:NotificationBarProps) => {
                 marginTop: '-1px',
                 marginRight: '7px'
             }} src={WarningIcon} className={css.warningIcon} alt={'warningIcon'}/>
-            <span>您的电费余额不足以使用3天，请尽快完成充值。</span>
+            <span>{t('warningMessage')}</span>
             <Image
                 onClick={handleClick}
                  src={CloseIcon} className={css.closeIcon} alt={'closeIcon'}/>

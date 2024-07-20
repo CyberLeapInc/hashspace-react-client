@@ -12,6 +12,7 @@ import css from './index.module.css'
 import {CodeSender} from "@/components/ui/codeSender";
 import Clipboard from "@/components/Clipboard";
 import KycSuccess from "../../../public/kyc-success.png";
+import {useTranslations} from 'next-intl';
 
 const styles = {
     container: {minHeight: 'calc(100vh - 232px)', paddingTop: '25px', paddingBottom: '25px'},
@@ -34,6 +35,8 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
     onFinish: (v: any) => any,
     ogAddress?: string
 }) => {
+    const tWalletAddress = useTranslations('walletAddress');
+    const tTwoFactorAuth = useTranslations('twoFactorAuth');
     const [step, setStep] = useState(0);
     const [address, setAddress] = useState('')
     const [remark, setRemark] = useState('')
@@ -50,7 +53,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
             return;
         }
         if (remark.length === 1) {
-            setRemarkErrorMessage('备注过短')
+            setRemarkErrorMessage(tWalletAddress("remarkTooShort"));
             return;
         }
         setLoading(true)
@@ -60,11 +63,11 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
             setStep(1)
         }).catch(e => {
             if (e?.details['@type'] && /CantChangeAddressAfterTOTPUnbind/.test(e?.details['@type'])) {
-                message.error('解绑Google验证后，24h内禁止设置/修改地址')
+                message.error(tTwoFactorAuth("unbindWarning"))
             } else {
                 message.error(e.message)
                 if (e.details.type === 'InvalidAddress') {
-                    setAddressErrorMessage('地址错误')
+                    setAddressErrorMessage(tWalletAddress("invalidAddress"))
                 }
             }
         }).finally(() => {
@@ -86,7 +89,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         }).then(res => {
             setIsSendCode(true)
         }).catch(e => {
-            message.error(e.message || '发送失败')
+            message.error(e.message || tWalletAddress("sendFailed"))
             setIsSendCode(false)
         })
     }
@@ -136,32 +139,32 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         {
             step === 0 && (
                 <div>
-                    <div className={css.modalTitle}>{ogAddress ? '更改' : '设置'}{currency}收款地址</div>
+                    <div className={css.modalTitle}>{ogAddress ? tWalletAddress('changeAddressTitle') : tWalletAddress('setAddressTitle')}</div>
                     {
                         ogAddress && (
                             <div>
-                                <div className={css.modalSubTitle}>原地址</div>
+                                <div className={css.modalSubTitle}>{tWalletAddress('setAddressOldAddress')}</div>
                                 <div><Input style={{color: '#999', backgroundColor: '#F7F7F7', borderColor: '#F7F7F7'}}
                                             className={css.myInput} disabled={true} value={ogAddress}/></div>
                             </div>
                         )
                     }
-                    <div className={css.modalSubTitle}>{ogAddress ? '新' : ''}主网地址</div>
-                    <div><Input placeholder={`请输入新的${currency}主网地址`} className={css.myInput}
+                    <div className={css.modalSubTitle}>{ogAddress ? tWalletAddress('setAddressNewAddress') : tWalletAddress('setAddressCurrentAddress')}</div>
+                    <div><Input placeholder={`${tWalletAddress('pleaseSetNew')}${currency}${tWalletAddress('address')}`} className={css.myInput}
                                 onChange={(v) => setAddress(v.target.value)}/></div>
                     <div className={css.errorMessage}>{addressErrorMessage}</div>
-                    <div className={css.modalSubTitle}>备注</div>
-                    <div><Input placeholder={'请输入该地址的备注'} minLength={2} maxLength={20} className={css.myInput}
+                    <div className={css.modalSubTitle}>{tWalletAddress('setAddressRemark')}</div>
+                    <div><Input placeholder={tWalletAddress('setAddressEnterRemark')} minLength={2} maxLength={20} className={css.myInput}
                                 onChange={(v) => setRemark(v.target.value)}/></div>
                     <div className={css.errorMessage}>{remarkErrorMessage}</div>
                     <div className={css.tip}>
-                        <div style={{margin: '20px 0 8px'}}>温馨提示</div>
-                        <div>1. 云算力运行时，最小支付金额：{getMinPayment(currency)}{currency}。</div>
-                        <div>2. 修改地址后，支付冻结48h。</div>
-                        <div>3. 一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。</div>
+                        <div style={{margin: '20px 0 8px'}}>{tWalletAddress('setAddressTips')}</div>
+                        <div>1. {tWalletAddress('setAddressMinimumPayment')}{getMinPayment(currency)}{currency}。</div>
+                        <div>2. {tWalletAddress('setAddressAddressChange')}</div>
+                        <div>3. {tWalletAddress('setAddressPayment')}</div>
                     </div>
                     <Button loading={loading} disabled={loading || !address || Boolean(remarkErrorMessage) || Boolean(addressErrorMessage)} shape={"round"} block size={"large"} type={"primary"}
-                            onClick={() => startChange()}>下一步</Button>
+                            onClick={() => startChange()}>{tWalletAddress('setAddressNext')}</Button>
 
                 </div>
             )
@@ -169,35 +172,35 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         {
             step === 1 && (
                 <div>
-                    <div className={css.modalTitle}>输入邮箱验证码</div>
-                    <div className={css.bigTip}>请输入您在邮箱 {state.userInfo.email} 收到的6位验证码，验证码30分钟有效</div>
+                    <div className={css.modalTitle}>{tWalletAddress('setAddressInputEmailCode')}</div>
+                    <div className={css.bigTip}>{tWalletAddress('setAddressEmailCodeTipFront')} {state.userInfo.email} {tWalletAddress('setAddressEmailCodeTipAfter')}</div>
                     <div className={css.modalSubTitle}>
-                        <CodeSender label={'邮箱验证码'} immidity={true} disabled={false} value={code} onSend={getCode}
+                        <CodeSender label={tWalletAddress('setAddressEmailCode')} immidity={true} disabled={false} value={code} onSend={getCode}
                                     onChange={(v) => {
                                         setCode(v)
                                         setErrorStatus(false)
                                     }} onError={() => setErrorStatus(true)}/>
                         {
-                            errorStatus && <div className={css.errorMessage}>邮箱验证码错误，请重新输入</div>
+                            errorStatus && <div className={css.errorMessage}>{tWalletAddress('setAddressEmailCodeWrong')}</div>
                         }
 
                     </div>
                     {
                         state.userInfo.has_totp && (
                             <div>
-                                <div className={css.modalSubTitle}>Google验证码</div>
+                                <div className={css.modalSubTitle}>{tWalletAddress('setAddressGoogleCode')}</div>
                                 <div><Input maxLength={6} onChange={(v) => {
                                     setTotp(v.target.value)
                                     setGoogleErrorStatus(false)
                                 }} className={css.myInput}/></div>
                                 {
-                                    googleErrorStatus && <div className={css.errorMessage}>Google Authenticator验证码错误，请重新输入</div>
+                                    googleErrorStatus && <div className={css.errorMessage}>{tWalletAddress('setGoogleAddressEmailCodeWrong')}</div>
                                 }
                             </div>
                         )
                     }
                     <Button  loading={loading} disabled={loading} style={{marginTop: '32px'}} shape={"round"} block size={"large"} type={"primary"}
-                            onClick={() => finish()}>确认</Button>
+                            onClick={() => finish()}>{tWalletAddress('setAddressConfirm')}</Button>
                 </div>
             )
         }
@@ -209,6 +212,7 @@ const SuccessContent = ({location,currency, onCountDownFinish} : {
     currency: string,
     onCountDownFinish: () => void
 }) => {
+    const t = useTranslations('walletAddress');
     const [countdown, setCountdown] = useState(5); // 倒计时5秒
 
     useEffect(() => {
@@ -221,16 +225,16 @@ const SuccessContent = ({location,currency, onCountDownFinish} : {
     }, [countdown, onCountDownFinish]);
     return (
         <div>
-            <div className={css.modalTitle} style={{textAlign:'center'}}>地址设置成功</div>
+            <div className={css.modalTitle} style={{textAlign:'center'}}>{t("setAddressSuccessTitle")}</div>
             <Image className={css.successImage} src={KycSuccess} alt={'kyc success'}></Image>
 
             <div className={css.modalSubTitle} style={{textAlign:"center", fontWeight: 600}}>
-                {currency}地址为
+            {t("setAddressSuccessLocation")}
             </div>
             <div className={css.successLocationBar}>
                 {location}
             </div>
-            <Button onClick={() => onCountDownFinish()} size={"large"} shape={'round'} type={"primary"} block>返回{
+            <Button onClick={() => onCountDownFinish()} size={"large"} shape={'round'} type={"primary"} block>{t("setAddressReturn")}{
                 countdown > 0 ? ` (${countdown}S)` : ''
             }</Button>
         </div>
@@ -242,6 +246,7 @@ const AddressCard = ({currency, icon, getAddress}: {
     icon: StaticImageData,
     getAddress: (v: string) => any
 }) => {
+    const t = useTranslations('walletAddress');
     const addressDict = getAddress(currency);
     const [isShowBindModal, setIsShowBindModal] = useState(false)
     const [isShowBindSuccessModal, setIsShowBindSuccessModal] = useState(false)
@@ -263,10 +268,10 @@ const AddressCard = ({currency, icon, getAddress}: {
                     payload: res
                 })
             }).catch((e: any) => {
-                message.error(e.message || '获取用户信息失败')
+                message.error(e.message || t("getUserInfoFailed"))
             })
         } else {
-            message.error('更改错误')
+            message.error( t("modificationError"))
         }
 
     }
@@ -302,7 +307,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                             <span
                                 className={state.isMobile ? css.remarkMobile : css.remark}
                                 style={{ color: addressDict['remark'] ? '#333' : '#999999'}}>
-                                {addressDict['remark'] || '暂无备注'}
+                                {addressDict['remark'] || t("noRemarks")}
                             </span>
                         </div>
                         <div style={styles.address}>
@@ -324,7 +329,7 @@ const AddressCard = ({currency, icon, getAddress}: {
                             <span className={css.remark} style={{
                                 color: addressDict['remark'] ? '#333' : '#999999',
                             }}>
-                                {addressDict['remark'] || '暂无备注'}
+                                {addressDict['remark'] || t("noRemarks")}
                             </span>
                             {addressDict['address'] && <Clipboard
                                 style={{
@@ -348,10 +353,10 @@ const AddressCard = ({currency, icon, getAddress}: {
                         addressDict['address'] ?
                             <Button shape={"round"} type={"text"}
                                     style={state.isMobile ? styles.mobileButton : styles.button}
-                                    onClick={() => setIsShowBindModal(true)}>更改</Button> :
+                                    onClick={() => setIsShowBindModal(true)}>{t("addressCardChange")}</Button> :
                             <Button shape={"round"} type={"primary"}
                                     style={state.isMobile ? styles.mobileButton : styles.button}
-                                    onClick={() => setIsShowBindModal(true)}>绑定</Button>
+                                    onClick={() => setIsShowBindModal(true)}>{t("addressCardBind")}</Button>
                     }
                 </div>
             </div>
@@ -360,6 +365,7 @@ const AddressCard = ({currency, icon, getAddress}: {
 }
 
 const WalletAddress = () => {
+    const t = useTranslations('walletAddress');
     const {state} = useContext(MyContext);
 
     const getAddressDict = (type: string) => {
@@ -385,7 +391,7 @@ const WalletAddress = () => {
                 <Space size={"middle"} direction={"vertical"} style={{display: 'flex'}}>
                     <Card>
                         <div className={'card-column-box-title'}>
-                            收款地址
+                        {t("walletAddressTitle")}
                         </div>
                         <Flex vertical={true} className={'card-column-box'}>
                             {currencies.map((currency, index) =>

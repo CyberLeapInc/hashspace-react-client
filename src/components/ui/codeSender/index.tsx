@@ -6,6 +6,7 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 
 import './index.css';
 import { cn } from "@/lib/utils";
+import {useTranslations} from 'next-intl';
 
 interface Props {
     onSend: () => Promise<any>;
@@ -18,12 +19,14 @@ interface Props {
     immidity?: boolean;
 }
 
-export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '验证码', immidity }: Props) => {
+export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '', immidity }: Props) => {
+    const t = useTranslations('codeSender');
     const TIMER_CONST = 60;
     const [focus, setFocus] = useState(false);
     const [timer, setTimer] = useState(0);
     const [sent, setSent] = useState(false);
     const [sending, setSending] = useState(false);
+    const tLabel = t('code');
 
     useEffect(() => {
         // Effect to handle the countdown timer
@@ -62,9 +65,9 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
             await onSend();
             setSent(true)
             setTimer(TIMER_CONST);
-            message.success('验证码已发送');
+            message.success(t("verificationCodeSent"));
         } catch (e) {
-            message.error('发送验证码失败');
+            message.error(t("verificationCodeSendFailed"));
             onError(e)
         } finally {
             setSending(false);
@@ -73,7 +76,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
 
     return (
         <div>
-            <div className={'login-title-text'}>{label}</div>
+            <div className={'login-title-text'}>{tLabel}</div>
             <div
                 className={cn("code-sender-wrapper", focus ? 'code-sender-wrapper-focus' : '', errorStatus ? 'code-sender-wrapper-error' : '')}
             >
@@ -100,7 +103,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     loading={sending}
                     disabled={((sending || (timer < TIMER_CONST)) && timer !== 0) || disabled}
                 >
-                    {timer === 0 ? <span style={{color: disabled ? '#A1A3AB' :'#3C53FF'}}>发送验证码</span> : <span style={{color: '#A1A3AB'}}>{`${timer}秒后重试`}</span>}
+                    {timer === 0 ? <span style={{color: disabled ? '#A1A3AB' :'#3C53FF'}}>{t("sendVerificationCode")}</span> : <span style={{color: '#A1A3AB'}}>{t("retryAfter")}</span>}
                 </Button>
             </div>
         </div>

@@ -1,8 +1,10 @@
 import React from 'react';
 import {Button} from "antd";
 import Link from "next/link";
+import {useTranslations} from 'next-intl';
 
 export const NoEleFee = ({onCharge}: {onCharge: () => void}) => {
+    const t = useTranslations('noEleFee');
     return (
         <div>
             <div style={{
@@ -11,7 +13,7 @@ export const NoEleFee = ({onCharge}: {onCharge: () => void}) => {
                 textAlign: 'center',
                 lineHeight: '30px',
                 fontWeight: '600'
-            }}>️❗️电费不足停机通知❗️</div>
+            }}>{t('title')}</div>
             <div style={{
                 fontWeight: '500',
                 fontSize: '14px',
@@ -19,9 +21,9 @@ export const NoEleFee = ({onCharge}: {onCharge: () => void}) => {
                 lineHeight: '24px',
                 textAlign: 'center',
                 margin: '50px auto'
-            }}>您的电费余额不足已停机，请尽快完成充值。</div>
+            }}>{t('description')}</div>
             <Link href={'/electricityFee'}>
-                <Button onClick={onCharge} size={'large'} shape={'round'} block type={"primary"}>立即充值</Button>
+                <Button onClick={onCharge} size={'large'} shape={'round'} block type={"primary"}>{t('buttonText')}</Button>
             </Link>
         </div>
     )

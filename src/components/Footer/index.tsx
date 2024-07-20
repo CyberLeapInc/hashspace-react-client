@@ -9,8 +9,10 @@ import {MyContext} from "@/service/context";
 import css from './index.module.css'
 import {cn} from "@/lib/utils";
 import Link from "next/link";
+import {useTranslations} from 'next-intl';
 
 export const Footer = () => {
+    const t = useTranslations('footer');
     const {state} = useContext(MyContext);
     return <>
         <div className={css.footerCus} id={'footer'}>
@@ -22,9 +24,9 @@ export const Footer = () => {
                     paddingTop: state.isMobile ? '20px' : '0',
                     paddingBottom: state.isMobile ? '20px' : '0'
                 }}>
-                    <a href={'/user_agreement_cn.html'} target="_blank" className={css.agreement}>服务协议</a>
-                    <a href={'/privacy_policy_cn.html'} target="_blank" className={css.agreement}>隐私政策</a>
-                    <a href={'/disclaimer_cn.html'} target="_blank" className={css.agreement}>免责声明</a>
+                    <a href={'/user_agreement_cn.html'} target="_blank" className={css.agreement}>{t('serviceAgreement')}</a>
+                    <a href={'/privacy_policy_cn.html'} target="_blank" className={css.agreement}>{t('privacyPolicy')}</a>
+                    <a href={'/disclaimer_cn.html'} target="_blank" className={css.agreement}>{t('disclaimer')}</a>
                 </div>
                 <div className='pic-row'>
                      <a href={'mailto:support@cyberleap.us'} style={{

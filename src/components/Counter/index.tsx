@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
 import moment from "moment/moment";
 import css from "@/components/BuyProduct/index.module.css";
+import {useTranslations} from 'next-intl';
 
 export const Counter: React.FC<{
     timeLeft: number;
     onCountFinish: () => void;
 }> = ({ timeLeft, onCountFinish }) => {
+    const t = useTranslations('buyProduct');
     const [time, setTime] = useState(timeLeft);
     const [timeStr, setTimeStr] = useState('')
 
@@ -38,9 +40,9 @@ export const Counter: React.FC<{
     return (
         <div className={css.counter}>
             {time > 0 ? (
-                <span>剩余有效时间 {timeStr} </span>
+                <span>{t("counter.remainingTime")} </span>
             ) : (
-                <span>已超时</span>
+                <span>{t("counter.timeout")}</span>
             )}
         </div>
     );

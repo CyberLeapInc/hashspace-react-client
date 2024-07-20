@@ -10,6 +10,7 @@ import {useMount} from "ahooks";
 
 import {formatThousands, getToFixedLength} from "../../lib/utils";
 import Big from "big.js";
+import {useTranslations} from 'next-intl';
 
 type currency = 'BTC' | 'DOGE' | 'LTC'
 type currencyList = currency[]
@@ -21,6 +22,7 @@ interface PriceSliderProps {
 }
 
 export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false}:PriceSliderProps) => {
+    const t = useTranslations('priceSlider');
     const [targetBTCPrice, setBTCTargetPrice] = useState(0)
     const [targetDogePrice, setDogeTargetPrice] = useState(0)
     const [targetLtcPrice, setLtcTargetPrice] = useState(0)
@@ -114,7 +116,7 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
         const currency = currencyList[0];
         return (
             <div>
-                <div className={css.tip}>左右滑动调整价格</div>
+                <div className={css.tip}>{t('slideToAdjustPrice')}</div>
                 <div className={css.coinImg} style={{
                     marginTop: '29px',
                     marginBottom: '19px'
@@ -131,14 +133,14 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                 />
                 <div className={css.coinText} style={{
                     marginTop: '32px'
-                }}>预期{currency}价格 <span
+                }}>{t('expectedPrice')}{t('currencyPrice')} <span
                     style={{color: '#3c53ff', fontWeight: 'bold'}}>${  formatThousands(getPrice(currency))}</span></div>
             </div>
         )
     } else {
         return (
             <div>
-                <div className={css.tip}>左右滑动调整价格</div>
+                <div className={css.tip}>{t('slideToAdjustPrice')}</div>
                 {currencyList.map((currency,index) => {
                     return (
                         <div style={{padding: index === 0 ? '16px 0 0' : '28px 0 0'}} key={currency}>
@@ -155,7 +157,7 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                                         disabled={false}/>
                             </div>
                             <div>
-                                <div className={css.coinText} style={{textAlign: "left"}}>预期{currency}价格 <span
+                                <div className={css.coinText} style={{textAlign: "left"}}>{t('expectedPrice')}{t('currencyPrice')} <span
                                     style={{
                                         color: '#3c53ff',
                                         fontWeight: 'bold'
