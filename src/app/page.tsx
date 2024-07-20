@@ -16,6 +16,7 @@ import {MyContext} from "@/service/context";
 import {cn} from "@/lib/utils";
 import {useTranslations} from 'next-intl';
 import langCn from '../../messages/zh-CN.json'
+import langEn from '../../messages/en.json'
 
 const text = `
   A dog is a type of domesticated animal.
@@ -28,6 +29,8 @@ if (typeof window !== 'undefined') {
     language = window.localStorage.getItem('language') || 'zh-CN';
     if (language === 'zh-CN') {
         questionList = langCn.home.questions
+    } else if (language === 'en') {
+        questionList = langEn.home.questions
     } else {
         questionList = []
     }

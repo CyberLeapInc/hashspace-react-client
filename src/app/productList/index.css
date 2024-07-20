@@ -107,6 +107,9 @@
     height: 24px;
     line-height: 24px;
     margin-bottom: 16px;
+    white-space: nowrap;       /* 强制文本在一行显示 */
+    overflow: hidden;          /* 隐藏超出容器的文本 */
+    text-overflow: ellipsis;
 }
 .card-single-bottom-label{
     font-weight: 400;
@@ -117,7 +120,6 @@
     font-style: normal;
 }
 .card-single-bottom-value{
-
     font-weight: 400;
     font-size: 14px;
     color: #000000;

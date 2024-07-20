@@ -68,7 +68,7 @@
   "electricityFee": {
     "chargeFee": {
       "modalSubTitle": "Amount",
-      "canUseCount": "Expected to be usable for{day}days.",
+      "canUseCount": "Expected to be usable for {day} days.",
       "confirm": "Continue"
     },
     "stateHover": {
@@ -133,7 +133,7 @@
     "cardAutonomyText": "Users choose their own mining pools, pay their own electricity bills, and receive coins directly from the mining pool. They also select their preferred payment methods. All our services put you in control.",
     "cardSecurityTitle": "Safe and Compliant",
     "cardSecurityText": "Self-operated mining data centers are located in multiple regions including the United States and Southeast Asia, providing your mining operations with greater flexibility, transparency, and competitiveness.",
-    "questionTitle": "Q&A",
+    "questionTitle": "",
     "questions": [
       {
         "title": "How does Hash Space work?",
@@ -304,7 +304,7 @@
     "nextStep": "Continue"
   },
   "priceSlider": {
-    "slideToAdjustPrice": "Swipeto adjust the price",
+    "slideToAdjustPrice": "Swipe to adjust the price",
     "expectedPrice": "Expected",
     "currencyPrice": "{currency} price"
   },
@@ -396,7 +396,7 @@
   },
   "walletAddress": {
     "setAddressTitle": "Set {currency}address",
-    "changeAddressTitle": "Change {currency}address",
+    "changeAddressTitle": "Change {currency} address",
     "setAddressOldAddress": "Current address",
     "setAddressNewAddress": "New address",
     "setAddressCurrentAddress": "Address",

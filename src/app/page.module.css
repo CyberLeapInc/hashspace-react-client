@@ -50,7 +50,6 @@
 .card{
     transition: all 0.2s;
     border-radius: 40px;
-    height: 250px;
     min-width: 250px;
     background-color: white;
     flex: 1;

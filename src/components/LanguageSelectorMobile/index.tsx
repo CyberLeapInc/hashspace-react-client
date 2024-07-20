@@ -69,6 +69,7 @@ const LanguageSelectorMobile = ({
         if (locale === currentLocal) return
         if (typeof window !== 'undefined') {
             window.localStorage.setItem('language', locale)
+            document.cookie = `language=${locale}; path=/`;
             window.location.reload()
             setOpen(false)
         } else {

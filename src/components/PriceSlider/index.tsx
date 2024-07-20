@@ -133,7 +133,7 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                 />
                 <div className={css.coinText} style={{
                     marginTop: '32px'
-                }}>{t('expectedPrice')}{t('currencyPrice')} <span
+                }}>{t('expectedPrice')} {t('currencyPrice', {currency})} <span
                     style={{color: '#3c53ff', fontWeight: 'bold'}}>${  formatThousands(getPrice(currency))}</span></div>
             </div>
         )
@@ -157,7 +157,7 @@ export const PriceSlider = ({currencyList, onTargetPriceChange, isMobile = false
                                         disabled={false}/>
                             </div>
                             <div>
-                                <div className={css.coinText} style={{textAlign: "left"}}>{t('expectedPrice')}{t('currencyPrice')} <span
+                                <div className={css.coinText} style={{textAlign: "left"}}>{t('expectedPrice')} {t('currencyPrice', {currency})} <span
                                     style={{
                                         color: '#3c53ff',
                                         fontWeight: 'bold'

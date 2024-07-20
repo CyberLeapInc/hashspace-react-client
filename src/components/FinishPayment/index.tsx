@@ -32,8 +32,8 @@ export const FinishPayment: React.FC<{
             <div className={css.money}>{big(amount).toFixed(fixPos).toString()} <span className={css.unit}>{currentCurrency.currency}</span></div>
             <Counter key={duration} timeLeft={duration} onCountFinish={setTimeStatus}/>
             <div className={css.row}>
-                <div>{t('orderId')}</div>
-                <div>{orderId}</div>
+                <div style={{marginRight: '8px'}}>{t('orderId')}</div>
+                <div className={css.elli}>{orderId}</div>
             </div>
             <div className={css.warning}>{t('warning')}</div>
             <div className={css.qrcodeWrapper}>

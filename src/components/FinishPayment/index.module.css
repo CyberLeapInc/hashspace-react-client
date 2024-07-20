@@ -77,6 +77,17 @@ flex: 1;
     font-size: 14px;
     color: #333333;
     line-height: 64px;
+    white-space: nowrap;       /* 强制文本在一行显示 */
+    overflow: hidden;          /* 隐藏超出容器的文本 */
+    text-overflow: ellipsis;   /* 使用省略号表示被截断的文本 */
+    width: 100%;
+}
+.elli{
+    white-space: nowrap;       /* 强制文本在一行显示 */
+    overflow: hidden;          /* 隐藏超出容器的文本 */
+    text-overflow: ellipsis;   /* 使用省略号表示被截断的文本 */
+    flex: 1;
+    text-align: right;
 }
 .warning{
     font-weight: 400;

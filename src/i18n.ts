@@ -1,20 +1,25 @@
-import {getRequestConfig} from 'next-intl/server';
+import { getRequestConfig } from 'next-intl/server';
+import { cookies } from 'next/headers'
 
 const locales = ['en', 'zh-CN'];
-const DEFAULT_LANGUAGE = 'zh-CN'
+const DEFAULT_LANGUAGE = 'en';
 
-
-export default getRequestConfig(async () => {
-    // Provide a static locale, fetch a user setting,
-    // read from `cookies()`, `headers()`, etc.
-    // 在这里通过local来设置语言
+// @ts-ignore
+export default getRequestConfig(async ({ req }) => {
     let locale = DEFAULT_LANGUAGE;
-    if (typeof window !== 'undefined') {
-        locale = window.localStorage.getItem('language') || DEFAULT_LANGUAGE;
-    }
+
+    const cookieStore = cookies()
+    const lan = cookieStore?.get('language')?.value || DEFAULT_LANGUAGE
+
+    // if (req.headers.cookie) {
+    //     const cookies = cookie.parse(req.headers.cookie);
+    //     locale = cookies.language || DEFAULT_LANGUAGE;
+    // }
+
+    console.log(lan);
 
     return {
         locale,
-        messages: (await import(`../messages/${locale}.json`)).default
+        messages: (await import(`../messages/${lan}.json`)).default
     };
 });

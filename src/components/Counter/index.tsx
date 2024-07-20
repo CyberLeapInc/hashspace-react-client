@@ -40,7 +40,7 @@ export const Counter: React.FC<{
     return (
         <div className={css.counter}>
             {time > 0 ? (
-                <span>{t("counter.remainingTime")} </span>
+                <span>{t("counter.remainingTime", {time:timeStr})} </span>
             ) : (
                 <span>{t("counter.timeout")}</span>
             )}

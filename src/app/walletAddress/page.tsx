@@ -139,7 +139,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         {
             step === 0 && (
                 <div>
-                    <div className={css.modalTitle}>{ogAddress ? tWalletAddress('changeAddressTitle') : tWalletAddress('setAddressTitle')}</div>
+                    <div className={css.modalTitle}>{ogAddress ? tWalletAddress('changeAddressTitle', {currency}) : tWalletAddress('setAddressTitle')}</div>
                     {
                         ogAddress && (
                             <div>

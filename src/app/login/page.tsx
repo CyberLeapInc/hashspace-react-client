@@ -186,6 +186,9 @@ const CryptoPage: React.FC = () => {
                                             setCloudFlareToken(token)
                                         }}
                                         siteKey={cloudFlareSiteKey}
+                                        options={{
+                                            language: typeof window !== 'undefined' && window.localStorage?.getItem('language') === 'zh-CN' ? 'zh-CN' : 'en-US',
+                                        }}
                                     />
                                 }
                                 <Button

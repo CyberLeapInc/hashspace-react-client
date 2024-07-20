@@ -103,7 +103,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     loading={sending}
                     disabled={((sending || (timer < TIMER_CONST)) && timer !== 0) || disabled}
                 >
-                    {timer === 0 ? <span style={{color: disabled ? '#A1A3AB' :'#3C53FF'}}>{t("sendVerificationCode")}</span> : <span style={{color: '#A1A3AB'}}>{t("retryAfter")}</span>}
+                    {timer === 0 ? <span style={{color: disabled ? '#A1A3AB' :'#3C53FF'}}>{t("sendVerificationCode")}</span> : <span style={{color: '#A1A3AB'}}>{t("retryAfter", {seconds: timer})}</span>}
                 </Button>
             </div>
         </div>

@@ -184,6 +184,7 @@
         justify-content: flex-start;
         .card-column-box-row-label{
             min-width: 80px;
+            margin-right: 14px;
             @media screen and (max-width: 768px){
                 font-size: 14px;
                 min-width: 40px;
@@ -221,7 +222,7 @@
 }
 
 .tips-cus{
-    width: 52px;
+    min-width: 52px;
     height: 20px;
     border-radius: 4px;
     text-align: center;

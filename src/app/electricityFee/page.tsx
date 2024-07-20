@@ -254,7 +254,7 @@ const ElectricityFee = () => {
                         <div style={{display: "flex", paddingTop: '8px'}}>
                             <div>
                                 <div className={css.boxMainTitle} style={{lineHeight: '24px', fontSize: '12px'}}>
-                                    <Image width={24} src={DollarBlue} alt={'dollar'}/>
+                                    <Image style={{width: '24px', height: '24px'}} height={24} width={24} src={DollarBlue} alt={'dollar'}/>
                                     <span className={css.boxMainTitleText}>{t('boxMainTitleText.electricityBalance')}</span>
                                 </div>
                                 <div className={css.bigText}

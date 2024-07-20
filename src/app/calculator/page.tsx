@@ -181,7 +181,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                                 return item.currency === 'BTC'
                             })?.last_usdt_price || '')}</span>
                         </div>
-                        <div className={'intro-single'} style={{textAlign: 'center'}}>
+                        <div className={'intro-single'} style={{textAlign: 'center', maxWidth: '125px'}}>
                             <span className={'intro-label'}>{t('introLabels.miningDifficulty')}:</span>
                             <span className={'intro-value'}>{state?.chainList?.find((item) => {
                                 return item.currency === 'BTC'

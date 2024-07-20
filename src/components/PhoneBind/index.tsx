@@ -204,6 +204,9 @@ export const PhoneBind = ({
                             }}
                             siteKey={cloudFlareSiteKey}
                             key={captchaRefreshKey}
+                            options={{
+                                language: typeof window !== 'undefined' &&  window.localStorage?.getItem('language') === 'zh-CN' ? 'zh-CN' : 'en-US',
+                            }}
                         />
                     }
                     <Button

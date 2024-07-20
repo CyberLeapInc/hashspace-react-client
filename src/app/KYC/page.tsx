@@ -28,7 +28,7 @@ const KYC = () => {
         return Promise.resolve('1')
     }
     const config = {
-        lang: 'zh'
+        lang: typeof window !== 'undefined' && window.localStorage?.getItem('language') === 'en' ? 'en' : 'zh',
     }
     const options = {}
     const messageHandler = (v: any) => {
