@@ -77,7 +77,7 @@ const handleBusinessError = (data: {code: number, message: string, details: any}
     }
     if (data.code === 13) {
         return Promise.reject({
-          message: data.message || '服务器错误',
+          message: data.message || 'Server Error',
           details: {}
         })
     }
@@ -94,7 +94,8 @@ const whiteList = [
     '/',
     '/productList',
     '/calculator',
-    '/login'
+    '/login',
+    '/orderInfoNoLogin'
 ]
 
 axiosInstance.interceptors.request.use((config) => {
@@ -113,7 +114,7 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use((res) => {
     useHideLoading()
     if (res.data.code === 13) {
-        message.error('服务器错误')
+        message.error('Server Error')
         return Promise.reject(res.data)
     }
     return res.data
@@ -129,10 +130,10 @@ axiosInstance.interceptors.response.use((res) => {
         case status.BUSINESS_ERROR:
             return handleBusinessError(response.data)
         case status.SERVER_ERROR:
-            message.error('服务器错误')
+            message.error('Server Error')
             return Promise.reject(response.data)
         case status.FORBIDDEN:
-            message.error('无权限')
+            message.error('No authorization')
             return Promise.reject(response.data)
         default:
             console.error(e);
@@ -1373,6 +1374,9 @@ export interface GoodDetail {
 export const getOrderInfo = (id: string): Promise<OrderDetailResponse> => {
     return axiosInstance.get(`/api/auth/user/order/${id}`)
 }
+export const getOrderInfoNoLogin = (id: string): Promise<OrderDetailResponse> => {
+    return axiosInstance.get(`/api/public/order/${id}`)
+}
 
 export interface PaymentListResponse {
     list: PaymentItem[];
@@ -1449,6 +1453,14 @@ export interface Income {
 
 export const getPaymentList = (id:string): Promise<PaymentListResponse> => {
     return axiosInstance.get(`/api/auth/user/order/${id}/payment`, {
+        params: {
+            page: 1,
+            page_size: 100
+        }
+    })
+}
+export const getPaymentListNoLogin = (id:string): Promise<PaymentListResponse> => {
+    return axiosInstance.get(`/api/public/order/${id}/payment`, {
         params: {
             page: 1,
             page_size: 100
