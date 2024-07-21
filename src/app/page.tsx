@@ -118,7 +118,7 @@ export default function Home() {
                                   <span style={{maxWidth: '80%', display: 'flex', alignItems: 'center'}}>
                                       <div >{item.title}</div>
                                   </span>
-                                      <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"} style={{margin: state.isMobile?'0' : ''}}/>
+                                      <span className={item.index === questionOpen ? "downarrowimg" : "uparrowimg"} style={{margin: state.isMobile?'0' : '', display: 'inline-block', width: state.isMobile ? '28px' : '40px',height: state.isMobile ? '28px' : '40px'}}/>
                                   </CollapsibleTrigger>
                                   <CollapsibleContent className="collapse-text">
                                       {item.text}
