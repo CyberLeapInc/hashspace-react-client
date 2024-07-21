@@ -434,9 +434,9 @@
     "sendFailed":"Send failed."
   },
   "firstConfirm":{
-    "declarationContent":"I hereby confirm and declare that I am not a resident of Cuba, Iran, North Korea, Syria, or any other country or region subject to sanctions imposed by relevant national or international bodies or governments. The services provided by Hash Space comply with the laws, regulations, and relevant policies in my country or region.",
-    "declarationDesc":"I will be solely responsible for all legal risks and liabilities arising from the use of Hash Space's services in my country or region if it is deemed illegal.",
+    "declarationContent":"I confirm and declare that I am not a resident of Cuba, Iran, North Korea, Syria, or any other country or region subject to sanctions imposed by relevant countries, governments, or international organizations. The services provided by Hash Space comply with the laws, regulations, and policies applicable in my country or region. ",
+    "declarationDesc":"I acknowledge that any legal risks and liabilities arising from the use of services provided by Hash Space in my country or region, where such use is illegal, will be solely my responsibility. ",
     "confirm": "Continue",
-    "notification":"Notification"
+    "notification":"Reminder"
   }
 }
