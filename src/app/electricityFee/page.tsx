@@ -62,7 +62,10 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
         </div>
         {
             !(Number(electricityCanUseLeftDays) < 0 ) && (
-                <div className={css.canUseCount}>{t('chargeFee.canUseCount', {day:electricityCanUseLeftDays })}</div>
+                <div className={css.canUseCount}>{t('chargeFee.canUseCount', {day:electricityCanUseLeftDays })}{
+                    typeof window && localStorage.getItem('language') === 'en' && electricityCanUseLeftDays && Number(electricityCanUseLeftDays) > 1 ? 's' : ''
+                }.
+                </div>
             )
         }
         <Button disabled={cost < min} style={{height:'52px', marginTop: '40px'}} size={"large"} shape={"round"} block type={"primary"} onClick={() => onConfirm(cost)}>{t('chargeFee.confirm')}</Button>
@@ -233,7 +236,11 @@ const ElectricityFee = () => {
                                 </div>
                                 <div className={css.smallText}>{t('boxMainTitleText.day', {
                                     day: formatThousands(electricityInfo.estimate_remain_day || 0, false)
-                                })}</div>
+                                })}{
+                                    typeof window && localStorage.getItem('language') === 'en' && electricityInfo.estimate_remain_day && Number(electricityInfo.estimate_remain_day) > 1 ? 's' : ''
+                                }
+
+                                </div>
                             </div>
                         </div>
                         <div className={css.box} style={{flex: 1}}>

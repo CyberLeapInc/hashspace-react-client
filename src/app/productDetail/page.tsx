@@ -277,6 +277,11 @@ const ProductDetail = () => {
         }
     }
 
+    let prefix = 'en';
+    if (typeof window !== 'undefined') {
+        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
+    }
+
 
 
     return (
@@ -388,7 +393,7 @@ const ProductDetail = () => {
                             marginTop: state.isMobile ? '0' : goodDetail?.mining_currency === 'LTC' ? '10px' : '42px',
                             marginBottom: state.isMobile ? '0' : '22px'
                         }}>
-                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>{t('acceptAgreementLabel')}<a href={'/user_agreement_cn.html'} target="_blank">{t('serviceAgreementLabel')}</a>{t('and')}<a href={'/privacy_policy_cn.html'} target="_blank">{t('privacyPolicyLabel')}</a> <a href={'/disclaimer_cn.html'} target="_blank">{t('disclaimerLabel')}</a></Checkbox>
+                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>{t('acceptAgreementLabel')}<a href={`/${prefix}/service-agreement.html`} target="_blank">{t('serviceAgreementLabel')}</a>{t('and')}<a href={`/${prefix}/privacy-policy.html`} target="_blank">{t('privacyPolicyLabel')}</a> <a href={`${prefix}/disclaimer.html`} target="_blank">{t('disclaimerLabel')}</a></Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button

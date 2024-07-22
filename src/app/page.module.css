@@ -3,15 +3,18 @@
     background-size: cover;
     padding-top: 150px;
     background-repeat: no-repeat;
-    padding-bottom: 342px;
     background-position-y: -64px;
     background-color: white;
+    font-weight: 900;
+    font-size: 70px;
+    color: #333333;
+    line-height: 72px;
+    height: 650px;
 }
 .mobileBanner{
     background-image: url("../../public/mobile-background.png");
     background-size: contain;
     padding-top: 330px;
-    padding-bottom: 130px;
     background-repeat: no-repeat;
     background-color: white;
 }
@@ -22,6 +25,9 @@
     line-height: 72px;
     text-align: left;
     font-style: normal;
+    height: 144px;
+    display: flex;
+    align-items: end;
 }
 .mobileTitle{
     font-weight: bold;
@@ -29,6 +35,28 @@
     color: #333333;
     line-height: 42px;
     text-align: center;
+}
+.subTitle{
+    font-weight: 400;
+    font-size: 20px;
+    color: #999999;
+    line-height: 30px;
+    text-align: left;
+    margin-top: 38px;
+    width: 610px;
+}
+.mobileSubTitle{
+    font-weight: 400;
+    font-size: 12px;
+    color: #999999;
+    line-height: 18px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 24px;
+    width: 100%;
+    padding-left: 46px;
+    padding-right: 46px;
+    padding-bottom: 60px;
 }
 .middle{
     background: #EDF1FE;

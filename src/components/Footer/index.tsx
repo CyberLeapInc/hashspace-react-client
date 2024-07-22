@@ -14,6 +14,10 @@ import {useTranslations} from 'next-intl';
 export const Footer = () => {
     const t = useTranslations('footer');
     const {state} = useContext(MyContext);
+    let prefix = 'en';
+    if (typeof window !== 'undefined') {
+        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
+    }
     return <>
         <div className={css.footerCus} id={'footer'}>
             <div className={cn(css.footerContainer, state.isMobile && css.footerContainerMobile)}>
@@ -24,9 +28,9 @@ export const Footer = () => {
                     paddingTop: state.isMobile ? '20px' : '0',
                     paddingBottom: state.isMobile ? '20px' : '0'
                 }}>
-                    <a href={'/user_agreement_cn.html'} target="_blank" className={css.agreement}>{t('serviceAgreement')}</a>
-                    <a href={'/privacy_policy_cn.html'} target="_blank" className={css.agreement}>{t('privacyPolicy')}</a>
-                    <a href={'/disclaimer_cn.html'} target="_blank" className={css.agreement}>{t('disclaimer')}</a>
+                    <a href={`/${prefix}/service-agreement.html`} target="_blank" className={css.agreement}>{t('serviceAgreement')}</a>
+                    <a href={`/${prefix}/privacy-policy.html`} target="_blank" className={css.agreement}>{t('privacyPolicy')}</a>
+                    <a href={`/${prefix}/disclaimer.html`} target="_blank" className={css.agreement}>{t('disclaimer')}</a>
                 </div>
                 <div className='pic-row'>
                      <a href={'mailto:support@cyberleap.us'} style={{

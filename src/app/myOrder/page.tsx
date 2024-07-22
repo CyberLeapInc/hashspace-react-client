@@ -124,9 +124,9 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
 
 const WrapperRenderExpandData = (data: any, modal: any, contextHolder: any, onDelete: (data: any) => void, reBuy: (data: any) => void, isMobile?: boolean) => {
     const messages = useMessages();
-    let locale = 'zh-CN'
+    let locale = 'en'
     if (typeof window !== 'undefined') {
-        locale = window.localStorage.getItem('language') || 'zh-CN';
+        locale = window.localStorage.getItem('language') || 'en';
     }
     return (
         <NextIntlClientProvider locale={locale} messages={messages}>

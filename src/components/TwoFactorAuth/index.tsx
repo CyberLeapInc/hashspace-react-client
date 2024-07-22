@@ -108,7 +108,9 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
                                        justifyContent: 'start',
                                        height:'24px',
                                        alignItems: 'center',
-                                       marginTop: '10px'
+                                       marginTop: '10px',
+                                       paddingLeft: '0',
+                                       cursor: 'pointer'
                                    }}
                                    style={{
                             fontSize: state.isMobile ? '12px' : '14px',

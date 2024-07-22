@@ -126,7 +126,8 @@
     "notCertified": "未认证"
   },
   "home": {
-    "bannerTitle": "Expanding your crypto space.",
+    "bannerTitle": "一站式云算力平台",
+    "subBannerTitle": "在Hash Space，您可以享受全方位的一站式服务，旨在提升您的加密体验并最大化您的挖矿潜力。",
     "cardProfessionalTitle": "专业团队",
     "cardProfessionalText": "我们对矿场进行严格筛选，确保每一处都符合高标准，并始终为您提供值得信赖的优质矿机，矿场及电力资源。",
     "cardAutonomyTitle": "算力自主",
@@ -149,7 +150,7 @@
       },
       {
         "title": "Hash Space的矿场在哪里？",
-        "text": "Hash Space为算力购买方提供算力购买的技术服务，当前合约中的矿机托管于美国的矿场。美国各州拥有独立的电网，丰富的电力资源，加上友好的政策环境，是不错的挖矿选址"
+        "text": "Hash Space为算力购买方提供算力购买的技术服务，当前合约中的矿机托管于美国的矿场。美国各州拥有独立的电网，丰富的电力资源，加上友好的政策环境，是不错的挖矿选址。"
       },
       {
         "title": "电费如何计算？可以直接从收益中扣除吗？除去电费外还有哪些额外费用？",
@@ -203,8 +204,8 @@
     "googleVerificationCodeError": "Google验证码错误",
     "openGoogleAuthenticator": "请打开您的Google Authenticator，输入6位验证码",
     "agreeToTerms": "创建账户即表示我同意Hash Space的",
-    "termsOfService": "服务条款",
-    "privacyPolicy": "隐私政策",
+    "termsOfService": "《服务条款》",
+    "privacyPolicy": "《隐私政策》",
     "and": "和",
     "sessionExpired": "会话session过期，请刷新页面重试",
     "tooFrequentCodeRequest": "验证码请求过于频繁，请{seconds}后重试",
@@ -411,12 +412,12 @@
     "setAddressPayment": "一般在更新收益的下一日执行打款，每天满足上述条件的多个算力合并一笔支付。",
     "setAddressNext": "下一步",
     "setAddressInputEmailCode": "输入邮箱验证码",
-    "setAddressEmailCodeTip": "请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效",
+    "setAddressEmailCodeTip": "请输入您在邮箱 {email} 收到的6位验证码，验证码30分钟有效。",
     "setAddressEmailCodeTipFront": "请输入您在邮箱 ",
-    "setAddressEmailCodeTipAfter": " 收到的6位验证码，验证码30分钟有效",
+    "setAddressEmailCodeTipAfter": " 收到的6位验证码，验证码30分钟有效。",
     "setAddressEmailCode": "邮箱验证码",
-    "setAddressEmailCodeWrong": "邮箱验证码错误，请重新输入",
-    "setGoogleAddressEmailCodeWrong": "Google Authenticator验证码错误，请重新输入",
+    "setAddressEmailCodeWrong": "邮箱验证码错误，请重新输入。",
+    "setGoogleAddressEmailCodeWrong": "Google Authenticator验证码错误，请重新输入。",
     "setAddressGoogleCode": "Google验证码",
     "setAddressConfirm": "确认",
     "setAddressSuccessTitle": "地址设置成功",

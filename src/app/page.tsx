@@ -26,7 +26,7 @@ const text = `
 let language = 'zh-CN';
 let questionList: any[] = [];
 if (typeof window !== 'undefined') {
-    language = window.localStorage.getItem('language') || 'zh-CN';
+    language = window.localStorage.getItem('language') || 'en';
     if (language === 'zh-CN') {
         questionList = langCn.home.questions
     } else if (language === 'en') {
@@ -59,11 +59,14 @@ export default function Home() {
           <div className={state.isMobile? css.mobileBanner : css.banner}>
               <div style={{
                   maxWidth: '1200px',
-                  margin: '0 auto'
+                  margin: '0 auto',
+                  whiteSpace: 'pre-line'
               }}>
-                  <div className={cn(css.title, state.isMobile ? css.mobileTitle : css.pcTitle)}>
-                      Expanding your<br/>
-                      crypto space.
+                  <div className={cn(state.isMobile ? css.mobileTitle : css.title)}>
+                      {t('bannerTitle')}
+                  </div>
+                  <div className={cn(state.isMobile ? css.mobileSubTitle : css.subTitle)}>
+                      {t('subBannerTitle')}
                   </div>
               </div>
 

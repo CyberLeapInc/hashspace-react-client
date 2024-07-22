@@ -18,6 +18,8 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
         onRecharge(record)
     }
 
+    const language = localStorage?.getItem('language') || 'en';
+
     const notPaidContent = (paymentExpiredAt: number, onRecharge: () => void) => {
         return <div className={css.contentWrapper}>
             <div className={css.smallTitle}>
@@ -26,11 +28,32 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
             <div>
                 <Button shape={"round"} block type={"primary"} onClick={onRecharge}>{t("stateHover.payImmediately")}</Button>
             </div>
-            <div className={css.countdown}><Countdown valueStyle={{
-                fontWeight: '400',
-                color: '#ea2a2a',
-                fontSize: '12px'
-            }} value={paymentExpiredAt * 1000}/>{t("stateHover.finishPayment")}</div>
+            <div className={css.countdown}>
+                {
+                    language === 'en' && (
+                        <>
+                            {t("stateHover.finishPayment")}&nbsp;
+                            <Countdown valueStyle={{
+                                fontWeight: '400',
+                                color: '#ea2a2a',
+                                fontSize: '12px'
+                            }} value={paymentExpiredAt * 1000}/>
+                        </>
+                    )
+                }
+                {
+                    language !== 'en' && (
+                        <>
+                            <Countdown valueStyle={{
+                                fontWeight: '400',
+                                color: '#ea2a2a',
+                                fontSize: '12px'
+                            }} value={paymentExpiredAt * 1000}/>
+                            {t("stateHover.finishPayment")}
+                        </>
+                    )
+                }
+            </div>
         </div>
     }
 
@@ -91,7 +114,7 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
         }
         {
             record.type === 2 && (
-                <Button type={"text"} > {t("stateHover.stateHover")}</Button>
+                <Button type={"text"} > {t("stateHover.deducted")}</Button>
             )
         }
 

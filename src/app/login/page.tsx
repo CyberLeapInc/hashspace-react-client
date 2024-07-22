@@ -144,7 +144,9 @@ const CryptoPage: React.FC = () => {
             }
         })
     }
-    const onErr = () => {
+    let prefix = 'en';
+    if (typeof window !== 'undefined') {
+        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
     }
 
     return (
@@ -287,8 +289,8 @@ const CryptoPage: React.FC = () => {
                                         {
                                             isFirstRegister && <div className={css.loginValidate}>
                                                 <Checkbox style={{marginTop: '1px'}} onChange={onChange}/>
-                                                <span>{t('agreeToTerms')} <a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}}>{t('termsOfService')} </a> {t('and')}
-                                                    <a style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank"> {t('privacyPolicy')}</a></span>
+                                                <span>{t('agreeToTerms')} <a href={`/${prefix}/service-agreement.html`} target="_blank" style={{color: '#3C53FF'}}>{t('termsOfService')} </a> {t('and')}
+                                                    <a style={{color: '#3C53FF'}} href={`/${prefix}/privacy-policy.html`} target="_blank"> {t('privacyPolicy')}</a></span>
                                             </div>
 
                                         }
