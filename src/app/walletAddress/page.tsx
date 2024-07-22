@@ -139,7 +139,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
         {
             step === 0 && (
                 <div>
-                    <div className={css.modalTitle}>{ogAddress ? tWalletAddress('changeAddressTitle', {currency}) : tWalletAddress('setAddressTitle')}</div>
+                    <div className={css.modalTitle}>{ogAddress ? tWalletAddress('changeAddressTitle', {currency}) : tWalletAddress('setAddressTitle', {currency})}</div>
                     {
                         ogAddress && (
                             <div>
@@ -150,7 +150,7 @@ const SetAddress = ({currency, onFinish, ogAddress = ''} : {
                         )
                     }
                     <div className={css.modalSubTitle}>{ogAddress ? tWalletAddress('setAddressNewAddress') : tWalletAddress('setAddressCurrentAddress')}</div>
-                    <div><Input placeholder={`${tWalletAddress('pleaseSetNew')}${currency}${tWalletAddress('address')}`} className={css.myInput}
+                    <div><Input placeholder={`${tWalletAddress('pleaseSetNew')} ${currency} ${tWalletAddress('address')}`} className={css.myInput}
                                 onChange={(v) => setAddress(v.target.value)}/></div>
                     <div className={css.errorMessage}>{addressErrorMessage}</div>
                     <div className={css.modalSubTitle}>{tWalletAddress('setAddressRemark')}</div>
@@ -229,7 +229,9 @@ const SuccessContent = ({location,currency, onCountDownFinish} : {
             <Image className={css.successImage} src={KycSuccess} alt={'kyc success'}></Image>
 
             <div className={css.modalSubTitle} style={{textAlign:"center", fontWeight: 600}}>
-            {t("setAddressSuccessLocation")}
+            {t("setAddressSuccessLocation", {
+                currency
+            })}
             </div>
             <div className={css.successLocationBar}>
                 {location}

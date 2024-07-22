@@ -308,7 +308,7 @@ const ProductDetail = () => {
                         <div style={{display: 'flex', gap: '20px',paddingTop: '20px', flexDirection: state.isMobile ? 'column' : 'row'}}>
                             <div className={cn(css.chart, css.block)}>
                                 <div className={css.roi} style={{paddingBottom: '20px'}}>
-                                    <span>{t('investmentReturnRate')}: </span>
+                                    <span>{t('investmentReturnRate')}</span>
                                     <span style={{color: '#3C53FF', fontWeight: 'bold'}}>{revenueData.roi}</span>
                                 </div>
                                 {/*@ts-ignore*/}
@@ -382,13 +382,13 @@ const ProductDetail = () => {
                             </div>
                         </div>
                         {
-                            goodDetail?.mining_currency === 'LTC' && <div className={css.dogeInfo}>*{t('setDogeAddressInfo')}</div>
+                            goodDetail?.mining_currency === 'LTC' && <div className={css.dogeInfo}>{t('setDogeAddressInfo')}</div>
                         }
                         <div style={{
                             marginTop: state.isMobile ? '0' : goodDetail?.mining_currency === 'LTC' ? '10px' : '42px',
                             marginBottom: state.isMobile ? '0' : '22px'
                         }}>
-                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>{t('acceptAgreementLabel')}<a href={'/user_agreement_cn.html'} target="_blank">{t('serviceAgreementLabel')}</a>{t('and')}<a href={'/privacy_policy_cn.html'} target="_blank">{t('privacyPolicyLabel')}</a> <a href={'/disclaimer_cn.html'} target="_blank">{t('disclaimerLabel')}</a>。</Checkbox>
+                            <Checkbox onChange={onCheckBoxChange} className={css.checkbox}>{t('acceptAgreementLabel')}<a href={'/user_agreement_cn.html'} target="_blank">{t('serviceAgreementLabel')}</a>{t('and')}<a href={'/privacy_policy_cn.html'} target="_blank">{t('privacyPolicyLabel')}</a> <a href={'/disclaimer_cn.html'} target="_blank">{t('disclaimerLabel')}</a></Checkbox>
                         </div>
                         <div style={{marginTop: '20px'}}>
                             <Button

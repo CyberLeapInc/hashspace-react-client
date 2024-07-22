@@ -94,7 +94,7 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
         case 2:
             return (
                 <div>
-                    <div style={{color: '#16C984'}}>{t('paid')}</div>
+                    <div style={{color: '#16C984', fontWeight: 500}}>{t('paid')}</div>
                 </div>
             )
         case 3:

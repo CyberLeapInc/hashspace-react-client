@@ -7,7 +7,8 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 import {getProductList, GoodListItem} from "@/service/api";
 import big from 'big.js';
 import Link from "next/link";
-import SoldOut from '../../../public/soldOut.png'
+import SoldOutCn from '../../../public/sold-out-cn.png';
+import SoldOutEn from '../../../public/sold-out-en.png';
 import Image from "next/image";
 import {cn, getToFixedLength} from "@/lib/utils";
 import {MyContext} from "@/service/context";
@@ -42,7 +43,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">{t('miningDateLabel')}</div>
-                    <div className="card-single-bottom-value">{moment((data?.start_at || 0) * 1000 || 0).format('MM/DD/YYYY')} - {moment((data?.end_at || 0) * 1000 || 0).format('MM/DD/YYYY')}</div>
+                    <div className="card-single-bottom-value">{moment((data?.start_at || 0) * 1000 || 0).format('MM/DD/YY')} - {moment((data?.end_at || 0) * 1000 || 0).format('MM/DD/YY')}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">{t('powerConsumptionLabel')}</div>
@@ -67,7 +68,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
 
             </div>
             {
-                data.is_soldout && <Image src={SoldOut} alt={'soldOut'} style={{
+                data.is_soldout && <Image src={getSoldOutImage()} alt={'soldOut'} style={{
                     height: '80px',
                     width: '80px',
                     position: 'absolute',
@@ -87,6 +88,17 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
 
         </div>
     )
+}
+
+const getSoldOutImage = () => {
+    if (typeof window !== 'undefined') {
+        if (window.localStorage.getItem('language') === 'zh-CN') {
+            return SoldOutCn
+        } else {
+            return SoldOutEn
+        }
+    }
+    return SoldOutEn
 }
 
 export default function ProductList() {

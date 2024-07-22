@@ -182,7 +182,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                             })?.last_usdt_price || '')}</span>
                         </div>
                         <div className={'intro-single'} style={{textAlign: 'center', maxWidth: '125px'}}>
-                            <span className={'intro-label'}>{t('introLabels.miningDifficulty')}:</span>
+                            <span className={'intro-label'}>{t('introLabels.miningDifficulty')}</span>
                             <span className={'intro-value'}>{state?.chainList?.find((item) => {
                                 return item.currency === 'BTC'
                             })?.difficulty && (parseHashrateByNumber(
@@ -196,7 +196,7 @@ const TitleBar = ({currencyPrice, currencyList, currencyDifficulty}: {currencyPr
                             ).unit)}</span>
                         </div>
                         <div className={'intro-single'} style={{textAlign: 'right'}}>
-                            <span className={'intro-label'}>{t('introLabels.networkHashrate')}: </span>
+                            <span className={'intro-label'}>{t('introLabels.networkHashrate')}</span>
                             <span className={'intro-value'}>{parseHashrateByNumber(Number(networkHashrate)).hashrate + ' ' + parseHashrateByNumber(Number(networkHashrate)).unit}H/s</span>
                         </div>
                     </> : null

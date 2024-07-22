@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {CheckboxProps, message} from 'antd';
 import {Button, Checkbox, type FormProps, Input, Space} from 'antd';
 import {ActionType, MyContext} from "@/service/context";
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 import Logo from '../../../public/logo-group.png'
 import {cloudFlareSiteKey} from "@/lib/constant";
 import css from './index.module.css'
@@ -68,7 +68,7 @@ const CryptoPage: React.FC = () => {
             if (e.details.type === 'SendCodeTooFrequent') {
                 messageApi.open({
                     type: 'error',
-                    content:  t('sendCodeTooFrequent', {
+                    content: t('sendCodeTooFrequent', {
                         left_second: e.details.left_second || 0
                     })
                 });
@@ -88,7 +88,7 @@ const CryptoPage: React.FC = () => {
             setStep(1)
         }).catch(e => {
             setStatus('no')
-            setCaptchaRefreshKey(prevState => prevState+1)
+            setCaptchaRefreshKey(prevState => prevState + 1)
             if (e.details.type === 'UserLocked') {
                 messageApi.open({
                     type: 'error',
@@ -97,17 +97,17 @@ const CryptoPage: React.FC = () => {
             } else if (e.details.type === 'InvalidEmail') {
                 messageApi.open({
                     type: 'error',
-                    content:  t('invalidEmailError'),
+                    content: t('invalidEmailError'),
                 });
             } else if (e.details.type === 'InvalidCaptcha') {
                 messageApi.open({
                     type: 'error',
-                    content:  t('invalidCaptchaError'),
+                    content: t('invalidCaptchaError'),
                 });
             } else {
                 messageApi.open({
                     type: 'error',
-                    content: e.message ||  t('unknownError'),
+                    content: e.message || t('unknownError'),
                 });
             }
         })
@@ -120,37 +120,38 @@ const CryptoPage: React.FC = () => {
     const onVerify = () => {
         login(sessionId, code, totpCode).then(res => {
             getUserInfo().then(res => {
-                dispatch({ type: ActionType.setUserInfo, payload: res });
+                dispatch({type: ActionType.setUserInfo, payload: res});
                 router.push(goTo)
             })
         }).catch(e => {
             if (e.details.type === 'SessionExpired') {
                 messageApi.open({
                     type: 'error',
-                    content:  t('sessionExpired'),
+                    content: t('sessionExpired'),
                 });
             } else if (e.details.type === 'InvalidCode') {
                 setCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
-                    content:  t('emailVerificationError'),
+                    content: t('emailVerificationError'),
                 });
             } else if (e.details.type === 'InvalidTOTP') {
                 setTotpCodeErrorStatus(true)
                 messageApi.open({
                     type: 'error',
-                    content:  t('googleVerificationError'),
+                    content: t('googleVerificationError'),
                 });
             }
         })
     }
-    const onErr = () => {}
+    const onErr = () => {
+    }
 
     return (
         <div className={state.isMobile ? css.mobileWrapper : css.pcWrapper}>
             {contextHolder}
             <div>
-                <div className={state.isMobile? css.mobileLoginCard : css.loginCard}>
+                <div className={state.isMobile ? css.mobileLoginCard : css.loginCard}>
                     {
                         !state.isMobile && (
                             <div className={css.logospace}>
@@ -161,14 +162,15 @@ const CryptoPage: React.FC = () => {
                     {
                         step === 0 && (
                             <div>
-                                <div className={cn(css.loginHello, state.isMobile? css.moblieLoginHello : '')}>{ t('welcomeToHashSpace')}</div>
+                                <div
+                                    className={cn(css.loginHello, state.isMobile ? css.moblieLoginHello : '')}>{t('welcomeToHashSpace')}</div>
                                 <div className={css.loginSmallText}>{t('email')}</div>
                                 <Input
                                     size={'large'}
                                     type={'email'}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder={ t('enterYourEmail')}
+                                    placeholder={t('enterYourEmail')}
                                 ></Input>
                                 {
                                     status !== 'solved' && <Turnstile
@@ -196,12 +198,12 @@ const CryptoPage: React.FC = () => {
                                         marginTop: '40px',
                                     }}
                                     className={
-                                        state.isMobile? css.fixedButton : ''
+                                        state.isMobile ? css.fixedButton : ''
                                     }
                                     disabled={(status !== 'solved') || (email === '')} type="primary" block size={'large'}
                                     shape={'round'} onClick={() => {
                                     submitEmail()
-                                }}>{ t('nextStep')}</Button>
+                                }}>{t('nextStep')}</Button>
                             </div>
                         )
                     }
@@ -210,7 +212,7 @@ const CryptoPage: React.FC = () => {
                             <div>
                                 {
                                     state.isMobile && (
-                                        <div className={css.mobileHello}>{ t('welcomeToHashSpace')}</div>
+                                        <div className={css.mobileHello}>{t('welcomeToHashSpace')}</div>
                                     )
                                 }
                                 {
@@ -221,15 +223,15 @@ const CryptoPage: React.FC = () => {
                                     )
                                 }
                                 <div style={{width: '100%'}}>
-                                <div style={{
-                                    marginBottom: '24px'
-                                }}>
+                                    <div style={{
+                                        marginBottom: '24px'
+                                    }}>
                                         <CodeSender
                                             label={t('email')}
                                             immidity={true}
                                             onError={() => {
                                                 setStatus('no')
-                                                setCaptchaRefreshKey(prevState => prevState+1)
+                                                setCaptchaRefreshKey(prevState => prevState + 1)
                                             }}
                                             errorStatus={codeErrorStatus}
                                             value={code}
@@ -244,14 +246,14 @@ const CryptoPage: React.FC = () => {
                                         {
                                             codeErrorStatus && <div className={css.errorMessage}>{t('emailCodeError')}</div>
                                         }
-                                    {
-                                        !state.isMobile && (
-                                            <div
-                                                className={css.message}>{t('enterEmailCode', {email})}
-                                            </div>
-                                        )
-                                    }
-                                </div>
+                                        {
+                                            !state.isMobile && (
+                                                <div
+                                                    className={css.message}>{t('enterEmailCode', {email})}
+                                                </div>
+                                            )
+                                        }
+                                    </div>
                                     {totpEnabled && (
                                         <div style={{
                                             marginBottom: '24px'
@@ -280,14 +282,15 @@ const CryptoPage: React.FC = () => {
                                         </div>
                                     )}
                                     <div className={
-                                        state.isMobile? css.fixedZone : ''
+                                        state.isMobile ? css.fixedZone : ''
                                     } style={{width: '100%'}}>
                                         {
-                                            isFirstRegister && <Checkbox
-                                                onChange={onChange}
-                                                className={css.loginValidate}>
-                                                    <span style={{marginLeft: '-3px'}}>{t('agreeToTerms')}<a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}} >《{t('termsOfService')}》</a>{t('and')} <a  style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank">《{t('privacyPolicy')}》</a></span>
-                                            </Checkbox>
+                                            isFirstRegister && <div className={css.loginValidate}>
+                                                <Checkbox style={{marginTop: '1px'}} onChange={onChange}/>
+                                                <span>{t('agreeToTerms')} <a href={'/user_agreement_cn.html'} target="_blank" style={{color: '#3C53FF'}}>{t('termsOfService')} </a> {t('and')}
+                                                    <a style={{color: '#3C53FF'}} href={'/privacy_policy_cn.html'} target="_blank"> {t('privacyPolicy')}</a></span>
+                                            </div>
+
                                         }
 
                                         <Button type="primary" block size={'large'} shape={'round'}

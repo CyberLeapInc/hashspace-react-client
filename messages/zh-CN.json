@@ -48,9 +48,9 @@
       "totalElectricityFee": "总电费"
     },
     "introLabels": {
-      "btcPrice": "BTC价格",
-      "miningDifficulty": "挖矿难度",
-      "networkHashrate": "全网算力"
+      "btcPrice": "BTC价格：",
+      "miningDifficulty": "挖矿难度：",
+      "networkHashrate": "全网算力："
     },
     "difficultyRange": "{percentage}%",
     "currencyPrice": "{currency}价格",
@@ -320,8 +320,8 @@
     "disclaimerLabel": "《免责声明》",
     "and": "和",
     "buyNowButton": "立即购买",
-    "setDogeAddressInfo": "根据矿池要求，请您下单前先设置DOGE收款地址。",
-    "investmentReturnRate": "投资回报率 ",
+    "setDogeAddressInfo": "*根据矿池要求，请您下单前先设置DOGE收款地址。",
+    "investmentReturnRate": "投资回报率：",
     "cloudComputingCost": "云算力费用",
     "expectedIncome": "预期收益",
     "set": "设置",
