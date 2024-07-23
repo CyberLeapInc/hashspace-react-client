@@ -1,6 +1,7 @@
 import react, {useState, useEffect} from 'react'
 import css from './index.module.css'
 import {PlusOutlined, MinusOutlined} from "@ant-design/icons";
+import {cn} from "@/lib/utils";
 
 export interface NumberSelector {
     value: number
@@ -48,7 +49,7 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
         return width + 'px';
     }
     return (<div className={css.numberSelectorWrapper} style={{...styles}}>
-        <div className={css.handler} onClick={() => handleOpera(false)}>
+        <div className={cn(css.handler, min === currentValue && css.handlerDisabled)} onClick={() => handleOpera(false)}>
             <MinusOutlined />
         </div>
         <div>
@@ -112,7 +113,7 @@ export const NumberSelector = ({value,onChange, unit = 'T', step = 1, min = 0, m
             </div>
 
         </div>
-        <div className={css.handler} onClick={() => handleOpera(true)}>
+        <div className={cn(css.handler, max <= currentValue && css.handlerDisabled)} onClick={() => handleOpera(true)}>
             <PlusOutlined/>
         </div>
     </div>)

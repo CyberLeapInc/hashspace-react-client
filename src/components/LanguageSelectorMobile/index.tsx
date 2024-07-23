@@ -25,25 +25,25 @@ const Content = ({onClick,currentLocal, onClose}: {onClick: (locale: string) => 
             <span>{
                 currentLocal === 'zh-CN' ? '语言' : 'Language'
             }</span>
-            <CloseOutlined onClick={onClose} size={12} />
+            <CloseOutlined onClick={onClose} size={12}/>
         </div>
-        <DividerCus margin={10} />
-        <div style={{
-            color: currentLocal === 'zh-CN' ? '#333333' : '#666666',
-            fontWeight: currentLocal === 'zh-CN' ? 500 : 400
-        }} onClick={() => handleOnClick('zh-CN')} className={css.contentWrapperRowMobile}>
-            <span>简体中文</span>
-            {
-                innerLocal === 'zh-CN' && <CheckOutlined />
-            }
-        </div>
+        <DividerCus margin={10}/>
         <div style={{
             color: currentLocal === 'en' ? '#333333' : '#666666',
             fontWeight: currentLocal === 'en' ? 500 : 400
         }} onClick={() => handleOnClick('en')} className={css.contentWrapperRowMobile}>
             <span>English</span>
             {
-                innerLocal === 'en' && <CheckOutlined />
+                innerLocal === 'en' && <CheckOutlined/>
+            }
+        </div>
+        <div style={{
+            color: currentLocal === 'zh-CN' ? '#333333' : '#666666',
+            fontWeight: currentLocal === 'zh-CN' ? 500 : 400
+        }} onClick={() => handleOnClick('zh-CN')} className={css.contentWrapperRowMobile}>
+            <span>中文简体</span>
+            {
+                innerLocal === 'zh-CN' && <CheckOutlined/>
             }
         </div>
     </div>
@@ -51,7 +51,7 @@ const Content = ({onClick,currentLocal, onClose}: {onClick: (locale: string) => 
 
 
 const LanguageSelectorMobile = ({
-    onClick
+                                    onClick
                                 }: {
     onClick: () => void
 }) => {
@@ -100,7 +100,7 @@ const LanguageSelectorMobile = ({
             <Image src={currentImage || England} alt={'language_icon'} width={28} height={28}/>
             <div className={css.languageNameMobile}>
                 {
-                    currentLocal === 'zh-CN' ? '简体中文' : 'English'
+                    currentLocal === 'zh-CN' ? '中文简体' : 'English'
                 }
             </div>
             <Image src={ArrowDownSolid} alt={'arrow'} width={6} height={4} />

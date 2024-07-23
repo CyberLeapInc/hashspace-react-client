@@ -383,7 +383,7 @@
     "step3": "Once the Google Authenticator is set up, it will display a 6-digit number that changes every 30 seconds. This number is your Google verification code.",
     "emailVerificationCode": "Email code",
     "googleVerificationCode": "Google code",
-    "confirmBind": "确认绑定",
+    "confirmBind": "Confirm",
     "unbindWarning": "After disabling Google verification, setting or modifying the address is prohibited within 24 hours.",
     "verificationCodeTip": "The verification code will be sent to",
     "googleCodeError": "Invalid code",

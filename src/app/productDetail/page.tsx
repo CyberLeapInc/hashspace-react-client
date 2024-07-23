@@ -253,6 +253,10 @@ const ProductDetail = () => {
     }
 
     const goBuyCheck = () => {
+        if (!state?.userInfo?.email) {
+            window.location.href = '/login'
+            return
+        }
         if (goodDetail?.mining_currency === 'LTC') {
             state.userInfo.address.find(item => item.currency === 'LTC')?.address ? toggleModal(true) : setIsShowSetDogeAddress(true)
         } else {
@@ -360,7 +364,7 @@ const ProductDetail = () => {
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
-                                        unit={t('day')}
+                                        unit={t('day') + `${buyDays > 1 ? 's' : ''}`}
                                         onChange={handleBuyDaysChange}
                                     />
                                 </div>

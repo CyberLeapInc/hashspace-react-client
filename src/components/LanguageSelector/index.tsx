@@ -10,13 +10,13 @@ import {useEffect, useState} from "react";
 
 const Content = ({onClick}: {onClick: (locale: string) => void}) => {
     return <div className={css.contentWrapper}>
-        <div onClick={() => onClick('zh-CN')} className={css.contentWrapperRow}>
-            <Image src={China} alt={'language_icon'} width={18} height={18}/>
-            <span style={{marginLeft: '8px'}}>中文简体</span>
-        </div>
         <div onClick={() => onClick('en')} className={css.contentWrapperRow}>
             <Image src={England} alt={'language_icon'} width={18} height={18}/>
             <span style={{marginLeft: '8px'}}>English</span>
+        </div>
+        <div onClick={() => onClick('zh-CN')} className={css.contentWrapperRow}>
+            <Image src={China} alt={'language_icon'} width={18} height={18}/>
+            <span style={{marginLeft: '8px'}}>中文简体</span>
         </div>
     </div>
 }

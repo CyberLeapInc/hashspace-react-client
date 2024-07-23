@@ -77,7 +77,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 }}/>
             }
 
-            <Link href={state?.userInfo?.email ? `productDetail?good_id=${data.good_id}` : '/login'}>
+            <Link href={`productDetail?good_id=${data.good_id}`}>
                 <Button
                     disabled={data.is_soldout}
                     className={

@@ -95,7 +95,8 @@ const whiteList = [
     '/productList',
     '/calculator',
     '/login',
-    '/orderInfoNoLogin'
+    '/orderInfoNoLogin',
+    '/productDetail'
 ]
 
 axiosInstance.interceptors.request.use((config) => {

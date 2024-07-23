@@ -257,7 +257,9 @@ const OrderInfo = () => {
                                 <div className={css.form}>
                                     <div className={'login-hello'}
                                          style={{display: 'flex', justifyContent: 'space-between'}}>{t('hashrateCurve')}
-                                        <Button href={link} shape={'round'} type={"primary"}>{t('miningPoolObserverLink')}</Button>
+                                        <Button onClick={() => {
+                                            window.open(link)
+                                        }} shape={'round'} type={"primary"}>{t('miningPoolObserverLink')}</Button>
                                     </div>
                                     <div style={{marginTop: '50px', marginBottom: '10px'}} className={css.legend}>
                                         <span className={css.try}></span>
