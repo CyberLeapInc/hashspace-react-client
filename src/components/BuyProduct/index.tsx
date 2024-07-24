@@ -68,6 +68,7 @@ export const BuyProduct = (data: BuyProductProp) => {
         console.log(data)
         setCurrentCurrency(data)
         setCurrentNetwork(data.networks[0].name)
+        setCurrentNetworks(data.networks[0])
     }
     const setNetwork = (network: string) => {
         setCurrentNetwork(network)
