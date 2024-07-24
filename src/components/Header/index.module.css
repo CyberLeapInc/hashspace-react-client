@@ -45,3 +45,18 @@
 .logOutButtonPC{
     margin: 15px auto;
 }
+.hoverButton{
+    color: #333333;
+    font-size: 14px;
+    display: flex;
+    vertical-align: middle;
+    justify-items: start;;
+    height: 52px;
+    align-items: center;
+    border-radius: 0;
+    width: 137px;
+    padding: 0 26px;
+}
+.pcHoverBottom{
+    margin: 0 auto;
+}

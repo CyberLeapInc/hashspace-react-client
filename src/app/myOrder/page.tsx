@@ -84,10 +84,17 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
                 <div>
                     <Button type={"primary"} shape={"round"} onClick={() => reBuy(record)}>{t('immediatePayment')}</Button>
                     <div className={cn(css.countdownWrapper)}>
+                        {
+                            typeof window !== 'undefined' && window.localStorage.getItem('language') !== 'zh-CN' &&
+                            <div>{t('completePaymentWithin')}</div>
+                        }
                         <Countdown key={record.order_id}
                                    valueStyle={{fontSize: '12px', color: '#EA2A2A', lineHeight: '23px', height: '23px'}}
                                    value={(record?.payment_expired_at || 0) * 1000}/>
-                        <div>{t('completePaymentWithin')}</div>
+                        {
+                            typeof window !== 'undefined' && window.localStorage.getItem('language') === 'zh-CN' &&
+                            <div>{t('completePaymentWithin')}</div>
+                        }
                     </div>
                 </div>
             )

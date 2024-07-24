@@ -7,6 +7,7 @@ import {useOnMountUnsafe} from "@/lib/clientUtils";
 import './index.css';
 import { cn } from "@/lib/utils";
 import {useTranslations} from 'next-intl';
+import placeholder from "lodash/fp/placeholder";
 
 interface Props {
     onSend: () => Promise<any>;
@@ -17,9 +18,10 @@ interface Props {
     errorStatus?: boolean
     label?: string;
     immidity?: boolean;
+    placeholder? : string;
 }
 
-export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '', immidity }: Props) => {
+export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorStatus = false, label = '', immidity, placeholder = '' }: Props) => {
     const t = useTranslations('codeSender');
     const TIMER_CONST = 60;
     const [focus, setFocus] = useState(false);
@@ -76,7 +78,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
 
     return (
         <div>
-            <div className={'login-title-text'}>{tLabel}</div>
+            <div className={'login-title-text'}>{label || tLabel}</div>
             <div
                 className={cn("code-sender-wrapper", focus ? 'code-sender-wrapper-focus' : '', errorStatus ? 'code-sender-wrapper-error' : '')}
             >
@@ -94,6 +96,7 @@ export const CodeSender = ({ onSend, value, onChange, onError, disabled, errorSt
                     }}
                     onFocus={onFocus}
                     onBlur={onBlur}
+                    placeholder={placeholder}
                     bordered={false}
                 />
                 <Button

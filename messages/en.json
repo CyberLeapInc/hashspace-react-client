@@ -39,12 +39,12 @@
     },
     "startCalculation": "Calculate",
     "cardTitles": {
-      "totalIncome": "Exp. total revenue",
+      "totalIncome": "Expected \n total revenue",
       "totalExpenditure": "Total cost",
       "netProfit": "Net profit",
       "dailyIncome": "Daily revenue",
-      "paybackDay": "Payback period",
-      "paybackPrice": "Break-even BTC pr.",
+      "paybackDay": "Break-even period",
+      "paybackPrice": "Break-even \n BTC price",
       "totalElectricityFee": "Total electricity"
     },
     "introLabels": {
@@ -313,7 +313,7 @@
     "chooseQuantityLabel": "Hashrate",
     "electricityDaysLabel": "Electricity",
     "contractCostLabel": "Hashrate fee",
-    "electricityCostLabel": "Electricity",
+    "electricityCostLabel": "Electricity fee",
     "totalCostLabel": "Total",
     "acceptAgreementLabel": "I agree",
     "serviceAgreementLabel": " Terms of service ",
@@ -411,7 +411,7 @@
     "setAddressAddressChange": "No payment will be made within 48 hours after your modified your address.",
     "setAddressPayment": "Payments are generally made the day after updating the earnings, combining multiple hashrates that meet the above conditions into a single payment each day.",
     "setAddressNext": "Continue",
-    "setAddressInputEmailCode": "Code",
+    "setAddressInputEmailCode": "Email code",
     "setAddressEmailCodeTip": "Please enter the 6-digit verification code that was sent to {email}. The code is valid for 30 minutes.",
     "setAddressEmailCodeTipFront": "Please enter the 6-digit verification code that was sent to ",
     "setAddressEmailCodeTipAfter": "The code is valid for 30 minutes.",

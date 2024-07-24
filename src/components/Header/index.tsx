@@ -68,7 +68,7 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                 }}>
                     <Image  style={{marginLeft: 'auto'}} width={32} src={IconAvatar} alt={'avatar'} />
                     <div>
-                        <div style={{fontWeight: 400}}>{outState.userInfo.email}</div>
+                        <div style={{fontWeight: 400}}>{outState.userInfo.email.length > 22 ? outState.userInfo.email.slice(0,22)+'...' : outState.userInfo.email}</div>
                         <div style={{fontSize: '12px', color: '#999'}}>{outState.userInfo.has_identity ? <span style={{color: 'green'}}>{t('certified')}</span> : <span>{t('notCertified')}</span>}</div>
                     </div>
                 </Space>
@@ -84,23 +84,19 @@ const HoverContent = ({outState, onLogOut, isMobile = false}: {
                                     <Button
                                         key={item.text}
                                         style={{
-                                            color: '#333',
-                                            fontSize: '14px',
-                                            display:'flex',
-                                            verticalAlign: 'middle',
-                                            justifyContent: isMobile? 'left' : 'left',
-                                            paddingLeft: isMobile ? '26px' : '60px',
-                                            height: '55px',
-                                            lineHeight: '55px',
-                                            alignItems: 'center',
-                                            borderRadius: '0'
-                                        }} block type="text" size={"large"}>
-                                        <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
-                                            margin:'2px 8px 0 0'
-                                        }}/>
-                                        <span>
+                                            padding: 0,
+                                            height : '52px',
+                                            borderRadius: 0
+                                        }}
+                                        block type="text" size={"large"}>
+                                        <div className={cn(css.hoverButton, !isMobile && css.pcHoverBottom)}>
+                                            <Image width={18} height={18} src={item.icon} alt={'avatar'} style={{
+                                                margin:'2px 8px 0 0'
+                                            }}/>
+                                            <span>
                                             {item.text}
                                         </span>
+                                        </div>
                                     </Button>
                                 </Link>
                             </div>

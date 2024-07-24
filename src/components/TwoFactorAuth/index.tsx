@@ -137,6 +137,7 @@ export const TwoFactorAuth = ({ onSuccess } : { onSuccess: () => void }) => {
             }}>
             {
                     sessionId && <CodeSender
+                        placeholder={t('enterCode')}
                         immidity={false}
                         onError={() => {
                             setCodeErrorStatus(true)
