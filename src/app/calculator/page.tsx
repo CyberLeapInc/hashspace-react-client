@@ -20,6 +20,8 @@ import IconList from "@/components/IconList";
 import {CustomInput} from "@/components/CustomInput";
 import _ from 'lodash'
 import {useDebounceEffect} from "ahooks";
+import CountUp from 'react-countup';
+
 
 interface CurrencyListSelectorProps {
     goodItem: GoodListItem | null;
@@ -366,13 +368,15 @@ const Calculator = () => {
                             {
                                 goodItem?.currency.map((item) => {
                                     return <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} key={item}>
-                                        {formatThousands(big(fullRevenueData?.total_coin_income[item] || 0).toNumber().toFixed(getToFixedLength(item)))}
+                                        {
+                                            <CountUp duration={0.3} decimals={getToFixedLength(item)} end={Number((big(fullRevenueData?.total_coin_income[item] || 0).toNumber().toFixed(getToFixedLength(item))))} />
+                                        }
                                         <span  className={state.isMobile ? css.smallTextMobile : css.smallText}>{item}</span>
                                     </div>
                                 })
                             }
                             <div className={state.isMobile ? css.calCardInfoMobile : css.calCardInfo}>
-                                ≈${fullRevenueData.total_income ? formatThousands(big(fullRevenueData.total_income || '0').toFixed(getToFixedLength())) : '0'}
+                                ≈$<CountUp duration={0.3} end={Number(fullRevenueData.total_income ? Number(big(fullRevenueData.total_income || '0').toFixed(getToFixedLength())) : '0')} decimals={getToFixedLength()} />
                             </div>
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
@@ -380,14 +384,14 @@ const Calculator = () => {
                                 <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calAllPay} alt={t('cardTitles.totalExpenditure')}></Image>
                                 {t('cardTitles.totalExpenditure')}
                             </div>
-                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >$<CountUp end={Number(big(fullRevenueData?.total_cost || '0').toFixed(getToFixedLength()))} decimals={getToFixedLength()} duration={0.3} /> </div>
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
                                 <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calProfit} alt={t('cardTitles.netProfit')}></Image>
                                 {t('cardTitles.netProfit')}
                             </div>
-                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength()))}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >$<CountUp end={Number(Number(big(fullRevenueData?.net_income || '0').toFixed(getToFixedLength())))} duration={0.3} decimals={getToFixedLength()} /> </div>
                         </div>
                         <div className={cn(state.isMobile? css.calCardMobile : css.calCard)}>
                             <div className={state.isMobile ? css.itemTitleMobile : css.itemTitle}>
@@ -398,14 +402,14 @@ const Calculator = () => {
                                 fullRevenueData.daily_coin_income ? Object.keys(fullRevenueData.daily_coin_income).map((item) => {
                                     return (
                                         <div key={item}  className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>
-                                            {formatThousands(big(fullRevenueData.daily_coin_income[item] || 0).toFixed(getToFixedLength(item)))}
+                                            <CountUp end={Number(Number(big(fullRevenueData.daily_coin_income[item] || 0).toFixed(getToFixedLength(item))))} duration={0.3} decimals={getToFixedLength(item)} />
                                             <span className={state.isMobile ? css.smallTextMobile : css.smallText}>{item}</span>
                                         </div>
                                     )
                                 }) : null
                             }
                             <div className={state.isMobile ? css.calCardInfoMobile : css.calCardInfo}>
-                                ≈${formatThousands(big(fullRevenueData.daily_income || '0').toFixed(getToFixedLength()))}
+                                ≈$<CountUp end={Number(Number(big(fullRevenueData.daily_income || '0').toFixed(getToFixedLength())))} duration={0.3} decimals={getToFixedLength()} />
                             </div>
                         </div>
                         <div className={cn(state.isMobile ? css.calCardMobile : css.calCard)}>
@@ -413,7 +417,12 @@ const Calculator = () => {
                             <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackDay} alt={t('cardTitles.paybackDay')}></Image>
                                 {t('cardTitles.paybackDay')}
                             </div>
-                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? t('unableToPayback') : `${formatThousands(fullRevenueData.payback_day || 0, false)} ${t('paybackInDays')}`}</div>
+                            <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >{formatThousands(fullRevenueData.payback_day || 0, false) === '-1' ? t('unableToPayback') :
+                                <div>
+                                    <CountUp end={Number(fullRevenueData.payback_day || 0)} duration={0.3} />&nbsp;
+                                     {t('paybackInDays')}
+                                </div>
+                                }</div>
                         </div>
                         {
                             goodItem?.mining_currency === 'BTC' ? (
@@ -422,7 +431,9 @@ const Calculator = () => {
                                         <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={t('cardTitles.paybackPrice')}></Image>
                                         {t('cardTitles.paybackPrice')}
                                     </div>
-                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >${formatThousands(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength()))}</div>
+                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount} >
+                                        $<CountUp end={Number(Number(big(fullRevenueData?.payback_price || 0).toFixed(getToFixedLength())))} duration={0.3} decimals={getToFixedLength()} />
+                                    </div>
                                 </div>
                             ):null
                         }
@@ -433,7 +444,7 @@ const Calculator = () => {
                                         <Image className={state.isMobile ? css.calIconMobile : css.calIcon} src={calPayBackMoney} alt={t('cardTitles.totalElectricityFee')}></Image>
                                         {t('cardTitles.totalElectricityFee')}
                                     </div>
-                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>${formatThousands(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))}</div>
+                                    <div className={state.isMobile ? css.calCardCountMobile : css.calCardCount}>$<CountUp end={Number(big(fullRevenueData?.electricity_cost || 0).toFixed(getToFixedLength()))} decimals={getToFixedLength()} duration={0.3} /> </div>
                                 </div>
                             ):null
                         }
