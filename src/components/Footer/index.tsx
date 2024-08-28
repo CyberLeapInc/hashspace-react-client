@@ -56,7 +56,7 @@ export const Footer = () => {
 
                 </div>
             </div>
-            <div className="footer-info">© 2024 Hashspce. All rights reserved</div>
+            <div className="footer-info">© 2024 Hashspace. All rights reserved</div>
         </div>
     </>
 }
