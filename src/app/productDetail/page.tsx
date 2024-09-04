@@ -364,7 +364,7 @@ const ProductDetail = () => {
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
-                                        unit={t('day') + `${buyDays > 1 ? 's' : ''}`}
+                                        unit={t('day') + `${buyDays > 1 ? '' : ''}`}
                                         onChange={handleBuyDaysChange}
                                     />
                                 </div>
