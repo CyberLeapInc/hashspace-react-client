@@ -64,7 +64,7 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
             !(Number(electricityCanUseLeftDays) < 0 ) && (
                 <div className={css.canUseCount}>{t('chargeFee.canUseCount', {day:electricityCanUseLeftDays })}{
                     typeof window && localStorage.getItem('language') === 'en' && electricityCanUseLeftDays && Number(electricityCanUseLeftDays) > 1 ? 's' : ''
-                }.
+                }
                 </div>
             )
         }

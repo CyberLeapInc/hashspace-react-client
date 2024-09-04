@@ -286,6 +286,8 @@ const ProductDetail = () => {
         prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
     }
 
+    const language = localStorage?.getItem('language') || 'en';
+
 
 
     return (
@@ -364,7 +366,7 @@ const ProductDetail = () => {
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
-                                        unit={t('day') + `${buyDays > 1 ? '' : ''}`}
+                                        unit={t('day') + `${buyDays > 1 ? language === 'en' ? 's' : '' : ''}`}
                                         onChange={handleBuyDaysChange}
                                     />
                                 </div>
