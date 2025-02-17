@@ -15,6 +15,7 @@ import {MyContext} from "@/service/context";
 import moment from "moment";
 import IconList from "@/components/IconList";
 import {useTranslations} from "next-intl";
+import {toThousands} from "@antv/component";
 
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
@@ -33,7 +34,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                         {data.currency.join('&')}
                     </div>
                 </div>
-                <div className={'card-single-top-b'}>$ {(data.price||'').slice(0, 4)}/{data.unit}</div>
+                <div className={'card-single-top-b'}>$ {toThousands(Number(data?.price || 0))}/{data.unit}</div>
                 <div className={'card-single-top-c'}>{data.description}</div>
             </div>
             <div className="card-single-bottom">
@@ -59,7 +60,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">{t('minPurchaseQuantityLabel')}</div>
-                    <div className="card-single-bottom-value">{new big(data['min_qty'] || 0).toFixed(2)}{data.unit}</div>
+                    <div className="card-single-bottom-value">{toThousands(Number(data?.['min_qty'] || 0))}{data.unit}</div>
                 </div>
                 <div className="card-single-bottom-row">
                     <div className="card-single-bottom-label">{t('expectedIncomeLabel')}</div>
