@@ -6,6 +6,7 @@ import England from '../../../public/united-kingdom.png'
 import css from './index.module.css'
 import Arrow from '../../../public/arrow-up-outline-black.png'
 import {useEffect, useState} from "react";
+import Cookies from "js-cookie";
 
 
 const Content = ({onClick}: {onClick: (locale: string) => void}) => {
@@ -23,7 +24,7 @@ const Content = ({onClick}: {onClick: (locale: string) => void}) => {
 
 const LanguageSelector = ({}) => {
     const [open, setOpen] = useState(false)
-    const [currentLocal, setCurrentLocal] = useState('zh-CN' as string)
+    const [currentLocal, setCurrentLocal] = useState('en' as string)
     const [currentImage, setCurrentImage] = useState(England as any)
     const handleOpenChange = (newOpen: boolean) => {
         setOpen(newOpen);
@@ -41,7 +42,7 @@ const LanguageSelector = ({}) => {
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const locale = window.localStorage.getItem('language') || 'en'
+            const locale = Cookies.get('language') || window.localStorage.getItem('language') || 'en'
             setCurrentLocal(locale)
         } else {
             setCurrentLocal('en')

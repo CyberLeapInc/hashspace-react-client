@@ -17,6 +17,7 @@ import {cn} from "@/lib/utils";
 import {useTranslations} from 'next-intl';
 import langCn from '../../messages/zh-CN.json'
 import langEn from '../../messages/en.json'
+import Cookies from "js-cookie";
 
 const text = `
   A dog is a type of domesticated animal.
@@ -26,7 +27,7 @@ const text = `
 let language = 'zh-CN';
 let questionList: any[] = [];
 if (typeof window !== 'undefined') {
-    language = window.localStorage.getItem('language') || 'en';
+    language = Cookies.get('language') ||  window.localStorage.getItem('language') || 'en';
     if (language === 'zh-CN') {
         questionList = langCn.home.questions
     } else if (language === 'en') {

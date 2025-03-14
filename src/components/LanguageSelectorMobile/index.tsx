@@ -9,6 +9,8 @@ import Arrow from "../../../public/arrow-up-outline-black.png";
 import DividerCus from "@/components/ui/dividerCus";
 import ArrowDownSolid from '../../../public/arrow-solid.png'
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import {useMount} from "ahooks";
+import Cookie from 'js-cookie'
 
 const Content = ({onClick,currentLocal, onClose}: {onClick: (locale: string) => void, currentLocal: string, onClose: () => void}) => {
     const [innerLocal, setInnerLocal] = useState('en')
@@ -56,7 +58,7 @@ const LanguageSelectorMobile = ({
     onClick: () => void
 }) => {
     const [open, setOpen] = useState(false)
-    const [currentLocal, setCurrentLocal] = useState('zh-CN' as string)
+    const [currentLocal, setCurrentLocal] = useState('en' as string)
     const [currentImage, setCurrentImage] = useState(England as any)
     const ref = useRef();
     useEffect(() => {
@@ -78,7 +80,7 @@ const LanguageSelectorMobile = ({
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const locale = window.localStorage.getItem('language') || 'en'
+            const locale = Cookie.get('language') || window.localStorage.getItem('language') || 'en'
             setCurrentLocal(locale)
         } else {
             setCurrentLocal('en')

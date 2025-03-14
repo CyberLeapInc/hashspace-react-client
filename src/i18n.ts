@@ -11,13 +11,6 @@ export default getRequestConfig(async ({ req }) => {
     const cookieStore = cookies()
     const lan = cookieStore?.get('language')?.value || DEFAULT_LANGUAGE
 
-    // if (req.headers.cookie) {
-    //     const cookies = cookie.parse(req.headers.cookie);
-    //     locale = cookies.language || DEFAULT_LANGUAGE;
-    // }
-
-    console.log(lan);
-
     return {
         locale,
         messages: (await import(`../messages/${lan}.json`)).default
