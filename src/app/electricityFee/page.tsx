@@ -24,6 +24,7 @@ import {MyContext} from "@/service/context";
 import EleStateHover from "@/components/EleStateHover";
 import EleStateHoverMobile from "@/components/EleStateHoverMobile";
 import {useTranslations} from "next-intl";
+import Cookies from "js-cookie";
 
 
 interface ChargeFeeProps {
@@ -63,7 +64,7 @@ const ChargeFee = ({onConfirm, min = 0, step =1} : ChargeFeeProps) => {
         {
             !(Number(electricityCanUseLeftDays) < 0 ) && (
                 <div className={css.canUseCount}>{t('chargeFee.canUseCount', {day:electricityCanUseLeftDays })}{
-                    typeof window && localStorage.getItem('language') === 'en' && electricityCanUseLeftDays && Number(electricityCanUseLeftDays) > 1 ? 's' : ''
+                    typeof window && Cookies.get('language') !== 'zh-CN' && electricityCanUseLeftDays && Number(electricityCanUseLeftDays) > 1 ? 's' : ''
                 }
                 </div>
             )
@@ -237,7 +238,7 @@ const ElectricityFee = () => {
                                 <div className={css.smallText}>{t('boxMainTitleText.day', {
                                     day: formatThousands(electricityInfo.estimate_remain_day || 0, false)
                                 })}{
-                                    typeof window && localStorage.getItem('language') === 'en' && electricityInfo.estimate_remain_day && Number(electricityInfo.estimate_remain_day) > 1 ? 's' : ''
+                                    typeof window && Cookies.get('language') !== 'zh-CN' && electricityInfo.estimate_remain_day && Number(electricityInfo.estimate_remain_day) > 1 ? 's' : ''
                                 }
 
                                 </div>

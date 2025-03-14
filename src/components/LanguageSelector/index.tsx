@@ -42,7 +42,7 @@ const LanguageSelector = ({}) => {
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const locale = Cookies.get('language') || window.localStorage.getItem('language') || 'en'
+            const locale = Cookies.get('language') || 'en'
             setCurrentLocal(locale)
         } else {
             setCurrentLocal('en')

@@ -16,7 +16,7 @@ import {MyContext} from "@/service/context";
 import BtcMachine from '../../../public/btc_machine.png';
 import LtcMachine from '../../../public/ltc_machine.png';
 import Image from 'next/image';
-
+import Cookies from "js-cookie";
 import dynamic from 'next/dynamic'
 import Link from "next/link";
 import {useTranslations} from "next-intl";
@@ -283,7 +283,7 @@ const ProductDetail = () => {
 
     let prefix = 'en';
     if (typeof window !== 'undefined') {
-        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
+        prefix = Cookies.get('language') || 'en';
     }
 
     const language = localStorage?.getItem('language') || 'en';
@@ -366,7 +366,7 @@ const ProductDetail = () => {
                                         max={9999999}
                                         step={1}
                                         value={buyDays}
-                                        unit={t('day') + `${buyDays > 1 ? language === 'en' ? 's' : '' : ''}`}
+                                        unit={t('day') + `${buyDays > 1 ? language === 'zh-CN' ? '' : 's' : ''}`}
                                         onChange={handleBuyDaysChange}
                                     />
                                 </div>

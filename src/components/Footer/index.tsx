@@ -5,7 +5,7 @@ import TgPic from "../../../public/tg@2x.png";
 import EmailPic from "../../../public/email@2x.png";
 import React, {useContext} from "react";
 import {MyContext} from "@/service/context";
-
+import Cookies from "js-cookie";
 import css from './index.module.css'
 import {cn} from "@/lib/utils";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export const Footer = () => {
     const {state} = useContext(MyContext);
     let prefix = 'en';
     if (typeof window !== 'undefined') {
-        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
+        prefix = Cookies.get('language') || 'en';
     }
     return <>
         <div className={css.footerCus} id={'footer'}>

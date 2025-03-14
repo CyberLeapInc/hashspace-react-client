@@ -27,13 +27,11 @@ const text = `
 let language = 'zh-CN';
 let questionList: any[] = [];
 if (typeof window !== 'undefined') {
-    language = Cookies.get('language') ||  window.localStorage.getItem('language') || 'en';
+    language = Cookies.get('language') || 'en';
     if (language === 'zh-CN') {
         questionList = langCn.home.questions
-    } else if (language === 'en') {
-        questionList = langEn.home.questions
     } else {
-        questionList = []
+        questionList = langEn.home.questions
     }
     for (let i = 0; i < questionList.length; i++) {
         // 在这里加一个key

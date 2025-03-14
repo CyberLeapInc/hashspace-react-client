@@ -11,6 +11,7 @@ import Image from "next/image";
 import SumsubWebSdk from '@sumsub/websdk-react'
 import {getKycToken, getUserInfo} from "@/service/api";
 import {useTranslations} from "next-intl";
+import Cookies from "js-cookie";
 
 
 const KYC = () => {
@@ -28,7 +29,7 @@ const KYC = () => {
         return Promise.resolve('1')
     }
     const config = {
-        lang: typeof window !== 'undefined' && window.localStorage?.getItem('language') === 'en' ? 'en' : 'zh',
+        lang: typeof window !== 'undefined' && Cookies.get('language') === 'zh-CN' ? 'zh' : 'en',
     }
     const options = {}
     const messageHandler = (v: any) => {

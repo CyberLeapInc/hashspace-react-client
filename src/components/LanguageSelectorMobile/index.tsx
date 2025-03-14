@@ -80,7 +80,7 @@ const LanguageSelectorMobile = ({
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const locale = Cookie.get('language') || window.localStorage.getItem('language') || 'en'
+            const locale = Cookie.get('language') || 'en'
             setCurrentLocal(locale)
         } else {
             setCurrentLocal('en')

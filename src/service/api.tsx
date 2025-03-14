@@ -4,7 +4,7 @@ import {message} from "antd";
 import React, {useContext} from 'react';
 import {LoadingComponent} from "@/service/loading";
 import {createRoot} from "react-dom/client";
-
+import Cookies from "js-cookie";
 let isShow = false;
 let count = 0;
 
@@ -102,7 +102,7 @@ const whiteList = [
 axiosInstance.interceptors.request.use((config) => {
     let acceptLanguage = 'en'
     if (typeof window !== 'undefined') {
-        acceptLanguage = window.localStorage.getItem('language') || 'en'
+        acceptLanguage = Cookies.get('language') || 'en'
     }
     config.headers['Accept-Language'] = acceptLanguage
     useShowLoading()

@@ -23,6 +23,7 @@ import IconList from "@/components/IconList";
 import {useTranslations} from "next-intl";
 import {NextIntlClientProvider} from 'next-intl';
 import {useMessages} from "use-intl";
+import Cookies from "js-cookie";
 
 
 const getCurrencyIcon = (currency: string) => {
@@ -85,14 +86,14 @@ const PaymentStatus = ({status, link, source, goodId, reBuy, record}: {
                     <Button type={"primary"} shape={"round"} onClick={() => reBuy(record)}>{t('immediatePayment')}</Button>
                     <div className={cn(css.countdownWrapper)}>
                         {
-                            typeof window !== 'undefined' && window.localStorage.getItem('language') !== 'zh-CN' &&
+                            typeof window !== 'undefined' && Cookies.get('language') !== 'zh-CN' &&
                             <div>{t('completePaymentWithin')}</div>
                         }
                         <Countdown key={record.order_id}
                                    valueStyle={{fontSize: '12px', color: '#EA2A2A', lineHeight: '23px', height: '23px'}}
                                    value={(record?.payment_expired_at || 0) * 1000}/>
                         {
-                            typeof window !== 'undefined' && window.localStorage.getItem('language') === 'zh-CN' &&
+                            typeof window !== 'undefined' && Cookies.get('language') === 'zh-CN' &&
                             <div>{t('completePaymentWithin')}</div>
                         }
                     </div>
@@ -133,7 +134,7 @@ const WrapperRenderExpandData = (data: any, modal: any, contextHolder: any, onDe
     const messages = useMessages();
     let locale = 'en'
     if (typeof window !== 'undefined') {
-        locale = window.localStorage.getItem('language') || 'en';
+        locale = Cookies.get('language') || 'en';
     }
     return (
         <NextIntlClientProvider locale={locale} messages={messages}>

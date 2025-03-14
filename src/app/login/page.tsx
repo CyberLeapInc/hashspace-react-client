@@ -6,7 +6,8 @@ import {ActionType, MyContext} from "@/service/context";
 import {useRouter} from 'next/navigation';
 import Logo from '../../../public/logo-group.png'
 import {cloudFlareSiteKey} from "@/lib/constant";
-import css from './index.module.css'
+import css from './index.module.css';
+import Cookies from "js-cookie";
 
 
 import {Turnstile} from '@marsidev/react-turnstile'
@@ -146,7 +147,7 @@ const CryptoPage: React.FC = () => {
     }
     let prefix = 'en';
     if (typeof window !== 'undefined') {
-        prefix = window.localStorage.getItem('language') === 'en' ? 'en' : 'cn';
+        prefix = Cookies.get('language') || 'en';
     }
 
     return (

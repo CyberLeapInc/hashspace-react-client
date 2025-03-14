@@ -5,7 +5,7 @@ import css from "@/app/electricityFee/index.module.css";
 import Clipboard from "@/components/Clipboard";
 import {getStateTextColor} from "@/lib/utils";
 import {useTranslations} from 'next-intl';
-
+import Cookies from "js-cookie";
 interface StateHoverProps {
     record: ElectricityList,
     onRecharge: (record: ElectricityList) => void
@@ -18,7 +18,7 @@ const EleStateHover = ({record, onRecharge} : StateHoverProps) => {
         onRecharge(record)
     }
 
-    const language = localStorage?.getItem('language') || 'en';
+    const language = Cookies.get('language') || 'en';
 
     const notPaidContent = (paymentExpiredAt: number, onRecharge: () => void) => {
         return <div className={css.contentWrapper}>

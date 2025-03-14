@@ -16,7 +16,7 @@ import moment from "moment";
 import IconList from "@/components/IconList";
 import {useTranslations} from "next-intl";
 import {toThousands} from "@antv/component";
-
+import Cookies from "js-cookie";
 // @ts-ignore
 const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}) {
     const {state, dispatch} = useContext(MyContext);
@@ -93,7 +93,7 @@ const Card = function ({data, isMobile}: {data: GoodListItem, isMobile: boolean}
 
 const getSoldOutImage = () => {
     if (typeof window !== 'undefined') {
-        if (window.localStorage.getItem('language') === 'zh-CN') {
+        if (Cookies.get('language') === 'zh-CN') {
             return SoldOutCn
         } else {
             return SoldOutEn
