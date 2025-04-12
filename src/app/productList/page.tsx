@@ -128,7 +128,7 @@ export default function ProductList() {
                     marginTop: '20px',
                     marginBottom: '20px',
                     paddingLeft: state.isMobile ? '12%' : '0px',
-                }}>DOGE&LTC云算力</div>
+                }}>{t('dogeLtcCloudComputingPower')}</div>
             <Tabs defaultValue="ltc" className="container-tabs" onChange={(e) => {
                 console.log(e.target)
             }}>
