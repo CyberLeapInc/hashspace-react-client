@@ -82,7 +82,7 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
         hoverable: false,
         label: {
             text: ({type, value} : {type: string, value: string}) => {
-                return `$${formatThousands(big(value).toNumber())}`
+                return `$${formatThousands(big(value).toNumber().toFixed(2))}`
             },
             textBaseline: 'bottom',
 
