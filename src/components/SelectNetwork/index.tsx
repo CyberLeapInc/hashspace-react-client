@@ -3,7 +3,7 @@ import react, {useContext, useEffect, useState} from 'react'
 import { uuid } from 'uuidv4';
 import {getPubInfo, PaymentCurrency, buyProduct, getPaymentResult, money} from "@/service/api";
 import {Button, message} from "antd";
-import {cn} from "@/lib/utils";
+import {cn, formatThousands} from "@/lib/utils";
 import React from "react";
 import css from './index.module.css';
 import {MyContext} from "@/service/context";
@@ -25,7 +25,7 @@ export const SelectNetwork: React.FC<{
         <div>
             <div className={css.title}>{t('orderPayment')}</div>
             <div className={css.tip}>{t('amountToPay')}</div>
-            <div className={css.money}>${total_cost}</div>
+            <div className={css.money}>${formatThousands(total_cost)}</div>
             <div className={css.info} style={{
                 marginTop: '38px'
             }}>{t('chooseCurrency')}</div>

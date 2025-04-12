@@ -1,7 +1,7 @@
 'use client'
 import css from './index.module.css'
 import {Button, Checkbox, Divider, Input, Modal, Slider} from "antd";
-import {cn, getToFixedLength, roundUp} from "@/lib/utils";
+import {cn, formatThousands, getToFixedLength, roundUp} from "@/lib/utils";
 import React, {useCallback, useEffect, useRef, useState,useContext} from "react";
 import {getProductDetail, GoodDetail, buyProduct, fullRevenue, FullRevenueRequest} from "@/service/api";
 import {getLocalDate} from '@/lib/clientUtils'
@@ -82,7 +82,7 @@ const DemoColumn = ({data, isMobile}: {data: any[], isMobile: boolean}) => {
         hoverable: false,
         label: {
             text: ({type, value} : {type: string, value: string}) => {
-                return `$${big(value).toFixed(2)}`
+                return `$${formatThousands(big(value).toNumber())}`
             },
             textBaseline: 'bottom',
 
@@ -373,13 +373,13 @@ const ProductDetail = () => {
                             </div>
                             <div className={css.row2}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('contractCostLabel')}</div>
-                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(hashrateCost),2).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${formatThousands(roundUp(Number(hashrateCost),2).toFixed(getToFixedLength()))}</div>
                             </div>
                             <div className={css.row2} style={{
                                 paddingBottom: state.isMobile ? '' :'8px'
                             }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('electricityCostLabel')}</div>
-                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${roundUp(Number(electricityCost),2).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,state.isMobile ? css.label2 : '')}>${formatThousands(roundUp(Number(electricityCost),2).toFixed(getToFixedLength()))}</div>
                             </div>
                             {
                                 !state.isMobile && <Divider />
@@ -389,7 +389,7 @@ const ProductDetail = () => {
                                 paddingTop: state.isMobile ? '' :'10px'
                             }}>
                                 <div className={css.label} style={{textAlign: state.isMobile ? 'right' : 'left'}}>{t('totalCostLabel')}</div>
-                                <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${roundUp(Number(totalCost),2).toFixed(getToFixedLength())}</div>
+                                <div className={cn(css.info,css.summary,state.isMobile ? css.label2 : '')}>${formatThousands(roundUp(Number(totalCost),2).toFixed(getToFixedLength()))}</div>
                             </div>
                         </div>
                         {

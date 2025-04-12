@@ -104,7 +104,7 @@ const getSoldOutImage = () => {
 
 export default function ProductList() {
     const [list, setList] = useState<Array<any>>([])
-    const [listTwo, setListTow] = useState<Array<any>>([])
+    const [listTwo, setListTwo] = useState<Array<any>>([])
     const {state, dispatch} = useContext(MyContext);
     const t = useTranslations('productList')
 
@@ -114,7 +114,7 @@ export default function ProductList() {
                 if (item.currency?.includes('BTC')) {
                     setList(item.list || []);
                 } else {
-                    setListTow(item.list || [])
+                    setListTwo(item.list || [])
                 }
             })
         })
@@ -122,27 +122,34 @@ export default function ProductList() {
     return (
         <div style={{backgroundColor: '#F6F7F8'}}>
             <div className="container-my" style={{paddingBottom: '25px'}}>
-            <Tabs defaultValue="btc" className="container-tabs" onChange={(e) => {
+                <div style={{
+                    fontWeight: "bold",
+                    fontSize: state.isMobile ? '16px' : '20px',
+                    marginTop: '20px',
+                    marginBottom: '20px',
+                    paddingLeft: state.isMobile ? '12%' : '0px',
+                }}>DOGE&LTC云算力</div>
+            <Tabs defaultValue="ltc" className="container-tabs" onChange={(e) => {
                 console.log(e.target)
             }}>
-                    <div style={{
-                        margin: '0 auto',
-                        maxWidth: '384px',
-                        width: '77%',
-                    }}>
-                        <TabsList isMobile={state.isMobile} className={cn('tabs-list', state.isMobile ? 'mobile-tabs-list' : '')}>
-                            <TabsTrigger isMobile={state.isMobile} value="btc">{t('btcCloudComputingPower')}</TabsTrigger>
-                            <TabsTrigger isMobile={state.isMobile} value="ltc">{t('dogeLtcCloudComputingPower')}</TabsTrigger>
-                        </TabsList>
-                    </div>
-                    <TabsContent value="btc" className={cn('card-tabs-content',state.isMobile ? 'mobile-card-tabs-content' : '')}>
-                        {
-                            list.map((item) => {
-                                // eslint-disable-next-line react/jsx-key
-                                return <Card isMobile={state.isMobile} data={item} key={item.good_id}></Card>
-                            })
-                        }
-                    </TabsContent>
+                    {/*<div style={{*/}
+                    {/*    margin: '0 auto',*/}
+                    {/*    maxWidth: '384px',*/}
+                    {/*    width: '77%',*/}
+                    {/*}}>*/}
+                    {/*    <TabsList isMobile={state.isMobile} className={cn('tabs-list', state.isMobile ? 'mobile-tabs-list' : '')}>*/}
+                    {/*        <TabsTrigger isMobile={state.isMobile} value="btc">{t('btcCloudComputingPower')}</TabsTrigger>*/}
+                    {/*        <TabsTrigger isMobile={state.isMobile} value="ltc">{t('dogeLtcCloudComputingPower')}</TabsTrigger>*/}
+                    {/*    </TabsList>*/}
+                    {/*</div>*/}
+                    {/*<TabsContent value="btc" className={cn('card-tabs-content',state.isMobile ? 'mobile-card-tabs-content' : '')}>*/}
+                    {/*    {*/}
+                    {/*        list.map((item) => {*/}
+                    {/*            // eslint-disable-next-line react/jsx-key*/}
+                    {/*            return <Card isMobile={state.isMobile} data={item} key={item.good_id}></Card>*/}
+                    {/*        })*/}
+                    {/*    }*/}
+                    {/*</TabsContent>*/}
                     <TabsContent value="ltc" className={'card-tabs-content'}>
                         {
                             listTwo.map((item) => {

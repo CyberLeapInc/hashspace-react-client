@@ -4,7 +4,7 @@ import css from './index.module.css';
 import { uuid } from 'uuidv4';
 import {getPubInfo,PaymentCurrency, buyProduct, getPaymentResult} from "@/service/api";
 import {Button, message} from "antd";
-import {cn} from "@/lib/utils";
+import {cn, formatThousands} from "@/lib/utils";
 import React from "react";
 import {QRCodeSVG} from "qrcode.react";
 import Clipboard from "@/components/Clipboard";
@@ -24,12 +24,14 @@ export const FinishPayment: React.FC<{
     fixPos?: number
 }> = ({duration, currentCurrency, amount, orderId, qrcodeUrl, isCountDownFinish, finishPay, setTimeStatus,fixPos = 8}) => {
     const t = useTranslations('finishPayment');
+    const fixNum = currentCurrency.currency === 'USDT' || currentCurrency.currency === 'USDC' ? 2 : fixPos;
+    const showAmount = fixNum === 2 ? formatThousands(big(amount).toFixed(fixNum)) : big(amount).toFixed(fixPos).toString()
 
     return (
         <div>
             <div className={css.title}>{t('paymentDetails')}</div>
             <div className={css.tip}>{t('amountToTransfer')}</div>
-            <div className={css.money}>{big(amount).toFixed(fixPos).toString()} <span className={css.unit}>{currentCurrency.currency}</span></div>
+            <div className={css.money}>{showAmount} <span className={css.unit}>{currentCurrency.currency}</span></div>
             <Counter key={duration} timeLeft={duration} onCountFinish={setTimeStatus}/>
             <div className={css.row}>
                 <div style={{marginRight: '8px'}}>{t('orderId')}</div>

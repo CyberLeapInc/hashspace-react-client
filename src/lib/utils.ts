@@ -50,40 +50,63 @@ export const getToFixedLength = (currency?: string) => {
     }
 }
 
-// 根据数字格式化算力
-export function parseHashrateByNumber(value = 0, precision = 2, unit = '') {
-    if (value === undefined) return {
-        hashrate: 0,
-        unit: ''
+// Formats the hashrate based on the input value, precision, and unit
+export function parseHashrateByNumber(
+    value: number | string = 0,
+    precision: number = 2,
+    unit: string = ''
+): { hashrate: string; unit: string } {
+    // Handle undefined or invalid values
+    if (value === undefined || value === null || isNaN(Number(value))) {
+        return { hashrate: '0', unit: '' };
     }
+
+    // Convert string to number if necessary
     if (typeof value === 'string') {
-        value = Number(value)
+        value = Number(value);
     }
-    const HASHRATE_UNIT_LIST_FULL = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
-    if (unit === 'T') {
-        value = value * Math.pow(10, 12)
+
+    // Ensure the value is non-negative
+    if (value < 0) {
+        return { hashrate: '0', unit: '' };
     }
-    if (unit === 'M') {
-        value = value * Math.pow(10, 6)
+
+    // List of hashrate units
+    const HASHRATE_UNIT_LIST_FULL = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+
+    // Convert input value based on the provided unit
+    switch (unit) {
+        case 'T':
+            value *= Math.pow(10, 12);
+            break;
+        case 'M':
+            value *= Math.pow(10, 6);
+            break;
+        case 'G':
+            value *= Math.pow(10, 9);
+            break;
+        default:
+            // If the unit is not recognized, assume no conversion
+            break;
     }
+
+    // Handle extremely large values
     if (value >= Math.pow(10, 27)) {
-        return {
-            hashrate: value,
-            unit: ''
-        }
+        return { hashrate: value.toFixed(precision), unit: '' };
     }
 
-    let pos = -1
-
-    while (value >= 1000) {
-        value /= 1000
-        pos++
+    // Determine the appropriate unit by dividing the value
+    let pos = -1;
+    while (value >= 1000 && pos < HASHRATE_UNIT_LIST_FULL.length - 1) {
+        value /= 1000;
+        pos++;
     }
 
+    // Return the formatted hashrate and unit
     return {
         hashrate: value.toFixed(precision),
         unit: HASHRATE_UNIT_LIST_FULL[pos] || ''
-    }
+    };
 }
 
 export function formatThousands(num: string | number, isDecimal = true) {
