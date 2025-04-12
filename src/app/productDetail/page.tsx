@@ -258,7 +258,7 @@ const ProductDetail = () => {
             return
         }
         if (goodDetail?.mining_currency === 'LTC') {
-            state.userInfo.address.find(item => item.currency === 'LTC')?.address ? toggleModal(true) : setIsShowSetDogeAddress(true)
+            state.userInfo.address.find(item => item.currency === 'DOGE')?.address ? toggleModal(true) : setIsShowSetDogeAddress(true)
         } else {
             toggleModal(true)
         }
@@ -273,10 +273,10 @@ const ProductDetail = () => {
             img: BtcMachine
         },
         LTC: {
-            name: 'ANTMINER L9',
-            hashrate: '16G',
-            power: '3360W',
-            heat: '210J/G',
+            name: 'VolcMiner D1',
+            hashrate: '18.5G',
+            power: '4250W',
+            heat: '229J/G',
             img: LtcMachine
         }
     }
