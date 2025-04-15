@@ -18,6 +18,9 @@ export const Footer = () => {
     if (typeof window !== 'undefined') {
         prefix = Cookies.get('language') || 'en';
     }
+    if (prefix != 'en') {
+        prefix = 'cn'
+    }
     return <>
         <div className={css.footerCus} id={'footer'}>
             <div className={cn(css.footerContainer, state.isMobile && css.footerContainerMobile)}>
